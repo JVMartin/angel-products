@@ -3,6 +3,8 @@
 class AdminProductCategoryController extends AdminCrudController {
 
 	public $model		= 'ProductCategory';
+	public $uri			= 'products';
+	public $sub_uri		= 'categories';
 	public $plural		= 'categories';
 	public $singular	= 'category';
 	public $package		= 'products';

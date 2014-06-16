@@ -9,7 +9,7 @@
 	<div class="row pad">
 		<div class="col-sm-8 pad">
 			<h1>Product Categories</h1>
-			<a class="btn btn-sm btn-primary" href="{{ admin_url('categories/add') }}">
+			<a class="btn btn-sm btn-primary" href="{{ admin_url('products/categories/add') }}">
 				<span class="glyphicon glyphicon-plus"></span>
 				Add
 			</a>

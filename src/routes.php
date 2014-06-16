@@ -26,7 +26,7 @@ Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function
 		'uses' => $controller . '@hard_delete'
 	));
 
-	Route::group(array('prefix'=>admin_uri('categories')), function() {
+	Route::group(array('prefix'=>'categories'), function() {
 
 		$controller = 'AdminProductCategoryController';
 
