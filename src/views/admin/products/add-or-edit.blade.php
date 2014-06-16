@@ -2,15 +2,11 @@
 
 @section('title', ucfirst($action).' Product')
 
-@section('css')
-@stop
-
 @section('js')
-	{{ HTML::script('assets/js/ckeditor/ckeditor.js') }}
-	{{ HTML::script('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js') }}
+	{{ HTML::script('packages/angel/core/js/ckeditor/ckeditor.js') }}
+	{{ HTML::script('packages/angel/core/js/jquery/jquery-ui.min.js') }}
 	<script>
 		$(function() {
-
 			$("#imagesTable tbody").sortable(sortObj);
 
 			var $imageTR = $('#imagesTable tbody tr').last().clone();
