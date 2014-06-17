@@ -4,9 +4,9 @@ Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function
 
 	$controller = 'AdminProductController';
 
-	Route::get('/', array(
-		'uses' => $controller . '@index'
-	));
+	Route::get('/', function() {
+		return Redirect::to(admin_uri('products/categories'));
+	});
 	Route::get('add', array(
 		'uses' => $controller . '@add'
 	));
@@ -30,6 +30,9 @@ Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function
 
 		$controller = 'AdminProductCategoryController';
 
+		Route::get('/', array(
+			'uses' => $controller . '@index'
+		));
 		Route::get('add', array(
 			'uses' => $controller . '@add'
 		));

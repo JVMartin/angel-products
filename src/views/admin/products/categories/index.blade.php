@@ -15,4 +15,11 @@
 			</a>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<ol class="sortable">
+				@include('products::admin.products.categories.render')
+			</ol>
+		</div>
+	</div>
 @stop
