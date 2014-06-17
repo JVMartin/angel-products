@@ -2,12 +2,11 @@
 
 class AdminProductController extends AdminCrudController {
 
-	public $model		= 'Product';
-	public $uri			= 'products';
-	public $sub_uri		= '';
-	public $plural		= 'products';
-	public $singular	= 'product';
-	public $package		= 'products';
+	protected $model	= 'Product';
+	protected $uri		= 'products';
+	protected $plural	= 'products';
+	protected $singular	= 'product';
+	protected $package	= 'products';
 
 	public function index()
 	{
