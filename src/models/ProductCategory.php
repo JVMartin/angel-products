@@ -14,5 +14,3 @@ class ProductCategory extends Eloquent {
 	}
 
 }
-
-?>

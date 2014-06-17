@@ -38,5 +38,3 @@ class Product extends Eloquent {
 	}
 
 }
-
-?>

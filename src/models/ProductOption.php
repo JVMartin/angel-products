@@ -14,5 +14,3 @@ class ProductOption extends Eloquent {
 	}
 
 }
-
-?>
