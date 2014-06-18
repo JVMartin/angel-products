@@ -25,10 +25,10 @@ php artisan asset:publish angel/products
 Finally, open up your `app/config/packages/angel/core/config.php` and add the module to the `menu` array:
 ```php
 'menu' => array(
-	'Pages'		  => 'pages',
-	'Menus'		  => 'menus',
+	'Pages'		=> 'pages',
+	'Menus'		=> 'menus',
 	'Products'	=> 'products', // <--- Add this line
-	'Users'		  => 'users',
+	'Users'		=> 'users',
 	'Settings'	=> 'settings'
 ),
 ```
