@@ -1,0 +1,5 @@
+.nested {
+  list-style-type: none; }
+  .nested li div {
+    border: 1px solid #CCC;
+    border-radius: 2px; }

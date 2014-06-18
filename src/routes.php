@@ -49,14 +49,17 @@ Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function
 		));
 		Route::post('delete/{id}', array(
 			'before' => 'csrf',
-			'uses' => 'AdminUserController@delete'
+			'uses' => $controller . '@delete'
 		));
 		Route::post('hard-delete/{id}', array(
 			'before' => 'csrf',
-			'uses' => 'AdminUserController@hard_delete'
+			'uses' => $controller . '@hard_delete'
 		));
 		Route::get('restore/{id}', array(
-			'uses' => 'AdminUserController@restore'
+			'uses' => $controller . '@restore'
+		));
+		Route::post('update-tree', array(
+			'uses' => $controller . '@update_tree'
 		));
 	});
 });

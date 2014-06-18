@@ -8,14 +8,30 @@ class AdminProductCategoryController extends AdminCrudController {
 	protected $singular	= 'category';
 	protected $package	= 'products';
 
+	private function categories_tree($categories, $parent_id = null)
+	{
+		$branch = array();
+
+		foreach ($categories as $category) {
+			if ($category->parent_id != $parent_id) continue;
+
+			$children = $this->categories_tree($categories, $category->id);
+
+			if (count($children)) {
+				$category->children = $children;
+			}
+
+			$branch[] = $category;
+		}
+
+		return $branch;
+	}
+
 	public function index()
 	{
-		$temp_categories = ProductCategory::orderBy('parent_id')->orderBy('order')->get();
-		$categories = array();
-		foreach ($temp_categories as $category) {
-			echo '';
-			echo '';
-		}
+		$temp_categories = ProductCategory::orderBy('depth')->orderBy('parent_id')->orderBy('order')->get();
+
+		$categories = $this->categories_tree($temp_categories);
 
 		$this->data['categories'] = $categories;
 
@@ -31,6 +47,19 @@ class AdminProductCategoryController extends AdminCrudController {
 		return array(
 			'name' => 'required'
 		);
+	}
+
+	public function update_tree()
+	{
+		parse_str(Input::get('tree'), $tree);
+		$categories = ProductCategory::all();
+		foreach ($tree['category'] as $category_id=>$parent_id) {
+			$parent_id = ($parent_id == 'null') ? null : $parent_id;
+			$category = $categories->find($category_id);
+			$category->parent_id = $parent_id;
+			$category->save();
+		}
+		return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree updated.');
 	}
 
 }
