@@ -19,10 +19,6 @@ class AdminProductCategoryController extends AdminCrudController {
 		return View::make($this->view('index'), $this->data);
 	}
 
-	/**
-	 * @param int $id - The ID of the model when editing, null when adding.
-	 * @return array - Rules for the validator.
-	 */
 	public function validate_rules($id = null)
 	{
 		return array(
@@ -34,7 +30,7 @@ class AdminProductCategoryController extends AdminCrudController {
 	{
 		parse_str(Input::get('tree'), $tree);
 		if (!isset($tree['category'])) {
-			return Redirect::to(admin_uri('products/categories'))->with('success', 'No changes were made.');
+			return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree saved.');
 		}
 		$categories = ProductCategory::all();
 		$order = 0;

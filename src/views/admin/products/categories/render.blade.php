@@ -6,6 +6,7 @@
 			</a>
 			<a class="btn btn-xs btn-info" href="{{ admin_url('products/categories/expand/' . $category->id) }}">
 				<span class="glyphicon glyphicon-eye-open"></span>
+				Products
 			</a>
 			{{ $category->name }}
 		</div>
