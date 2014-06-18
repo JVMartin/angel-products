@@ -8,6 +8,24 @@ class AdminProductCategoryController extends AdminCrudController {
 	protected $singular	= 'category';
 	protected $package	= 'products';
 
+	public function index($id = null)
+	{
+		$temp_categories = ProductCategory::orderBy('parent_id')->orderBy('order')->get();
+
+		$categories = $this->categories_tree($temp_categories);
+
+		$this->data['categories'] = $categories;
+
+		return View::make($this->view('index'), $this->data);
+	}
+
+	/**
+	 * Creates a nested array of categories and their children.
+	 *
+	 * @param $categories - An Illuniate Collection of all product categories.
+	 * @param null $parent_id - Used for recursively creating branches.
+	 * @return array - The completed branch.
+	 */
 	private function categories_tree($categories, $parent_id = null)
 	{
 		$branch = array();
@@ -25,17 +43,6 @@ class AdminProductCategoryController extends AdminCrudController {
 		}
 
 		return $branch;
-	}
-
-	public function index()
-	{
-		$temp_categories = ProductCategory::orderBy('parent_id')->orderBy('order')->get();
-
-		$categories = $this->categories_tree($temp_categories);
-
-		$this->data['categories'] = $categories;
-
-		return View::make($this->view('index'), $this->data);
 	}
 
 	/**
@@ -66,6 +73,21 @@ class AdminProductCategoryController extends AdminCrudController {
 			$order++;
 		}
 		return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree saved.');
+	}
+
+	public function expand($id)
+	{
+		$temp_categories = ProductCategory::orderBy('parent_id')->orderBy('order')->get();
+
+		$paginator = Product::where('category_id', $id)->paginate();
+
+		$this->data['crumbs'] = ProductCategory::crumbs($temp_categories, $id);
+		$this->data['category'] = $temp_categories->find($id);
+		$this->data['products'] = $paginator->getCollection();
+		$appends = $_GET;
+		unset($appends['page']);
+		$this->data['links'] = $paginator->appends($appends)->links();
+		return View::make($this->view('expand'), $this->data);
 	}
 
 }

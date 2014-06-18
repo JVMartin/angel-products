@@ -61,5 +61,8 @@ Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function
 		Route::post('update-tree', array(
 			'uses' => $controller . '@update_tree'
 		));
+		Route::get('expand/{id}', array(
+			'uses' => $controller . '@expand'
+		));
 	});
 });
