@@ -1,5 +1,8 @@
-.nested {
+.nested, .nested ol {
   list-style-type: none; }
-  .nested li div {
-    border: 1px solid #CCC;
-    border-radius: 2px; }
+.nested li div {
+  padding: 3px 10px;
+  border: 1px solid #CCC;
+  border-radius: 2px; }
+  .nested li div:hover {
+    cursor: move; }
