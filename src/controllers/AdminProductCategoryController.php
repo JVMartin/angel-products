@@ -65,7 +65,7 @@ class AdminProductCategoryController extends AdminCrudController {
 			$category->save();
 			$order++;
 		}
-		return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree updated.');
+		return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree saved.');
 	}
 
 }

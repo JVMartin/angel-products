@@ -46,7 +46,7 @@
 			{{ Form::open(array('url'=>admin_url('products/categories/update-tree'))) }}
 				<input type="hidden" name="tree" id="treeInput" />
 				<button type="submit" class="btn btn-sm btn-primary">
-					Update Tree
+					Save Tree
 				</button>
 			{{ Form::close() }}
 		</div>
