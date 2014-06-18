@@ -19,7 +19,7 @@ Add the following service provider to your `providers` array in `app/config/app.
 Issue the following commands:
 ```bash
 php artisan migrate --package="angel/products"   # Run the migrations
-php artisan asset:publish --package="angel/products"
+php artisan asset:publish angel/products
 ```
 
 Finally, open up your `app/config/packages/angel/core/config.php` and add the module to the `menu` array:
