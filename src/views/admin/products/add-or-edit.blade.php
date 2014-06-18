@@ -11,7 +11,7 @@
 
 			var $imageTR = $('#imagesTable tbody tr').last().clone();
 
-			@if (isset($product))
+			@if (isset($product) && $product->images->count())
 				$('#imagesTable tbody tr').last().remove();
 			@endif
 
@@ -209,9 +209,6 @@
 								<span class="glyphicon glyphicon-plus"></span>
 								Add Image
 							</button>
-							@if ($action == 'add')
-							@else
-							@endif
 						</td>
 					</tr>
 				</tbody>
