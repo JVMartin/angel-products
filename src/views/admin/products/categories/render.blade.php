@@ -1,7 +1,7 @@
 @foreach ($categories as $category)
 	<li id="category_{{ $category->id }}">
 		<div>
-			<a class="btn btn-xs btn-default" href="">
+			<a class="btn btn-xs btn-default" href="{{ admin_url('products/categories/edit/' . $category->id) }}">
 				<span class="glyphicon glyphicon-edit"></span>
 			</a>
 			<a class="btn btn-xs btn-info" href="">
