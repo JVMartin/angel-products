@@ -15,7 +15,7 @@ class ProductCategory extends Eloquent {
 
 	public function children()
 	{
-		return ProductCategory::where('parent_id', $this->id)->get();
+		return $this->hasMany('ProductCategory', 'parent_id');
 	}
 
 	public static function crumbs($categories, $category_id, $url = null)
