@@ -29,7 +29,7 @@ class AdminProductCategoryController extends AdminCrudController {
 
 	public function index()
 	{
-		$temp_categories = ProductCategory::orderBy('depth')->orderBy('parent_id')->orderBy('order')->get();
+		$temp_categories = ProductCategory::orderBy('parent_id')->orderBy('order')->get();
 
 		$categories = $this->categories_tree($temp_categories);
 
@@ -52,12 +52,18 @@ class AdminProductCategoryController extends AdminCrudController {
 	public function update_tree()
 	{
 		parse_str(Input::get('tree'), $tree);
+		if (!isset($tree['category'])) {
+			return Redirect::to(admin_uri('products/categories'))->with('success', 'No changes were made.');
+		}
 		$categories = ProductCategory::all();
+		$order = 0;
 		foreach ($tree['category'] as $category_id=>$parent_id) {
 			$parent_id = ($parent_id == 'null') ? null : $parent_id;
 			$category = $categories->find($category_id);
 			$category->parent_id = $parent_id;
+			$category->order = $order;
 			$category->save();
+			$order++;
 		}
 		return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree updated.');
 	}
