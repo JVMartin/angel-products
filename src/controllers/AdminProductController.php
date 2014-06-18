@@ -19,5 +19,12 @@ class AdminProductController extends AdminCrudController {
 		return parent::add();
 	}
 
+	public function validate_rules($id = null)
+	{
+		return array(
+			'name' => 'required'
+		);
+	}
+
 
 }

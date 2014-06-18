@@ -5,6 +5,7 @@ Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function
 	$controller = 'AdminProductController';
 
 	Route::get('/', function() {
+		Session::reflash();
 		return Redirect::to(admin_uri('products/categories'));
 	});
 	Route::get('add', array(
