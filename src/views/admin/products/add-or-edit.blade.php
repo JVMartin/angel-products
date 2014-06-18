@@ -56,23 +56,24 @@
 		<div class="col-md-10">
 			<table class="table table-striped">
 				<tbody>
+					@if (Config::get('core::languages'))
+						<tr>
+							<td>
+								{{ Form::label('language_id', 'Language') }}
+							</td>
+							<td>
+								<div style="width:300px">
+									{{ Form::select('language_id', $language_drop, $active_language->id, array('class' => 'form-control')) }}
+								</div>
+							</td>
+						</tr>
+					@endif
 					<tr>
 						<td>
 							{{ Form::label('category_id', 'Category') }}
 						</td>
 						<td>
-							{{ Form::select('category_id', $categories_drop, null, array('id'=>'categoryDrop', 'class'=>'form-control', 'style'=>'width:auto;')) }}
-						</td>
-					</tr>
-					<tr>
-						<td>
-							{{ Form::label('subcategory_id', 'Subcategory') }}
-						</td>
-						<td>
-							<span id="noSubcategories"><i>None</i></span>
-							@foreach ($subcategories_drops as $category_id=>$subcategories_drop)
-								{{ Form::select('subcategory_id', $subcategories_drop, null, array('id'=>'subcategoryDrop'.$category_id, 'class'=>'form-control subcategoryDrop', 'style'=>'width:auto;')) }}
-							@endforeach
+							{{ Form::select('category_id', ProductCategory::drop_down($categories), Input::get('to_category'), array('id'=>'categoryDrop', 'class'=>'form-control', 'style'=>'width:auto;')) }}
 						</td>
 					</tr>
 					<tr>

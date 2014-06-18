@@ -10,7 +10,6 @@ class Product extends Eloquent {
 			'size',
 			'description',
 			'category_id',
-			'subcategory_id',
 			'price',
 			'fake_price',
 			'new'
@@ -23,10 +22,6 @@ class Product extends Eloquent {
 	public function category()
 	{
 		return $this->belongsTo('ProductCategory');
-	}
-	public function subcategory()
-	{
-		return $this->belongsTo('ProductSubcategory');
 	}
 	public function options()
 	{

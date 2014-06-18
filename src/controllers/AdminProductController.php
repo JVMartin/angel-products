@@ -10,8 +10,13 @@ class AdminProductController extends AdminCrudController {
 
 	public function index()
 	{
-
 		return View::make($this->view('index'), $this->data);
+	}
+
+	public function add()
+	{
+		$this->data['categories'] = ProductCategory::orderBy('order')->get();
+		return parent::add();
 	}
 
 

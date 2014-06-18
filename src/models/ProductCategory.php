@@ -1,6 +1,6 @@
 <?php
 
-class ProductCategory extends Eloquent {
+class ProductCategory extends LinkableModel {
 
 	protected $table = 'products_categories';
 
@@ -66,6 +66,32 @@ class ProductCategory extends Eloquent {
 		}
 
 		return $branch;
+	}
+
+	public static function drop_down($categories)
+	{
+		$arr = array();
+		foreach ($categories as $category) {
+			$arr[$category->id] = $category->name_full();
+		}
+		return $arr;
+	}
+
+	///////////////////////////////////////////////
+	//               Menu Linkable               //
+	///////////////////////////////////////////////
+	// Menu link related methods - all menu-linkable models must have these
+	// NOTE: Always pull models with their languages initially if you plan on using these!
+	// Otherwise, you're going to be performing repeated queries.  Naughty.
+	public function link()
+	{
+		$language_segment = (Config::get('core::languages')) ? $this->language->uri . '/' : '';
+
+		return url($language_segment . 'products/categories/' . $this->id);
+	}
+	public function link_edit()
+	{
+		return admin_url('products/categories/edit/' . $this->id);
 	}
 
 }

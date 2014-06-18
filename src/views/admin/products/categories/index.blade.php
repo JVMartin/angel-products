@@ -41,14 +41,16 @@
 			</ol>
 		</div>
 	</div>
-	<div class="row pad">
-		<div class="col-xs-12">
-			{{ Form::open(array('url'=>admin_url('products/categories/update-tree'))) }}
-				<input type="hidden" name="tree" id="treeInput" />
-				<button type="submit" class="btn btn-sm btn-primary">
-					Save Tree
-				</button>
-			{{ Form::close() }}
+	@if (count($categories))
+		<div class="row pad">
+			<div class="col-xs-12">
+				{{ Form::open(array('url'=>admin_url('products/categories/update-tree'))) }}
+					<input type="hidden" name="tree" id="treeInput" />
+					<button type="submit" class="btn btn-sm btn-primary">
+						Save Tree
+					</button>
+				{{ Form::close() }}
+			</div>
 		</div>
-	</div>
+	@endif
 @stop

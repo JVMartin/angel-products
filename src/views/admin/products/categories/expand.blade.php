@@ -19,7 +19,7 @@
 	<div class="row pad">
 		<div class="col-sm-8 pad">
 			<h1 style="margin-top:5px;">{{ $category->name }} Category</h1>
-			<a class="btn btn-sm btn-primary" href="{{ admin_url('products/categories/add') }}">
+			<a class="btn btn-sm btn-primary" href="{{ admin_url('products/add?to_category=' . $category->id) }}">
 				<span class="glyphicon glyphicon-plus"></span>
 				Add Product
 			</a>
