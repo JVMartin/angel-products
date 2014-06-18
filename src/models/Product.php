@@ -1,6 +1,6 @@
 <?php
 
-class Product extends Eloquent {
+class Product extends LinkableModel {
 
 	// Columns to update/insert on edit/add
 	public static function columns()
@@ -29,7 +29,21 @@ class Product extends Eloquent {
 	}
 	public function images()
 	{
-		return $this->hasMany('ProductImage');
+		return $this->hasMany('ProductImage')->orderBy('order');
+	}
+
+	///////////////////////////////////////////////
+	//               Menu Linkable               //
+	///////////////////////////////////////////////
+	public function link()
+	{
+		$language_segment = (Config::get('core::languages')) ? $this->language->uri . '/' : '';
+
+		return url($language_segment . 'products/' . $this->id);
+	}
+	public function link_edit()
+	{
+		return admin_url('products/edit/' . $this->id);
 	}
 
 }

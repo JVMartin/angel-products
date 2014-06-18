@@ -29,9 +29,11 @@ class AdminProductCategoryController extends AdminCrudController {
 	public function update_tree()
 	{
 		parse_str(Input::get('tree'), $tree);
+
 		if (!isset($tree['category'])) {
 			return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree saved.');
 		}
+
 		$categories = ProductCategory::all();
 		$order = 0;
 		foreach ($tree['category'] as $category_id=>$parent_id) {
@@ -42,17 +44,18 @@ class AdminProductCategoryController extends AdminCrudController {
 			$category->save();
 			$order++;
 		}
+
 		return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree saved.');
 	}
 
 	public function expand($id)
 	{
-		$temp_categories = ProductCategory::orderBy('parent_id')->orderBy('order')->get();
+		$categories = ProductCategory::orderBy('parent_id')->orderBy('order')->get();
 
-		$paginator = Product::where('category_id', $id)->paginate();
+		$paginator = Product::with('images')->where('category_id', $id)->paginate();
 
-		$this->data['crumbs'] = ProductCategory::crumbs($temp_categories, $id);
-		$this->data['category'] = $temp_categories->find($id);
+		$this->data['crumbs'] = ProductCategory::crumbs($categories, $id);
+		$this->data['category'] = $categories->find($id);
 		$this->data['products'] = $paginator->getCollection();
 		$appends = $_GET;
 		unset($appends['page']);

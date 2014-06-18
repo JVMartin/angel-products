@@ -19,6 +19,12 @@ class AdminProductController extends AdminCrudController {
 		return parent::add();
 	}
 
+	public function edit($id)
+	{
+		$this->data['categories'] = ProductCategory::orderBy('order')->get();
+		return parent::edit($id);
+	}
+
 	public function validate_rules($id = null)
 	{
 		return array(
@@ -26,5 +32,18 @@ class AdminProductController extends AdminCrudController {
 		);
 	}
 
+	public function after_save(&$product)
+	{
+		ProductImage::where('product_id', $product->id)->delete();
+		$thumbs = Input::get('imageThumbs');
+		foreach (Input::get('images') as $i=>$data_image) {
+			$image = new ProductImage;
+			$image->product_id	= $product->id;
+			$image->image		= $data_image;
+			$image->order		= $i;
+			$image->thumb		= $thumbs[$i];
+			$image->save();
+		}
+	}
 
 }
