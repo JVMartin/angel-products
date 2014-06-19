@@ -1,4 +1,6 @@
-<?php
+<?php namespace Angel\Products;
+
+use Eloquent;
 
 class ProductOption extends Eloquent {
 
@@ -10,7 +12,7 @@ class ProductOption extends Eloquent {
 	///////////////////////////////////////////////
 	public function items()
 	{
-		return $this->hasMany('ProductOptionItem');
+		return $this->hasMany(App::make('ProductOptionItem'));
 	}
 
 }

@@ -1,4 +1,7 @@
-<?php
+<?php namespace Angel\Products;
+
+use Angel\Core\LinkableModel;
+use Config, App;
 
 class Product extends LinkableModel {
 
@@ -21,15 +24,15 @@ class Product extends LinkableModel {
 	///////////////////////////////////////////////
 	public function category()
 	{
-		return $this->belongsTo('ProductCategory');
+		return $this->belongsTo(App::make('ProductCategory'));
 	}
 	public function options()
 	{
-		return $this->hasMany('ProductOption');
+		return $this->hasMany(App::make('ProductOption'));
 	}
 	public function images()
 	{
-		return $this->hasMany('ProductImage')->orderBy('order');
+		return $this->hasMany(App::make('ProductImage'))->orderBy('order');
 	}
 
 	///////////////////////////////////////////////
