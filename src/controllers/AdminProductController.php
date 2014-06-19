@@ -1,4 +1,7 @@
-<?php
+<?php namespace Angel\Products;
+
+use Angel\Core\AdminCrudController;
+use Input, App;
 
 class AdminProductController extends AdminCrudController {
 
@@ -15,13 +18,17 @@ class AdminProductController extends AdminCrudController {
 
 	public function add()
 	{
-		$this->data['categories'] = ProductCategory::orderBy('order')->get();
+		$productCategoryModel = App::make('ProductCategory');
+
+		$this->data['categories'] = $productCategoryModel::orderBy('order')->get();
 		return parent::add();
 	}
 
 	public function edit($id)
 	{
-		$this->data['categories'] = ProductCategory::orderBy('order')->get();
+		$productCategoryModel = App::make('ProductCategory');
+
+		$this->data['categories'] = $productCategoryModel::orderBy('order')->get();
 		return parent::edit($id);
 	}
 
@@ -34,10 +41,12 @@ class AdminProductController extends AdminCrudController {
 
 	public function after_save(&$product)
 	{
-		ProductImage::where('product_id', $product->id)->delete();
+		$productImageModel = App::make('ProductImage');
+
+		$productImageModel::where('product_id', $product->id)->delete();
 		$thumbs = Input::get('imageThumbs');
 		foreach (Input::get('images') as $i=>$data_image) {
-			$image = new ProductImage;
+			$image = new $productImageModel;
 			$image->product_id	= $product->id;
 			$image->image		= $data_image;
 			$image->order		= $i;

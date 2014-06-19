@@ -1,4 +1,7 @@
-<?php
+<?php namespace Angel\Products;
+
+use Angel\Core\AdminCrudController;
+use App, View, Input, Redirect;
 
 class AdminProductCategoryController extends AdminCrudController {
 
@@ -10,9 +13,11 @@ class AdminProductCategoryController extends AdminCrudController {
 
 	public function index($id = null)
 	{
-		$temp_categories = ProductCategory::orderBy('parent_id')->orderBy('order')->get();
+		$productCategoryModel = App::make('ProductCategory');
 
-		$categories = ProductCategory::tree($temp_categories);
+		$temp_categories = $productCategoryModel::orderBy('parent_id')->orderBy('order')->get();
+
+		$categories = $productCategoryModel::tree($temp_categories);
 
 		$this->data['categories'] = $categories;
 
@@ -28,13 +33,15 @@ class AdminProductCategoryController extends AdminCrudController {
 
 	public function update_tree()
 	{
+		$productCategoryModel = App::make('ProductCategory');
+
 		parse_str(Input::get('tree'), $tree);
 
 		if (!isset($tree['category'])) {
 			return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree saved.');
 		}
 
-		$categories = ProductCategory::all();
+		$categories = $productCategoryModel::all();
 		$order = 0;
 		foreach ($tree['category'] as $category_id=>$parent_id) {
 			$parent_id = ($parent_id == 'null') ? null : $parent_id;
@@ -50,11 +57,14 @@ class AdminProductCategoryController extends AdminCrudController {
 
 	public function expand($id)
 	{
-		$categories = ProductCategory::orderBy('parent_id')->orderBy('order')->get();
+		$productCategoryModel = App::make('ProductCategory');
+		$productModel = App::make('Product');
 
-		$paginator = Product::with('images')->where('category_id', $id)->paginate();
+		$categories = $productCategoryModel::orderBy('parent_id')->orderBy('order')->get();
 
-		$this->data['crumbs'] = ProductCategory::crumbs($categories, $id);
+		$paginator = $productModel::with('images')->where('category_id', $id)->paginate();
+
+		$this->data['crumbs'] = $productCategoryModel::crumbs($categories, $id);
 		$this->data['category'] = $categories->find($id);
 		$this->data['products'] = $paginator->getCollection();
 		$appends = $_GET;

@@ -73,7 +73,8 @@
 							{{ Form::label('category_id', 'Category') }}
 						</td>
 						<td>
-							{{ Form::select('category_id', ProductCategory::drop_down($categories), Input::get('to_category'), array('id'=>'categoryDrop', 'class'=>'form-control', 'style'=>'width:auto;')) }}
+							<?php $productCategoryModel = App::make('ProductCategory'); ?>
+							{{ Form::select('category_id', $productCategoryModel::drop_down($categories), Input::get('to_category'), array('id'=>'categoryDrop', 'class'=>'form-control', 'style'=>'width:auto;')) }}
 						</td>
 					</tr>
 					<tr>
