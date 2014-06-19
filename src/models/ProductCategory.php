@@ -1,4 +1,7 @@
-<?php
+<?php namespace Angel\Products;
+
+use Angel\Core\LinkableModel;
+use View, Config;
 
 class ProductCategory extends LinkableModel {
 
@@ -17,7 +20,7 @@ class ProductCategory extends LinkableModel {
 
 	public function children()
 	{
-		return $this->hasMany('ProductCategory', 'parent_id');
+		return $this->hasMany(get_class($this), 'parent_id');
 	}
 
 	/**
@@ -58,7 +61,7 @@ class ProductCategory extends LinkableModel {
 		foreach ($categories as $category) {
 			if ($category->parent_id != $parent_id) continue;
 
-			$children = ProductCategory::tree($categories, $category->id);
+			$children = static::tree($categories, $category->id);
 
 			if (count($children)) {
 				$category->children = $children;
