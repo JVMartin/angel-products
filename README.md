@@ -5,7 +5,7 @@ Installation
 Add the following requirements to your `composer.json` file:
 ```javascript
 "require": {
-    "angel/products": "dev-master"
+	"angel/products": "dev-master"
 },
 ```
 
@@ -25,19 +25,19 @@ php artisan asset:publish angel/products         # Publish the assets
 Finally, open up your `app/config/packages/angel/core/config.php` and add the module to the `menu` array:
 ```php
 'menu' => array(
-	'Pages'		=> 'pages',
-	'Menus'		=> 'menus',
-	'Products'	=> 'products', // <--- Add this line
-	'Users'		=> 'users',
-	'Settings'	=> 'settings'
+	'Pages'     => 'pages',
+	'Menus'     => 'menus',
+	'Products'  => 'products', // <--- Add this line
+	'Users'     => 'users',
+	'Settings'  => 'settings'
 ),
 ```
 
 ...and the menu-linkable models to the `linkable_models` array:
 ```php
 'linkable_models' => array(
-	'Page'			=> 'pages',
-	'Product'		=> 'products',			// <--- Add this line
-	'ProductCategory'	=> 'products/categories'	// <--- Add this line
+	'Page'             => 'pages',
+	'Product'          => 'products',			// <--- Add this line
+	'ProductCategory'  => 'products/categories'	// <--- Add this line
 )
 ```
