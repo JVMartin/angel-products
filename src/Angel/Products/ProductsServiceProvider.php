@@ -34,29 +34,29 @@ class ProductsServiceProvider extends ServiceProvider {
 		//-------------------
 		// Models
 		//-------------------
-		App::bind('Product', function() {
+		App::singleton('Product', function() {
 			return new \Angel\Products\Product;
 		});
-		App::bind('ProductCategory', function() {
+		App::singleton('ProductCategory', function() {
 			return new \Angel\Products\ProductCategory;
 		});
-		App::bind('ProductImage', function() {
+		App::singleton('ProductImage', function() {
 			return new \Angel\Products\ProductImage;
 		});
-		App::bind('ProductOption', function() {
+		App::singleton('ProductOption', function() {
 			return new \Angel\Products\ProductOption;
 		});
-		App::bind('ProductOptionItem', function() {
+		App::singleton('ProductOptionItem', function() {
 			return new \Angel\Products\ProductOptionItem;
 		});
 
 		//-------------------
 		// Controllers
 		//-------------------
-		App::bind('AdminProductCategoryController', function() {
+		App::singleton('AdminProductCategoryController', function() {
 			return new \Angel\Products\AdminProductCategoryController;
 		});
-		App::bind('AdminProductController', function() {
+		App::singleton('AdminProductController', function() {
 			return new \Angel\Products\AdminProductController;
 		});
 	}
