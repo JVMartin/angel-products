@@ -19,7 +19,7 @@
 	@if ($category->children->count())
 		<div class="row">
 			<div class="col-xs-12">
-				{{ $category->name }} Subcategories:
+				Subcategories:
 				<?php $i = 0; ?>
 				@foreach ($category->children as $child)
 					<a href="{{ admin_url('products/categories/show-products/' . $child->id) }}">
