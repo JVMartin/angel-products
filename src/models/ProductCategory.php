@@ -20,7 +20,7 @@ class ProductCategory extends LinkableModel {
 
 	public function children()
 	{
-		return $this->hasMany(get_class($this), 'parent_id');
+		return $this->hasMany(get_class($this), 'parent_id')->orderBy('order');
 	}
 
 	/**
