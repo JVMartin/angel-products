@@ -33,7 +33,7 @@ class ProductCategory extends LinkableModel {
 	 */
 	public static function crumbs($categories, $category_id, $url = null)
 	{
-		$url = (!$url) ? admin_url('products/categories/expand/{id}') : $url;
+		$url = (!$url) ? admin_url('products/categories/show-products/{id}') : $url;
 		$crumbs = array();
 
 		do {

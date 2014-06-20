@@ -4,7 +4,7 @@
 			<a class="btn btn-xs btn-default" href="{{ $category->link_edit() }}">
 				<span class="glyphicon glyphicon-edit"></span>
 			</a>
-			<a class="btn btn-xs btn-info" href="{{ admin_url('products/categories/expand/' . $category->id) }}">
+			<a class="btn btn-xs btn-info" href="{{ admin_url('products/categories/show-products/' . $category->id) }}">
 				<span class="glyphicon glyphicon-eye-open"></span>
 				Products
 			</a>
@@ -12,7 +12,7 @@
 		</div>
 		@if (isset($category->children))
 			<ol>
-				@include('products::admin.products.categories.render', array('categories' => $category->children))
+				@include('products::admin.products.categories.tree', array('categories' => $category->children))
 			</ol>
 		@endif
 	</li>

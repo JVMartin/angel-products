@@ -37,7 +37,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<ol class="nested">
-				@include('products::admin.products.categories.render')
+				@include('products::admin.products.categories.tree')
 			</ol>
 		</div>
 	</div>

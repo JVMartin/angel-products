@@ -1,9 +1,8 @@
 <?php namespace Angel\Products;
 
-use Angel\Core\AdminCrudController;
 use App, View, Input, Redirect;
 
-class AdminProductCategoryController extends AdminCrudController {
+class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 
 	protected $model	= 'ProductCategory';
 	protected $uri		= 'products/categories';
@@ -55,7 +54,7 @@ class AdminProductCategoryController extends AdminCrudController {
 		return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree saved.');
 	}
 
-	public function expand($id)
+	public function show_products($id)
 	{
 		$productCategoryModel = App::make('ProductCategory');
 		$productModel = App::make('Product');
@@ -70,7 +69,7 @@ class AdminProductCategoryController extends AdminCrudController {
 		$appends = $_GET;
 		unset($appends['page']);
 		$this->data['links'] = $paginator->appends($appends)->links();
-		return View::make($this->view('expand'), $this->data);
+		return View::make($this->view('show-products'), $this->data);
 	}
 
 }

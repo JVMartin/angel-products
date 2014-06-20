@@ -1,9 +1,8 @@
 <?php namespace Angel\Products;
 
-use Angel\Core\AdminCrudController;
 use Input, App;
 
-class AdminProductController extends AdminCrudController {
+class AdminProductController extends \Angel\Core\AdminCrudController {
 
 	protected $model	= 'Product';
 	protected $uri		= 'products';
