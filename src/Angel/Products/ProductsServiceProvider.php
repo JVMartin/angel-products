@@ -22,6 +22,13 @@ class ProductsServiceProvider extends ServiceProvider {
 		$this->package('angel/products');
 
 		include __DIR__ . '../../../routes.php';
+
+		$bindings = \Config::get('products::bindings');
+		foreach ($bindings as $name=>$class) {
+			App::singleton($name, function() use ($class) {
+				return new $class;
+			});
+		}
 	}
 
 	/**
@@ -31,34 +38,7 @@ class ProductsServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//-------------------
-		// Models
-		//-------------------
-		App::singleton('Product', function() {
-			return new \Angel\Products\Product;
-		});
-		App::singleton('ProductCategory', function() {
-			return new \Angel\Products\ProductCategory;
-		});
-		App::singleton('ProductImage', function() {
-			return new \Angel\Products\ProductImage;
-		});
-		App::singleton('ProductOption', function() {
-			return new \Angel\Products\ProductOption;
-		});
-		App::singleton('ProductOptionItem', function() {
-			return new \Angel\Products\ProductOptionItem;
-		});
-
-		//-------------------
-		// Controllers
-		//-------------------
-		App::singleton('AdminProductCategoryController', function() {
-			return new \Angel\Products\AdminProductCategoryController;
-		});
-		App::singleton('AdminProductController', function() {
-			return new \Angel\Products\AdminProductController;
-		});
+		//
 	}
 
 	/**
