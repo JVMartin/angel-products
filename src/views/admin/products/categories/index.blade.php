@@ -36,6 +36,12 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
+			@if (!count($categories))
+				<div class="alert alert-info">
+					Start by creating at least one product category.<br />
+					Then, you will be able to add products to that category.
+				</div>
+			@endif
 			<ol class="nested">
 				@include('products::admin.products.categories.tree')
 			</ol>
