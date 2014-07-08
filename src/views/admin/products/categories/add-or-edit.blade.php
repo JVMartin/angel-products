@@ -25,6 +25,11 @@
 			@elseif ($action == 'add')
 				{{ Form::open(array('role'=>'form', 'method'=>'post')) }}
 			@endif
+
+				@if (isset($menu_id))
+					{{ Form::hidden('menu_id', $menu_id) }}
+				@endif
+
 				<table class="table table-striped">
 					<tbody>
 						<tr>
