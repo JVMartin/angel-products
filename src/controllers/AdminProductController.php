@@ -9,6 +9,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 	protected $plural	= 'products';
 	protected $singular	= 'product';
 	protected $package	= 'products';
+
 	protected $slug     = 'name';
 
 	public function add()
