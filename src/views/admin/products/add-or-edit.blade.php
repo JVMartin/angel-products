@@ -187,7 +187,7 @@
 								@include('products::admin.products.option-inputs')
 								<button id="addOption" type="button" class="btn btn-sm btn-primary">
 									<span class="glyphicon glyphicon-plus"></span>
-									Add Option
+									Add Option Group
 								</button>
 							</td>
 						</tr>
