@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration {
 			$table->engine = 'InnoDB';
 
 			$table->increments('id');
+			$table->string('slug')->unique();
 			$table->string('name');
 			$table->string('size');
 			$table->text('description');

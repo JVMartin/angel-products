@@ -17,6 +17,7 @@ class CreateProductsOptionsTable extends Migration {
 
 			$table->increments('id');
 			$table->integer('product_id')->unsigned()->nullable();
+			$table->integer('order')->unsigned();
 			$table->string('name');
 
 			$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

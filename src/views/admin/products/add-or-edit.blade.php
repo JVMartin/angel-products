@@ -4,6 +4,9 @@
 
 @section('js')
 	{{ HTML::script('packages/angel/core/js/ckeditor/ckeditor.js') }}
+	<script>
+		$.fn.bsTooltip = $.fn.tooltip.noConflict();
+	</script>
 	{{ HTML::script('packages/angel/core/js/jquery/jquery-ui.min.js') }}
 	<script>
 		$(function() {
@@ -27,6 +30,8 @@
 				});
 			}
 			bindRemoveImage();
+
+			$('.glyphicon-question-sign').bsTooltip();
 		});
 	</script>
 @stop
@@ -110,6 +115,7 @@
 						<tr>
 							<td>
 								{{ Form::label('fake_price', 'Fake Price') }}
+								<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="When a fake price is entered, it is displayed above the real price with a slash through it."></span>
 							</td>
 							<td>
 								<div style="width:300px">
@@ -147,7 +153,7 @@
 										<tr>
 											<th></th>
 											<th>Image</th>
-											<th>Thumb (240px square)</th>
+											<th>Thumb</th>
 											<th></th>
 										</tr>
 									</thead>
