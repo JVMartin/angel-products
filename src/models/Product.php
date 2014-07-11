@@ -28,7 +28,7 @@ class Product extends LinkableModel {
 	}
 	public function options()
 	{
-		return $this->hasMany(App::make('ProductOption'));
+		return $this->hasMany(App::make('ProductOption'))->orderBy('order');
 	}
 	public function images()
 	{
@@ -42,7 +42,7 @@ class Product extends LinkableModel {
 	{
 		$language_segment = (Config::get('core::languages')) ? $this->language->uri . '/' : '';
 
-		return url($language_segment . 'products/' . $this->id);
+		return url($language_segment . 'products/' . $this->slug);
 	}
 	public function link_edit()
 	{

@@ -58,7 +58,7 @@
 		@endif
 
 		<div class="row">
-			<div class="col-md-10">
+			<div class="col-md-12">
 				<table class="table table-striped">
 					<tbody>
 						@if (Config::get('core::languages'))
@@ -148,7 +148,7 @@
 								<b>Images</b>
 							</td>
 							<td>
-								<table id="imagesTable" class="table" style="width:100%;">
+								<table id="imagesTable" class="table table-striped" style="width:100%;">
 									<thead>
 										<tr>
 											<th></th>
@@ -160,61 +160,34 @@
 									<tbody>
 										@if (isset($product))
 											@foreach ($product->images as $image)
-												<tr>
-													<td>
-														<button type="button" class="btn btn-xs btn-default handle">
-															<span class="glyphicon glyphicon-resize-vertical"></span>
-														</button>
-													</td>
-													<td>
-														<input name="images[]" class="form-control" placeholder="Image" value="{{ $image->image }}" />
-														<div class="text-right pad">
-															<button type="button" class="btn btn-default imageBrowse">Browse...</button>
-														</div>
-													</td>
-													<td>
-														<input name="imageThumbs[]" class="form-control" placeholder="Thumb" value="{{ $image->thumb }}" />
-														<div class="text-right pad">
-															<button type="button" class="btn btn-default imageBrowse">Browse...</button>
-														</div>
-													</td>
-													<td>
-														<button type="button" class="removeImage btn btn-xs btn-danger">
-															<span class="glyphicon glyphicon-remove"></span>
-														</button>
-													</td>
-												</tr>
+												@include('products::admin.products.image-inputs')
 											@endforeach
 										@endif
-										<tr>
-											<td>
-												<button type="button" class="btn btn-xs btn-default handle">
-													<span class="glyphicon glyphicon-resize-vertical"></span>
-												</button>
-											</td>
-											<td>
-												<input name="images[]" class="form-control" placeholder="Image" />
-												<div class="text-right pad">
-													<button type="button" class="btn btn-default imageBrowse">Browse...</button>
-												</div>
-											</td>
-											<td>
-												<input name="imageThumbs[]" class="form-control" placeholder="Thumb" />
-												<div class="text-right pad">
-													<button type="button" class="btn btn-default imageBrowse">Browse...</button>
-												</div>
-											</td>
-											<td>
-												<button type="button" class="removeImage btn btn-xs btn-danger">
-													<span class="glyphicon glyphicon-remove"></span>
-												</button>
-											</td>
-										</tr>
+										<?php unset($image); ?>
+										@include('products::admin.products.image-inputs')
 									</tbody>
 								</table>
 								<button id="addImage" type="button" class="btn btn-sm btn-primary">
 									<span class="glyphicon glyphicon-plus"></span>
 									Add Image
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b>Options</b>
+							</td>
+							<td>
+								@if (isset($product))
+									@foreach ($product->options as $option)
+										@include('products::admin.products.option-inputs')
+									@endforeach
+								@endif
+								<?php unset($option); ?>
+								@include('products::admin.products.option-inputs')
+								<button id="addOption" type="button" class="btn btn-sm btn-primary">
+									<span class="glyphicon glyphicon-plus"></span>
+									Add Option
 								</button>
 							</td>
 						</tr>
