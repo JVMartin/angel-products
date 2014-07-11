@@ -19,11 +19,11 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		return parent::add();
 	}
 
-	public function attempt_add()
+	public function add_redirect($object)
 	{
-		$error = parent::attempt_add();
-
-		return ($error) ? $error : Redirect::to();
+		return Redirect::to(admin_uri('products/categories/show-products/' . $object->category_id))->with('success', '
+			<p>Product successfully created.</p>
+		');
 	}
 
 	public function edit($id)
@@ -34,28 +34,10 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		return parent::edit($id);
 	}
 
-	public function attempt_edit($id)
+	public function edit_redirect($object)
 	{
-		$model = App::make($this->model);
-
-		$errors = $this->validate($custom, $id);
-		if (count($errors)) {
-			return Redirect::to($this->uri('edit/' . $id))->withInput()->withErrors($errors);
-		}
-
-		$object = $model::withTrashed()->findOrFail($id);
-		foreach ($model::columns() as $column) {
-			$object->{$column} = isset($custom[$column]) ? $custom[$column] : Input::get($column);
-		}
-		if (isset($this->slug) && $this->slug) {
-			$object->slug = $this->slug($model, 'slug', $object->{$this->slug}, $id);
-		}
-		$object->save();
-
-		if (method_exists($this, 'after_save')) $this->after_save($object);
-
-		return Redirect::to($this->uri('edit/' . $id))->with('success', '
-			<p>' . $this->model . ' successfully updated.</p>
+		return Redirect::to($this->uri('edit/' . $object->id))->with('success', '
+			<p>Product successfully updated.</p>
 			<p><a href="' . admin_url('products/categories/show-products/' . $object->category_id) . '">Return to index</a></p>
 		');
 	}
@@ -67,13 +49,14 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		);
 	}
 
-	public function after_save(&$product)
+	public function after_save($product, &$changes = array())
 	{
 		$productImageModel = App::make('ProductImage');
 
 		$productImageModel::where('product_id', $product->id)->delete();
 		$thumbs = Input::get('imageThumbs');
 		foreach (Input::get('images') as $i=>$data_image) {
+			if (!$data_image) continue;
 			$image = new $productImageModel;
 			$image->product_id	= $product->id;
 			$image->image		= $data_image;
