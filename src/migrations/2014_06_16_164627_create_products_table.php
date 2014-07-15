@@ -23,7 +23,7 @@ class CreateProductsTable extends Migration {
 			$table->integer('category_id')->unsigned()->nullable();
 			$table->decimal('price', 7, 2);
 			$table->decimal('fake_price', 7, 2);
-			$table->boolean('new');
+			$table->boolean('new')->default(0);
 			$table->timestamps(); // Adds `created_at` and `updated_at` columns
 
 			$table->foreign('category_id')->references('id')->on('products_categories')->onDelete('cascade');
