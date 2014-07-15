@@ -4,7 +4,7 @@ use App, View, Input, Redirect;
 
 class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 
-	protected $model	= 'ProductCategory';
+	protected $Model	= 'ProductCategory';
 	protected $uri		= 'products/categories';
 	protected $plural	= 'categories';
 	protected $singular	= 'category';
