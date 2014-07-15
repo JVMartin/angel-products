@@ -19,7 +19,7 @@ class CreateProductsOptionsItemsTable extends Migration {
 			$table->integer('product_option_id')->unsigned();
 			$table->integer('order')->unsigned();
 			$table->string('name');
-			$table->decimal('price', 7, 2);
+			$table->decimal('price', 9, 2);
 			$table->string('image');
 
 			$table->foreign('product_option_id')->references('id')->on('products_options')->onDelete('cascade');

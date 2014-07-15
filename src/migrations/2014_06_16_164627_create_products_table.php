@@ -21,8 +21,8 @@ class CreateProductsTable extends Migration {
 			$table->string('size');
 			$table->text('description');
 			$table->integer('category_id')->unsigned()->nullable();
-			$table->decimal('price', 7, 2);
-			$table->decimal('fake_price', 7, 2);
+			$table->decimal('price', 9, 2);
+			$table->decimal('fake_price', 9, 2);
 			$table->boolean('new')->default(0);
 			$table->timestamps(); // Adds `created_at` and `updated_at` columns
 
