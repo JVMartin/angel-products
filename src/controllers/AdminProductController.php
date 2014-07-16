@@ -46,7 +46,8 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 	public function validate_rules($id = null)
 	{
 		return array(
-			'name' => 'required'
+			'category_id' => 'required',
+			'name'        => 'required'
 		);
 	}
 

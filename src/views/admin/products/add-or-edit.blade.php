@@ -75,20 +75,22 @@
 						@endif
 						<tr>
 							<td>
+								<span class="required">*</span>
 								{{ Form::label('category_id', 'Category') }}
 							</td>
 							<td>
-								<?php $productCategoryModel = App::make('ProductCategory'); ?>
-								{{ Form::select('category_id', $productCategoryModel::drop_down($categories), Input::get('to_category'), array('id'=>'categoryDrop', 'class'=>'form-control', 'style'=>'width:auto;')) }}
+								<?php $ProductCategory = App::make('ProductCategory'); ?>
+								{{ Form::select('category_id', $ProductCategory::drop_down($categories), Input::get('to_category'), array('id'=>'categoryDrop', 'class'=>'form-control', 'style'=>'width:auto;', 'required')) }}
 							</td>
 						</tr>
 						<tr>
 							<td>
+								<span class="required">*</span>
 								{{ Form::label('name', 'Name') }}
 							</td>
 							<td>
 								<div style="width:300px">
-									{{ Form::text('name', null, array('class'=>'form-control', 'placeholder'=>'Name')) }}
+									{{ Form::text('name', null, array('class'=>'form-control', 'placeholder'=>'Name', 'required')) }}
 								</div>
 							</td>
 						</tr>
