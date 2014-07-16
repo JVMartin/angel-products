@@ -23,8 +23,7 @@ class ProductsServiceProvider extends ServiceProvider {
 
 		include __DIR__ . '../../../routes.php';
 
-		$bindings = Config::get('products::bindings');
-		foreach ($bindings as $name=>$class) {
+		foreach (Config::get('products::bindings') as $name=>$class) {
 			$this->app->singleton($name, function() use ($class) {
 				return new $class;
 			});
