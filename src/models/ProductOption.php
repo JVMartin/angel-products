@@ -1,6 +1,6 @@
 <?php namespace Angel\Products;
 
-use Eloquent;
+use Eloquent, App;
 
 class ProductOption extends Eloquent {
 

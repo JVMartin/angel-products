@@ -11,7 +11,13 @@
 	<div class="panel-body">
 		<p>Options:</p>
 		<div class="options">
-
+			@if (isset($option) && $option->items && $option->items->count())
+				@foreach ($option->items as $optionItem)
+					@include('products::admin.products.option-item-inputs', array('optionItem'=>$optionItem))
+				@endforeach
+			@else
+				@include('products::admin.products.option-item-inputs')
+			@endif
 		</div>
 		<button type="button" class="btn btn-sm btn-primary addOptionItem">
 			<span class="glyphicon glyphicon-plus"></span>

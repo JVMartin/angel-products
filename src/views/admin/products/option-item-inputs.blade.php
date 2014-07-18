@@ -3,13 +3,13 @@
 		<button type="button" class="btn btn-xs btn-default handle">
 			<span class="glyphicon glyphicon-resize-vertical"></span>
 		</button>
-		<input type="text" class="form-control form-control-inline optionItemName" placeholder="Option Name" />
+		<input type="text" class="form-control form-control-inline optionItemName" placeholder="Option Name" value="{{ isset($optionItem) ? $optionItem->name : '' }}" />
 	</div>
 	<div class="col-sm-2">
-		<input type="text" class="form-control optionItemPrice" placeholder="Price Modifier" />
+		<input type="text" class="form-control optionItemPrice" placeholder="Price Modifier" value="{{ isset($optionItem) ? $optionItem->price : '' }}" />
 	</div>
 	<div class="col-sm-5">
-		<input type="text" class="form-control optionItemImage" placeholder="Image" />
+		<input type="text" class="form-control optionItemImage" placeholder="Image" value="{{ isset($optionItem) ? $optionItem->image : '' }}" />
 		<div class="text-right top-nudge">
 			<button type="button" class="btn btn-default imageBrowse">Browse...</button>
 		</div>
