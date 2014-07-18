@@ -73,8 +73,8 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		foreach (Input::get('options') as $order=>$data_option) {
 			if (!isset($data_option['name']) || !$data_option['name']) continue;
 			$option = new $ProductOption;
-			$option->order      = $order;
 			$option->product_id = $product->id;
+			$option->order      = $order;
 			$option->name       = $data_option['name'];
 			$option->save();
 

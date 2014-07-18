@@ -72,8 +72,8 @@
 				fixOptions();
 			});
 
-			var $option = $('.option').first().clone();
-			var $optionItem = $('.optionItem').first().clone();
+			var $option = $('.option').last().clone();
+			var $optionItem = $('.optionItem').last().clone();
 
 			@if (isset($product) && $product->options->count())
 				$('.option').last().remove();
@@ -98,7 +98,8 @@
 			function fixOptions() {
 				var optCount = 0;
 				$('.option').each(function() {
-					$('.optionName').attr('name', 'options['+optCount+'][name]');
+					console.log(optCount);
+					$(this).find('.optionName').attr('name', 'options['+optCount+'][name]');
 					var optItemCount = 0;
 					$(this).find('.optionItem').each(function() {
 						$(this).find('.optionItemName').attr('name', 'options['+optCount+'][items]['+optItemCount+'][name]');
