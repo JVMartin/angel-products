@@ -19,6 +19,15 @@ class Product extends LinkableModel {
 		);
 	}
 
+	public function markSelectedItem($option_item_id)
+	{
+		$this->options->each(function($option) use ($option_item_id) {
+			$option->items->each(function($item) use ($option_item_id) {
+				if ($item->id == $option_item_id) $item->selected = true;
+			});
+		});
+	}
+
 	///////////////////////////////////////////////
 	//               Relationships               //
 	///////////////////////////////////////////////
