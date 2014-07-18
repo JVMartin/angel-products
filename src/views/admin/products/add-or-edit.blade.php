@@ -2,6 +2,17 @@
 
 @section('title', ucfirst($action).' Product')
 
+@section('css')
+	<style>
+		.handle, .optionHandle {
+			cursor:ns-resize;
+		}
+		.optionItem {
+			margin-bottom:7px;
+		}
+	</style>
+@stop
+
 @section('js')
 	{{ HTML::script('packages/angel/core/js/ckeditor/ckeditor.js') }}
 	<script>
@@ -10,6 +21,8 @@
 	{{ HTML::script('packages/angel/core/js/jquery/jquery-ui.min.js') }}
 	<script>
 		$(function() {
+			$('.glyphicon-question-sign').bsTooltip();
+
 			$("#imagesTable tbody").sortable(sortObj);
 
 			var $imageTR = $('#imagesTable tbody tr').last().clone();
@@ -21,17 +34,83 @@
 			$('#addImage').click(function() {
 				$('#imagesTable tbody').append($imageTR.clone());
 				bindImageBrowsers();
-				bindRemoveImage();
 			});
 
-			function bindRemoveImage() {
-				$('.removeImage').click(function() {
-					$(this).closest('tr').remove();
+			$('#imagesTable').on('click', '.removeImage', function() {
+				var $tr = $(this).closest('tr');
+				if ($tr.parent().children('tr').length == 1) {
+					alert('Let\'s keep at least one.');
+					return;
+				}
+				$(this).closest('tr').remove();
+			});
+
+			$('#options').sortable({
+				cancel: '',
+				handle: '.optionHandle',
+				stop: function(e, ui) {
+					fixOptions();
+				}
+			});
+
+			$('#options').on('click', '.removeOption', function() {
+				if ($('.option').length == 1) {
+					alert('Let\'s keep at least one.');
+					return;
+				}
+				$(this).closest('.option').remove();
+				fixOptions();
+			});
+
+			$('#options').on('click', '.removeOptionItem', function() {
+				var $optionItem = $(this).closest('.optionItem');
+				if ($optionItem.parent().children('.optionItem').length == 1) {
+					alert('Let\'s keep at least one.');
+					return;
+				}
+				$optionItem.remove();
+				fixOptions();
+			});
+
+			var $option = $('.option').first().clone();
+			var $optionItem = $('.optionItem').first().clone();
+
+			@if (isset($product) && $product->options->count())
+				$('.option').last().remove();
+			@endif
+
+			$('.options').sortable({
+				cancel: '',
+				handle: '.handle',
+				stop: function(e, ui) {
+					fixOptions();
+				}
+			});
+			$('#addOption').click(function() {
+				$('#options').append($option.clone());
+				fixOptions();
+			});
+			$('#options').on('click', '.addOptionItem', function() {
+				$(this).prev().append($optionItem.clone());
+				fixOptions();
+			});
+
+			function fixOptions() {
+				var optCount = 0;
+				$('.option').each(function() {
+					$('.optionName').attr('name', 'options['+optCount+'][name]');
+					var optItemCount = 0;
+					$(this).find('.optionItem').each(function() {
+						$(this).find('.optionItemName').attr('name', 'options['+optCount+'][items]['+optItemCount+'][name]');
+						$(this).find('.optionItemPrice').attr('name', 'options['+optCount+'][items]['+optItemCount+'][price]');
+						$(this).find('.optionItemImage').attr('name', 'options['+optCount+'][items]['+optItemCount+'][image]');
+						optItemCount++;
+					});
+					optCount++;
 				});
 			}
-			bindRemoveImage();
+			fixOptions();
 
-			$('.glyphicon-question-sign').bsTooltip();
 		});
 	</script>
 @stop
@@ -180,13 +259,15 @@
 								<b>Options</b>
 							</td>
 							<td>
-								@if (isset($product))
-									@foreach ($product->options as $option)
-										@include('products::admin.products.option-inputs')
-									@endforeach
-								@endif
-								<?php unset($option); ?>
-								@include('products::admin.products.option-inputs')
+								<div id="options">
+									@if (isset($product))
+										@foreach ($product->options as $option)
+											@include('products::admin.products.option-inputs')
+										@endforeach
+									@endif
+									<?php unset($option); ?>
+									@include('products::admin.products.option-inputs')
+								</div>
 								<button id="addOption" type="button" class="btn btn-sm btn-primary">
 									<span class="glyphicon glyphicon-plus"></span>
 									Add Option Group
