@@ -91,7 +91,7 @@
 				$optionItem.remove();
 				fixOptions();
 			});
-			
+
 			$('#addOption').click(function() {
 				$('#options').append($option.clone());
 				fixOptions();
