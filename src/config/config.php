@@ -2,6 +2,8 @@
 
 return array(
 	'bindings' => array(
+		'Cart'              => '\Angel\Products\Cart',
+
 		// Models
 		'Product'           => '\Angel\Products\Product',
 		'ProductCategory'   => '\Angel\Products\ProductCategory',

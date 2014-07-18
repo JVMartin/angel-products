@@ -21,6 +21,7 @@ class ProductsServiceProvider extends ServiceProvider {
 	{
 		$this->package('angel/products');
 
+		include __DIR__ . '/Cart.php';
 		include __DIR__ . '../../../routes.php';
 
 		foreach (Config::get('products::bindings') as $name=>$class) {
