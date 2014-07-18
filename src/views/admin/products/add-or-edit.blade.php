@@ -23,6 +23,9 @@
 		$(function() {
 			$('.glyphicon-question-sign').bsTooltip();
 
+			//-----------
+			// Images
+			//-----------
 			$("#imagesTable tbody").sortable(sortObj);
 
 			var $imageTR = $('#imagesTable tbody tr').last().clone();
@@ -45,9 +48,29 @@
 				$(this).closest('tr').remove();
 			});
 
+			//-----------
+			// Options
+			//-----------
+
+
+			var $option = $('.option').last().clone();
+			var $optionItem = $('.optionItem').last().clone();
+
+			@if (isset($product) && $product->options->count())
+				$('.option').last().remove();
+			@endif
+
 			$('#options').sortable({
 				cancel: '',
 				handle: '.optionHandle',
+				stop: function(e, ui) {
+					fixOptions();
+				}
+			});
+
+			$('.options').sortable({
+				cancel: '',
+				handle: '.handle',
 				stop: function(e, ui) {
 					fixOptions();
 				}
@@ -61,7 +84,6 @@
 				$(this).closest('.option').remove();
 				fixOptions();
 			});
-
 			$('#options').on('click', '.removeOptionItem', function() {
 				var $optionItem = $(this).closest('.optionItem');
 				if ($optionItem.parent().children('.optionItem').length == 1) {
@@ -70,21 +92,6 @@
 				}
 				$optionItem.remove();
 				fixOptions();
-			});
-
-			var $option = $('.option').last().clone();
-			var $optionItem = $('.optionItem').last().clone();
-
-			@if (isset($product) && $product->options->count())
-				$('.option').last().remove();
-			@endif
-
-			$('.options').sortable({
-				cancel: '',
-				handle: '.handle',
-				stop: function(e, ui) {
-					fixOptions();
-				}
 			});
 			$('#addOption').click(function() {
 				$('#options').append($option.clone());
