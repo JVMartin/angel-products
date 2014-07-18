@@ -26,13 +26,13 @@
 			//-----------
 			// Images
 			//-----------
-			$("#imagesTable tbody").sortable(sortObj);
-
 			var $imageTR = $('#imagesTable tbody tr').last().clone();
 
 			@if (isset($product) && $product->images->count())
 				$('#imagesTable tbody tr').last().remove();
 			@endif
+
+			$("#imagesTable tbody").sortable(sortObj);
 
 			$('#addImage').click(function() {
 				$('#imagesTable tbody').append($imageTR.clone());
@@ -51,8 +51,6 @@
 			//-----------
 			// Options
 			//-----------
-
-
 			var $option = $('.option').last().clone();
 			var $optionItem = $('.optionItem').last().clone();
 
@@ -93,6 +91,7 @@
 				$optionItem.remove();
 				fixOptions();
 			});
+			
 			$('#addOption').click(function() {
 				$('#options').append($option.clone());
 				fixOptions();
