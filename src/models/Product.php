@@ -28,6 +28,9 @@ class Product extends LinkableModel {
 		});
 	}
 
+	/*
+	 * We need to override toArray() because it ignores the special JSON mutation we do from the cart.
+	 */
 	public function toArray()
 	{
 		$array = parent::toArray();
