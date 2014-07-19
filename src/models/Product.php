@@ -28,6 +28,13 @@ class Product extends LinkableModel {
 		});
 	}
 
+	public function toArray()
+	{
+		$array = parent::toArray();
+		$array['options'] = $this->options;
+		return $array;
+	}
+
 	///////////////////////////////////////////////
 	//               Relationships               //
 	///////////////////////////////////////////////

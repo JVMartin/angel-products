@@ -45,13 +45,13 @@ class Cart {
 
 		if (count($custom_options)) {
 			$temp_options = array();
-			foreach ($custom_options as $id=>$custom_option) {
+			foreach ($custom_options as $option_name=>$custom_option) {
 				$temp_options[] = array(
-					'id' => $id,
-					'name' => $id,
+					'id' => $option_name,
+					'name' => $option_name,
 					'items' => array(
 						array(
-							'id'       => $id,
+							'id'       => $option_name . ':' . $custom_option['name'],
 							'name'     => $custom_option['name'],
 							'price'    => $custom_option['price'],
 							'image'    => $custom_option['image'],
