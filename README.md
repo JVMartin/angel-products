@@ -73,8 +73,7 @@ $Cart    = App::make('Cart');
 // Grab the user's desired product from the database.
 $product = $Product::findOrFail(Input::get('product_id'));
 
-// Create a custom array of options.
-$options = array(
+$product->addCustomOptions(array(
 	'Size' => array(
 		'name'  => 'Large',
 		'price' => 4.50
@@ -84,37 +83,25 @@ $options = array(
 		'price' => -2.50,
 		'image' => 'assets/images/green-shirt.jpg'
 	)
-);
+));
 
 // Add the product to the cart in the user's desired quantity, saving the unique key for accessing it later.
-$key = $Cart->add($product, Input::get('quantity'), $options);
+$key = $Cart->add($product, Input::get('quantity'));
 ```
 
 ### Remove Products
 ```php
-$Cart->remove($product);
-// or...
-$Cart->remove($product, $options);
-// or...
-$Cart->removeByKey($key);
+$Cart->remove($key);
 ```
 
 ### Adjust the Quantity of Products
 ```php
-$Cart->quantity($product, 5);
-// or...
-$Cart->quantity($product, 5, $options);
-// or...
-$Cart->quantityByKey($key, 5);
+$Cart->quantity($key, 5);
 ```
 
 ### Retrieve Products
 ```php
-$details = $Cart->get($product);
-// or...
-$details = $Cart->get($product, $options);
-// or...
-$details = $Cart->getByKey($key);
+$details = $Cart->get($key);
 
 // $details then looks like this:
 array(
@@ -130,7 +117,7 @@ foreach (Session::get('cart') as $key=>$details) {
 	$product = json_decode($details['product']);
 	$price   = $details['price'];
 	$qty     = $details['qty'];
-	$total   = $Cart->totalByKey($key);
+	$total   = $Cart->totalForKey($key);
 }
 ```
 
@@ -140,5 +127,5 @@ foreach (Session::get('cart') as $key=>$details) {
 echo $Cart->total();
 
 // The total for a specific product variation by key.
-echo $Cart->totalByKey($key);
+echo $Cart->totalForKey($key);
 ```
