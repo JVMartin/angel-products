@@ -24,8 +24,8 @@ class Product extends LinkableModel {
 	public function markSelectedOption($option_item_id)
 	{
 		$this->options->each(function($option) use ($option_item_id) {
-			$option->items->each(function($item) use ($option_item_id) {
-				if ($item->id == $option_item_id) $this->selected_options[] = $item->toArray();
+			$option->items->each(function($option_item) use ($option_item_id) {
+				if ($option_item->id == $option_item_id) $this->selected_options[] = $option_item->toArray();
 			});
 		});
 	}
