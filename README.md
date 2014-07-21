@@ -48,7 +48,7 @@ Cart Usage
 ----------
 [The cart class](https://github.com/JVMartin/angel-products/blob/master/src/Angel/Products/Cart.php) stores variations of products, based on their selected options, in the session.
 
-Example usage:
+### Add Products to the Cart
 ```php
 $Product = App::make('Product');
 $Cart    = App::make('Cart');
@@ -61,13 +61,42 @@ foreach (Input::get('selected_options') as $option_item_id) {
 	$product->markSelectedOption($option_item_id);
 }
 
-// Add the product to the cart in the user's desired quantity.
+// Add the product to the cart in the user's desired quantity, saving the unique key for accessing it later.
 $key = $Cart->add($product, Input::get('quantity'));
+```
 
-// Echo the total for just this product variation.
-echo $Cart->totalByKey($key);
+### Remove Products from the Cart
+```php
+$Cart->removeByKey($key);
 
-// Echo the total for all cart products.
+// -or-
+
+$Cart->remove($product);
+```
+
+### Get Totals from the Cart
+```php
+// The total for all products in the cart.
 echo $Cart->total();
 
+// The total for a specific product variation by key.
+echo $Cart->totalByKey($key);
+```
+
+### Retrieve Products from the Cart
+```php
+$details = $Cart->getByKey($key);
+
+// -or-
+
+$details = $Cart->get($product);
+```
+
+### Adjust the Quantity of Products in the Cart
+```php
+$Cart->quantity($product, 5);
+
+// -or-
+
+$Cart->quantityByKey($key, 5);
 ```
