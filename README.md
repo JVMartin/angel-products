@@ -90,6 +90,13 @@ $details = $Cart->getByKey($key);
 // -or-
 
 $details = $Cart->get($product);
+
+// $details then looks like this:
+array(
+	'product' => {String, JSON encoded product},
+	'price'   => {Float, price per unit},
+	'qty'     => {Int, quantity of units}
+);
 ```
 
 ### Adjust the Quantity of Products in the Cart
