@@ -8,46 +8,58 @@ class Cart {
 
 	function __construct()
 	{
-		$this->get();
+		$this->init();
 	}
 
-	private function get()
+	/**
+	 * Retrieve the cart from the session or create it.
+	 */
+	private function init()
 	{
 		if (!Session::has('cart')) Session::put('cart', array());
 
 		$this->cart = Session::get('cart');
 	}
 
+	/**
+	 * Save the cart back into the session.
+	 */
 	private function save()
 	{
 		Session::put('cart', $this->cart);
 	}
 
+	/**
+	 * Empty the cart, removing all items.
+	 */
 	public function destroy()
 	{
 		$this->cart = array();
 		$this->save();
 	}
 
-	/*
-	$custom_options = array(
-		'Size' => array(
-			'name'  => 'Large',
-			'price' => 10,
-			'image' => 'large-shirt.jpg'
-		)
-	);
-	*/
+	/**
+	 * Create a unique key for the product based on its selected options or the custom options
+	 * if they exist.  Also, compile the price for this unique variation.
+	 *
+	 * @param Product &$product - The product we're generating a key for.
+	 * @param int &$price - While looping through options, we'll compile the price as well.
+	 * @param array $custom_options
+	 * @return string $key - The unique key.
+	 */
 	private function cartKey(&$product, &$price = 0, $custom_options = array())
 	{
 		$key = $product->id . '|';
 		$price = $product->price;
 
+		// Some deployments use custom options and some don't.  So, instead of using
+		// an Illuminate Collection, we're going to use simple standard objects by
+		// JSON encoding and decoding the options collection when there are no custom options,
+		// or the custom options array when it exists.
 		if (count($custom_options)) {
 			$temp_options = array();
 			foreach ($custom_options as $option_name=>$custom_option) {
 				$temp_options[] = array(
-					'id' => $option_name,
 					'name' => $option_name,
 					'items' => array(
 						array(
@@ -65,6 +77,8 @@ class Cart {
 			$product->options = json_decode($product->options->toJson());
 		}
 
+		// Now, we can treat $product->options the same and simply loop through and
+		// add each selected option to our options array and add the prices as well.
 		$options = array();
 		foreach ($product->options as $option) {
 			foreach ($option->items as $item) {
@@ -80,6 +94,24 @@ class Cart {
 		return $key;
 	}
 
+	/**
+	 * Add a product to the cart, or increase its quantity if it's already there.
+	 * Be sure to have already executed $product->markSelectedOption() for all selected options.
+	 * If you use custom options, they follow the following format:
+	 *
+	 * $custom_options = array(
+	 *     'Size' => array(
+	 *	       'name'  => 'Large',
+	 *	       'price' => 10,
+	 *	       'image' => 'large-shirt.jpg'
+	 *     )
+	 * );
+	 *
+	 * @param Product $product -
+	 * @param int $qty - How many to add to the cart.
+	 * @param array $custom_options - Custom options instead of
+	 * @return string $key - The key for retrieving from the cart.
+	 */
 	public function add($product, $qty = 1, $custom_options = array())
 	{
 		$key = $this->cartKey($product, $price, $custom_options);
@@ -96,19 +128,62 @@ class Cart {
 
 		$this->save();
 
-		return true;
+		return $key;
 	}
 
+	/**
+	 * Remove a product from the cart.  (Again, based on its selected options.)
+	 *
+	 * @param Product $product
+	 * @return bool - True if succeeded, false if not.
+	 */
 	public function remove($product)
 	{
 		$key = $this->cartKey($product);
 
+		return $this->removeByKey($key);
+	}
+
+	/**
+	 * Remove a product from the cart by its unique key.
+	 *
+	 * @param string $key - The unique key, returned from add().
+	 * @return bool - True if succeeded, false if not.
+	 */
+	public function removeByKey($key)
+	{
 		if (!array_key_exists($key, $this->cart)) return false;
 
 		unset($this->cart[$key]);
 		$this->save();
 
 		return true;
+	}
+
+	/**
+	 * Retrieve a product from the cart.
+	 *
+	 * @param Product $product - The desired product.
+	 * @return array - The product's cart array with 'product', 'price', and 'qty'.
+	 */
+	public function get($product)
+	{
+		$key = $this->cartKey($product);
+
+		return $this->getByKey($key);
+	}
+
+	/**
+	 * Retrieve a product from the cart by its unique key.
+	 *
+	 * @param string $key - The unique key, returned from add().
+	 * @return array - The product's cart array with 'product', 'price', and 'qty'.
+	 */
+	public function getByKey($key)
+	{
+		if (!array_key_exists($key, $this->cart)) return false;
+
+		return $this->cart[$key];
 	}
 
 }
