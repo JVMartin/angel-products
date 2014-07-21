@@ -71,7 +71,7 @@ $Product = App::make('Product');
 $Cart    = App::make('Cart');
 
 // Grab the user's desired product from the database.
-$product = $Product::with('options')->findOrFail(Input::get('product_id'));
+$product = $Product::findOrFail(Input::get('product_id'));
 
 // Create a custom array of options.
 $options = array(
