@@ -55,8 +55,8 @@ class Product extends LinkableModel {
 			$key = $name . ':' . $option['name'];
 			$this->selected_options[$key] = array(
 				'name'     => $option['name'],
-				'price'    => $option['price'],
-				'image'    => $option['image']
+				'price'    => isset($option['price']) ? $option['price'] : 0,
+				'image'    => isset($option['image']) ? $option['image'] : null
 			);
 		}
 		ksort($this->selected_options);
