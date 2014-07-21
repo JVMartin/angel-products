@@ -5,6 +5,17 @@ use Config, App;
 
 class Product extends LinkableModel {
 
+	public $selected_options = array();
+
+	public function markSelectedOption($option_item_id)
+	{
+		$this->options->each(function($option) use ($option_item_id) {
+			$option->items->each(function($item) use ($option_item_id) {
+				if ($item->id == $option_item_id) $this->selected_options[] = $item->toArray();
+			});
+		});
+	}
+
 	// Columns to update/insert on edit/add
 	public static function columns()
 	{
@@ -19,23 +30,13 @@ class Product extends LinkableModel {
 		);
 	}
 
-	public function markSelectedOption($option_item_id)
-	{
-		$this->options->each(function($option) use ($option_item_id) {
-			$option->items->each(function($item) use ($option_item_id) {
-				if ($item->id == $option_item_id) $item->selected = true;
-			});
-		});
-	}
-
 	/**
-	 * We need to override toArray() to make it include the special JSON mutation we do from the cart, allowing
-	 * developers to pass in custom arrays of options instead of using the ProductOption relationships.
+	 * We need to override toArray() to make it include the special selected_options array.
 	 */
 	public function toArray()
 	{
 		$array = parent::toArray();
-		$array['options'] = $this->options;
+		$array['selected_options'] = $this->selected_options;
 		return $array;
 	}
 

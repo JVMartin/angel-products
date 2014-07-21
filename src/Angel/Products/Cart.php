@@ -57,35 +57,22 @@ class Cart {
 		// JSON encoding and decoding the options collection when there are no custom options,
 		// or the custom options array when it exists.
 		if (count($custom_options)) {
-			$temp_options = array();
 			foreach ($custom_options as $option_name=>$custom_option) {
-				$temp_options[] = array(
-					'name' => $option_name,
-					'items' => array(
-						array(
-							'id'       => $option_name . ':' . $custom_option['name'],
-							'name'     => $custom_option['name'],
-							'price'    => $custom_option['price'],
-							'image'    => $custom_option['image'],
-							'selected' => true
-						)
-					)
+				$product->selected_options[] = array(
+					'id'       => $option_name . ':' . $custom_option['name'],
+					'name'     => $custom_option['name'],
+					'price'    => $custom_option['price'],
+					'image'    => $custom_option['image']
 				);
 			}
-			$product->options = json_decode(json_encode($temp_options));
-		} else {
-			$product->options = json_decode($product->options->toJson());
 		}
 
 		// Now, we can treat $product->options the same and simply loop through and
 		// add each selected option to our options array and add the prices as well.
 		$options = array();
-		foreach ($product->options as $option) {
-			foreach ($option->items as $item) {
-				if (!property_exists($item, 'selected') || !$item->selected) continue;
-				$options[] = $item->id;
-				$price += $item->price;
-			}
+		foreach ($product->selected_options as $option) {
+			$options[] = $option['id'];
+			$price += $option['price'];
 		}
 
 		sort($options);
