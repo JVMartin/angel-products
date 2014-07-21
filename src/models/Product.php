@@ -54,7 +54,6 @@ class Product extends LinkableModel {
 		foreach ($options as $name=>$option) {
 			$key = $name . ':' . $option['name'];
 			$this->selected_options[$key] = array(
-				'id'       => $name . ':' . $option['name'],
 				'name'     => $option['name'],
 				'price'    => $option['price'],
 				'image'    => $option['image']
