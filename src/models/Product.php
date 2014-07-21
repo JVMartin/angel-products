@@ -52,8 +52,7 @@ class Product extends LinkableModel {
 	public function addCustomOptions($options)
 	{
 		foreach ($options as $name=>$option) {
-			$key = $name . ':' . $option['name'];
-			$this->selected_options[$key] = array(
+			$this->selected_options[$name . ':' . $option['name']] = array(
 				'name'     => $option['name'],
 				'price'    => isset($option['price']) ? $option['price'] : 0,
 				'image'    => isset($option['image']) ? $option['image'] : null
