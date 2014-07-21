@@ -1,5 +1,5 @@
 Angel Products
---------------
+==============
 This is an eCommerce module for the [Angel CMS](https://github.com/JVMartin/angel).
 
 Installation
@@ -48,7 +48,7 @@ Cart Usage
 ----------
 [The cart class](https://github.com/JVMartin/angel-products/blob/master/src/Angel/Products/Cart.php) stores variations of products, based on their selected options, in the session.
 
-### Add Products to the Cart
+### Add Products
 ```php
 $Product = App::make('Product');
 $Cart    = App::make('Cart');
@@ -65,31 +65,56 @@ foreach (Input::get('selected_options') as $option_item_id) {
 $key = $Cart->add($product, Input::get('quantity'));
 ```
 
-### Remove Products from the Cart
+### Add Products with Custom Options
 ```php
-$Cart->removeByKey($key);
+$Product = App::make('Product');
+$Cart    = App::make('Cart');
 
-// -or-
+// Grab the user's desired product from the database.
+$product = $Product::with('options')->findOrFail(Input::get('product_id'));
 
+// Create a custom array of options.
+$options = array(
+	'Size' => array(
+		'name'  => 'Large',
+		'price' => 4.50
+	),
+	'Color' => array(
+		'name'  => 'Green',
+		'price' => -2.50,
+		'image' => 'assets/images/green-shirt.jpg'
+	)
+);
+
+// Add the product to the cart in the user's desired quantity, saving the unique key for accessing it later.
+$key = $Cart->add($product, Input::get('quantity'), $options);
+```
+
+### Remove Products
+```php
 $Cart->remove($product);
+// or...
+$Cart->remove($product, $options);
+// or...
+$Cart->removeByKey($key);
 ```
 
-### Get Totals from the Cart
+### Adjust the Quantity of Products
 ```php
-// The total for all products in the cart.
-echo $Cart->total();
-
-// The total for a specific product variation by key.
-echo $Cart->totalByKey($key);
+$Cart->quantity($product, 5);
+// or...
+$Cart->quantity($product, 5, $options);
+// or...
+$Cart->quantityByKey($key, 5);
 ```
 
-### Retrieve Products from the Cart
+### Retrieve Products
 ```php
-$details = $Cart->getByKey($key);
-
-// -or-
-
 $details = $Cart->get($product);
+// or...
+$details = $Cart->get($product, $options);
+// or...
+$details = $Cart->getByKey($key);
 
 // $details then looks like this:
 array(
@@ -99,11 +124,11 @@ array(
 );
 ```
 
-### Adjust the Quantity of Products in the Cart
+### Get Totals
 ```php
-$Cart->quantity($product, 5);
+// The total for all products in the cart.
+echo $Cart->total();
 
-// -or-
-
-$Cart->quantityByKey($key, 5);
+// The total for a specific product variation by key.
+echo $Cart->totalByKey($key);
 ```
