@@ -96,7 +96,7 @@ class Cart {
 
 	/**
 	 * Add a product to the cart, or increase its quantity if it's already there.
-	 * Be sure to have already executed $product->markSelectedOption() for all selected options.
+	 * Be sure to have already executed $product->markSelectedOption({product_option_item_id}) for all selected option items.
 	 * If you use custom options, they follow the following format:
 	 *
 	 * $custom_options = array(
@@ -107,7 +107,7 @@ class Cart {
 	 *     )
 	 * );
 	 *
-	 * @param Product $product -
+	 * @param Product $product - The product model object to add.
 	 * @param int $qty - How many to add to the cart.
 	 * @param array $custom_options - Custom options instead of
 	 * @return string $key - The key for retrieving from the cart.
@@ -177,13 +177,41 @@ class Cart {
 	 * Retrieve a product from the cart by its unique key.
 	 *
 	 * @param string $key - The unique key, returned from add().
-	 * @return array - The product's cart array with 'product', 'price', and 'qty'.
+	 * @return array - The product's cart array with 'product', 'price', and 'qty', or false if it doesn't exist.
 	 */
 	public function getByKey($key)
 	{
 		if (!array_key_exists($key, $this->cart)) return false;
 
 		return $this->cart[$key];
+	}
+
+	/**
+	 * Get the total dollar amount for the cart's contents.
+	 *
+	 * @return float $total - The total dollar amount.
+	 */
+	public function total()
+	{
+		$total = 0;
+
+		foreach (array_keys($this->cart) as $key) {
+			$total += $this->totalByKey($key);
+		}
+
+		return $total;
+	}
+
+	/**
+	 * Get the total dollar amount for a specific cart product by key.
+	 *
+	 * @return float $total - The total dollar amount for the cart product, or false if it doesn't exist.
+	 */
+	public function totalByKey($key)
+	{
+		if (!array_key_exists($key, $this->cart)) return false;
+
+		return $this->cart[$key]['price'] * $this->cart[$key]['qty'];
 	}
 
 }
