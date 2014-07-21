@@ -124,6 +124,16 @@ array(
 );
 ```
 
+### Loop Through Products
+```php
+foreach (Session::get('cart') as $key=>$details) {
+	$product = json_decode($details['product']);
+	$price   = $details['price'];
+	$qty     = $details['qty'];
+	$total   = $Cart->totalByKey($key);
+}
+```
+
 ### Get Totals
 ```php
 // The total for all products in the cart.
