@@ -21,13 +21,46 @@ class Product extends LinkableModel {
 
 	public $selected_options = array();
 
+	/**
+	 * Mark an option_item as selected by that option_item's ID.
+	 *
+	 * @param $option_item_id
+	 */
 	public function markSelectedOption($option_item_id)
 	{
 		$this->options->each(function($option) use ($option_item_id) {
-			$option->items->each(function($option_item) use ($option_item_id) {
-				if ($option_item->id == $option_item_id) $this->selected_options[] = $option_item->toArray();
+			$option->items->each(function($option_item) use ($option, $option_item_id) {
+				if ($option_item->id == $option_item_id) $this->selected_options[$option->name . ':' . $option_item->name] = $option_item->toArray();
 			});
 		});
+		ksort($this->selected_options);
+	}
+
+	/**
+	 * Add custom option(s) to the product in this format:
+	 *
+	 * $options = array(
+	 *     'Size' => array(
+	 *	       'name'  => 'Large',
+	 *	       'price' => 10,
+	 *	       'image' => 'large-shirt.jpg'
+	 *     )
+	 * );
+	 *
+	 * @param $options - Array of options
+	 */
+	public function addCustomOptions($options)
+	{
+		foreach ($options as $name=>$option) {
+			$key = $name . ':' . $option['name'];
+			$this->selected_options[$key] = array(
+				'id'       => $name . ':' . $option['name'],
+				'name'     => $option['name'],
+				'price'    => $option['price'],
+				'image'    => $option['image']
+			);
+		}
+		ksort($this->selected_options);
 	}
 
 	/**
