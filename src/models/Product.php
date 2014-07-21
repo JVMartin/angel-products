@@ -5,17 +5,6 @@ use Config, App;
 
 class Product extends LinkableModel {
 
-	public $selected_options = array();
-
-	public function markSelectedOption($option_item_id)
-	{
-		$this->options->each(function($option) use ($option_item_id) {
-			$option->items->each(function($item) use ($option_item_id) {
-				if ($item->id == $option_item_id) $this->selected_options[] = $item->toArray();
-			});
-		});
-	}
-
 	// Columns to update/insert on edit/add
 	public static function columns()
 	{
@@ -28,6 +17,17 @@ class Product extends LinkableModel {
 			'fake_price',
 			'new'
 		);
+	}
+
+	public $selected_options = array();
+
+	public function markSelectedOption($option_item_id)
+	{
+		$this->options->each(function($option) use ($option_item_id) {
+			$option->items->each(function($item) use ($option_item_id) {
+				if ($item->id == $option_item_id) $this->selected_options[] = $item->toArray();
+			});
+		});
 	}
 
 	/**
