@@ -19,7 +19,7 @@ class Product extends LinkableModel {
 		);
 	}
 
-	public function markSelectedItem($option_item_id)
+	public function markSelectedOption($option_item_id)
 	{
 		$this->options->each(function($option) use ($option_item_id) {
 			$option->items->each(function($item) use ($option_item_id) {
