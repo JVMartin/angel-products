@@ -48,7 +48,7 @@ class Product extends LinkableModel {
 	}
 	public function options()
 	{
-		return $this->hasMany(App::make('ProductOption'))->orderBy('order');
+		return $this->hasMany(App::make('ProductOption'))->with('items')->orderBy('order');
 	}
 	public function images()
 	{

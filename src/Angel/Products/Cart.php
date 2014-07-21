@@ -44,10 +44,10 @@ class Cart {
 	 *
 	 * @param Product &$product - The product we're generating a key for.
 	 * @param int &$price - While looping through options, we'll compile the price as well.
-	 * @param array $custom_options
+	 * @param array $custom_options - Optional custom options.
 	 * @return string $key - The unique key.
 	 */
-	private function cartKey(&$product, &$price = 0, $custom_options = array())
+	private function cartKey(&$product, $custom_options = array(), &$price = 0)
 	{
 		$key = $product->id . '|';
 		$price = $product->price;
@@ -109,12 +109,12 @@ class Cart {
 	 *
 	 * @param Product $product - The product model object to add.
 	 * @param int $qty - How many to add to the cart.
-	 * @param array $custom_options - Custom options instead of
+	 * @param array $custom_options - Optional custom options.
 	 * @return string $key - The key for retrieving from the cart.
 	 */
 	public function add($product, $qty = 1, $custom_options = array())
 	{
-		$key = $this->cartKey($product, $price, $custom_options);
+		$key = $this->cartKey($product, $custom_options, $price);
 
 		if (array_key_exists($key, $this->cart)) {
 			$this->cart[$key]['qty'] += $qty;
@@ -135,11 +135,12 @@ class Cart {
 	 * Remove a product from the cart.  (Again, based on its selected options.)
 	 *
 	 * @param Product $product
+	 * @param array $custom_options - Optional custom options.
 	 * @return bool - True if succeeded, false if not.
 	 */
-	public function remove($product)
+	public function remove($product, $custom_options = array())
 	{
-		$key = $this->cartKey($product);
+		$key = $this->cartKey($product, $custom_options);
 
 		return $this->removeByKey($key);
 	}
@@ -164,11 +165,12 @@ class Cart {
 	 * Retrieve a product from the cart.
 	 *
 	 * @param Product $product - The desired product.
+	 * @param array $custom_options - Optional custom options.
 	 * @return array - The product's cart array with 'product', 'price', and 'qty'.
 	 */
-	public function get($product)
+	public function get($product, $custom_options = array())
 	{
-		$key = $this->cartKey($product);
+		$key = $this->cartKey($product, $custom_options);
 
 		return $this->getByKey($key);
 	}
@@ -184,6 +186,38 @@ class Cart {
 		if (!array_key_exists($key, $this->cart)) return false;
 
 		return $this->cart[$key];
+	}
+
+	/**
+	 * Adjust the cart quantity for a product variation.
+	 *
+	 * @param Product $product - The product to adjust.
+	 * @param int $quantity - The new quantity.
+	 * @param array $custom_options - Optional custom options.
+	 * @return bool - Success true or false.
+	 */
+	public function quantity($product, $quantity, $custom_options = array())
+	{
+		$key = $this->cartKey($product, $custom_options);
+
+		return $this->quantityByKey($key, $quantity);
+	}
+
+	/**
+	 * Adjust the cart quantity for a product by its unique key.
+	 *
+	 * @param string $key - The unique key, returned from add().
+	 * @param int $quantity - The new quantity.
+	 * @return bool - Success true or false.
+	 */
+	public function quantityByKey($key, $quantity)
+	{
+		if (!array_key_exists($key, $this->cart)) return false;
+
+		$this->cart[$key]['qty'] = $quantity;
+		$this->save();
+
+		return true;
 	}
 
 	/**
