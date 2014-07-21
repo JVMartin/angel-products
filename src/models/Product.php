@@ -28,7 +28,7 @@ class Product extends LinkableModel {
 		});
 	}
 
-	/*
+	/**
 	 * We need to override toArray() to make it include the special JSON mutation we do from the cart, allowing
 	 * developers to pass in custom arrays of options instead of using the ProductOption relationships.
 	 */
