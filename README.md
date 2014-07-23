@@ -89,6 +89,16 @@ $product->addCustomOptions(array(
 $key = $Cart->add($product, Input::get('quantity'));
 ```
 
+### Retrieve Key
+If you need to get the key for a product (i.e. to remove that product from the cart) you can do so like this:
+```php
+// Retrieve the key.
+$key = $Cart->key($product);
+
+// Use the key however you wish.
+$Cart->remove($key);
+```
+
 ### Remove Products
 ```php
 $Cart->remove($key);
