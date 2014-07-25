@@ -31,10 +31,16 @@
 		?>
 		<div class="row">
 			<div class="col-sm-3">
-				<img src="{{ $product->images[0]->image }}" style="width:100%" />
+				<a href="{{ url('products/' . $product->slug) }}">
+					<img src="{{ $product->images[0]->image }}" style="width:100%" />
+				</a>
 			</div>
 			<div class="col-sm-3">
-				<h4>{{ $product->name }}</h4>
+				<h4>
+					<a href="{{ url('products/' . $product->slug) }}">
+						{{ $product->name }}
+					</a>
+				</h4>
 				<hr />
 				@foreach ($Cart->getOptions($key) as $group_name=>$option)
 					<p>
@@ -55,7 +61,7 @@
 				<h4>Quantity</h4>
 				<hr />
 				<div class="form-group">
-					{{ Form::text('qty', 1, array('class'=>'form-control text-center', 'style'=>'display:inline-block;width:50px;')) }}
+					{{ Form::text('qty', $item['qty'], array('class'=>'form-control text-center', 'style'=>'display:inline-block;width:50px;')) }}
 				</div>
 			</div>
 		</div>
