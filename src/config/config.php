@@ -1,6 +1,16 @@
 <?php
 
 return array(
+	'stripe' => array(
+		'test' => array(
+			'secret'      => '',
+			'publishable' => ''
+		),
+		'live' => array(
+			'secret'      => '',
+			'publishable' => ''
+		)
+	),
 	'bindings' => array(
 		'Cart'              => '\Angel\Products\Cart',
 
