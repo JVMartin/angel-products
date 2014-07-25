@@ -8,10 +8,10 @@ class ProductImage extends Eloquent {
 
 	public function src()
 	{
-		return asset($this->image);
+		if ($this->image) return asset($this->image);
 	}
 	public function thumb_src()
 	{
-		return asset($this->thumb);
+		if ($this->thumb) return asset($this->thumb);
 	}
 }
