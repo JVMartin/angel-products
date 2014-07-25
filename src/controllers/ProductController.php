@@ -37,7 +37,19 @@ class ProductController extends \Angel\Core\AngelController {
 
 		$Cart->add($product, Input::get('qty'));
 
-		return Redirect::back()->with('success', 'This product has been added to your cart!');
+		return Redirect::back()->with('success', array(
+			'This product has been added to your cart!',
+			'<a href="' . url('cart') . '">View Cart</a>'
+		));
+	}
+
+	public function cart()
+	{
+		$Cart = App::make('Cart');
+
+		$this->data['Cart'] = $Cart;
+
+		return View::make('products::cart', $this->data);
 	}
 
 }

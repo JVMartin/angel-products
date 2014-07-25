@@ -26,11 +26,13 @@ class Product extends LinkableModel {
 	 *
 	 * @param int $option_item_id
 	 */
-	public function markSelectedOption($option_item_id)
+	public function markSelectedOption($option_item_id, $option_order = 0)
 	{
-		$this->options->each(function($option) use ($option_item_id) {
-			$option->items->each(function($option_item) use ($option, $option_item_id) {
-				if ($option_item->id == $option_item_id) $this->selected_options[$option->name . ':' . $option_item->name] = $option_item->toArray();
+		$this->options->each(function($option) use ($option_item_id, $option_order) {
+			$option->items->each(function($option_item) use ($option, $option_item_id, $option_order) {
+				$arr = $option_item->toArray();
+				$arr['order'] = $option_order;
+				if ($option_item->id == $option_item_id) $this->selected_options[$option->name . ':' . $option_item->name] = $arr;
 			});
 		});
 		ksort($this->selected_options);
@@ -45,8 +47,9 @@ class Product extends LinkableModel {
 	{
 		if (!is_array($options)) return false;
 
-		foreach ($options as $option_item_id) {
-			$this->markSelectedOption($option_item_id);
+		foreach ($options as $option_id=>$option_item_id) {
+			$option = $this->options->find($option_id);
+			$this->markSelectedOption($option_item_id, $option->order);
 		}
 	}
 

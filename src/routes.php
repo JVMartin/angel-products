@@ -2,6 +2,7 @@
 
 Route::get('products/{slug}', 'ProductController@view');
 Route::post('cart-add', 'ProductController@cart_add');
+Route::get('cart', 'ProductController@cart');
 
 Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function() {
 

@@ -63,18 +63,21 @@ class Cart {
 	{
 		$key = $this->key($product);
 
-		$price = $product->price;
+		$price      = $product->price;
+		$fake_price = $product->fake_price;
 		foreach ($product->selected_options as $option) {
 			$price += $option['price'];
+			if ($fake_price > 0) $fake_price += $option['price'];
 		}
 
 		if (array_key_exists($key, $this->cart)) {
 			$this->cart[$key]['qty'] += $qty;
 		} else {
 			$this->cart[$key] = array(
-				'product' => $product->toJson(),
-				'price'   => $price,
-				'qty'     => $qty
+				'product'    => $product->toJson(),
+				'price'      => $price,
+				'fake_price' => $fake_price,
+				'qty'        => $qty
 			);
 		}
 
@@ -110,6 +113,30 @@ class Cart {
 		if (!array_key_exists($key, $this->cart)) return false;
 
 		return $this->cart[$key];
+	}
+
+	/**
+	 * Retrieve an array of selected options on the item, sorted by order.
+	 *
+	 * @param string $key - The unique key, returned from add().
+	 */
+	public function getOptions($key)
+	{
+		if (!array_key_exists($key, $this->cart)) return false;
+
+		$product = json_decode($this->cart[$key]['product']);
+
+		$options = array();
+		foreach ($product->selected_options as $string=>$option) {
+			$group_name = explode(':', $string)[0];
+			$options[$group_name] = $option;
+		}
+
+		uasort($options, function($a, $b) {
+			return ($a->order > $b->order);
+		});
+
+		return $options;
 	}
 
 	/**
