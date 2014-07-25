@@ -28,7 +28,7 @@ class ProductCategory extends LinkableModel {
 	 *
 	 * @param Collection $categories - A collection of all categories
 	 * @param int $category_id - The current visible category
-	 * @param string $url - The URL to use for the crumbs, with {id} signifying where the category ID should go for each crumb
+	 * @param string $url - The URL to use for the crumbs, with {id} or {slug} signifying where the category ID or slug should go for each crumb
 	 * @return HTML of the breadcrumbs
 	 */
 	public static function crumbs($categories, $category_id, $url = null)
