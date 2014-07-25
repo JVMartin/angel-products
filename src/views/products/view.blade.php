@@ -60,12 +60,24 @@
 			<hr />
 			<h5 id="fakePriceWrap">$<span id="fakePrice"></span></h5>
 			<h3>$<span id="price"></span></h3>
-			@foreach ($product->options as $option)
+			{{ Form::open(array('url'=>'cart-add')) }}
+				@foreach ($product->options as $option)
+					<div class="form-group">
+						{{ Form::label('options['.$option->id.']', $option->name) }}
+						{{ Form::select('options['.$option->id.']', $option->drop_down(), null, array('class'=>'form-control optionSelect')) }}
+					</div>
+				@endforeach
+				{{ Form::hidden('product_id', $product->id) }}
 				<div class="form-group">
-					{{ Form::label('options['.$option->id.']', $option->name) }}
-					{{ Form::select('options['.$option->id.']', $option->drop_down(), null, array('class'=>'form-control optionSelect')) }}
+					{{ Form::label('qty', 'Quantity') }}
+					{{ Form::text('qty', 1, array('class'=>'form-control text-center', 'style'=>'display:inline-block;width:50px;')) }}
 				</div>
-			@endforeach
+				{{ Form::hidden('product_id', $product->id) }}
+				<button type="submit" class="btn btn-primary">
+					<span class="glyphicon glyphicon-shopping-cart"></span>
+					Add To Cart
+				</button>
+			{{ Form::close() }}
 		</div>
 	</div>
 @stop
