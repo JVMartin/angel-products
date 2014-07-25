@@ -46,11 +46,6 @@
 
 @section('content')
 	<div class="row">
-		<div class="col-xs-12">
-
-		</div>
-	</div>
-	<div class="row">
 		<div class="col-sm-6">
 			@foreach ($product->images as $image)
 				<img src="{{ $image->src() }}" style="width:100%" />
