@@ -38,7 +38,7 @@ class ProductCategory extends LinkableModel {
 
 		do {
 			$category = $categories->find($category_id);
-			$crumbs[$category_id] = $category->name;
+			$crumbs[$category_id] = $category;
 			$category_id = $category->parent_id;
 		} while($category_id);
 

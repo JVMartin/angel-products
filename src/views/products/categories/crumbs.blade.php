@@ -1,15 +1,19 @@
 <ol class="breadcrumb">
 	<?php $i = 0; ?>
-	@foreach ($crumbs as $id=>$name)
+	@foreach ($crumbs as $id=>$category)
 		@if (++$i < count($crumbs))
 			<li>
-				<a href="{{ str_replace('{id}', $id, $url) }}">
-					{{ $name }}
+				<?php
+					$url = str_replace('{id}', $id, $url);
+					$url = str_replace('{slug}', $category->slug, $url);
+				?>
+				<a href="{{ $url }}">
+					{{ $category->name }}
 				</a>
 			</li>
 		@else
 			<li class="active">
-				{{ $name }}
+				{{ $category->name }}
 			</li>
 		@endif
 	@endforeach

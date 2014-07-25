@@ -19,6 +19,7 @@
 			@endforeach
 		</div>
 		<div class="col-sm-6">
+			{{ $crumbs }}
 			{{ $product->description }}
 			@foreach ($product->options as $option)
 				<div class="form-group">

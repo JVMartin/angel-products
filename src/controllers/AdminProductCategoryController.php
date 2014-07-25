@@ -10,13 +10,15 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 	protected $singular	= 'category';
 	protected $package	= 'products';
 
+	protected $slug     = 'name';
+
 	public function index($id = null)
 	{
-		$productCategoryModel = App::make('ProductCategory');
+		$ProductCategory = App::make('ProductCategory');
 
-		$temp_categories = $productCategoryModel::orderBy('parent_id')->orderBy('order')->get();
+		$temp_categories = $ProductCategory::orderBy('parent_id')->orderBy('order')->get();
 
-		$categories = $productCategoryModel::tree($temp_categories);
+		$categories = $ProductCategory::tree($temp_categories);
 
 		$this->data['categories'] = $categories;
 
@@ -32,7 +34,7 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 
 	public function update_tree()
 	{
-		$productCategoryModel = App::make('ProductCategory');
+		$ProductCategory = App::make('ProductCategory');
 
 		parse_str(Input::get('tree'), $tree);
 
@@ -40,7 +42,7 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 			return Redirect::to(admin_uri('products/categories'))->with('success', 'Category tree saved.');
 		}
 
-		$categories = $productCategoryModel::all();
+		$categories = $ProductCategory::all();
 		$order = 0;
 		foreach ($tree['category'] as $category_id=>$parent_id) {
 			$parent_id = ($parent_id == 'null') ? null : $parent_id;
@@ -56,14 +58,14 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 
 	public function show_products($id)
 	{
-		$productCategoryModel = App::make('ProductCategory');
-		$productModel = App::make('Product');
+		$ProductCategory = App::make('ProductCategory');
+		$Product = App::make('Product');
 
-		$categories = $productCategoryModel::orderBy('parent_id')->orderBy('order')->get();
+		$categories = $ProductCategory::orderBy('parent_id')->orderBy('order')->get();
 
-		$paginator = $productModel::with('images')->where('category_id', $id)->paginate();
+		$paginator = $Product::with('images')->where('category_id', $id)->paginate();
 
-		$this->data['crumbs'] = $productCategoryModel::crumbs($categories, $id);
+		$this->data['crumbs'] = $ProductCategory::crumbs($categories, $id);
 		$this->data['category'] = $categories->find($id);
 		$this->data['products'] = $paginator->getCollection();
 		$appends = $_GET;

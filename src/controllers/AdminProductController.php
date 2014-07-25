@@ -14,9 +14,9 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 
 	public function add()
 	{
-		$productCategoryModel = App::make('ProductCategory');
+		$ProductCategory = App::make('ProductCategory');
 
-		$this->data['categories'] = $productCategoryModel::orderBy('order')->get();
+		$this->data['categories'] = $ProductCategory::orderBy('order')->get();
 		return parent::add();
 	}
 
@@ -29,9 +29,9 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 
 	public function edit($id)
 	{
-		$productCategoryModel = App::make('ProductCategory');
+		$ProductCategory = App::make('ProductCategory');
 
-		$this->data['categories'] = $productCategoryModel::orderBy('order')->get();
+		$this->data['categories'] = $ProductCategory::orderBy('order')->get();
 		return parent::edit($id);
 	}
 
