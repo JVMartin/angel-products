@@ -31,7 +31,7 @@ class ProductController extends \Angel\Core\AngelController {
 		$Cart    = App::make('Cart');
 		$Product = App::make('Product');
 
-		$product = $Product::findOrFail(Input::get('product_id'));
+		$product = $Product::with('images', 'options')->findOrFail(Input::get('product_id'));
 
 		foreach (Input::get('options') as $option_item_id) {
 			$product->markSelectedOption($option_item_id);
