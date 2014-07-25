@@ -6,21 +6,34 @@
 @stop
 
 @section('css')
+	<style>
+		#fakePriceWrap {
+			text-decoration:line-through;
+			font-style:italic;
+			@if ($product->fake_price == 0)
+				display:none;
+			@endif
+		}
+	</style>
 @stop
 
 @section('js')
 	<script>
 		$(function() {
 			var productPrice = {{ number_format($product->price) }};
-			var fakePrice = {{ number_format($product->fakePrice) }};
+			var productFakePrice = {{ number_format($product->fake_price) }};
 			var options = {{ json_encode($options) }};
 
 			function showPrice() {
 				var price = productPrice;
+				var fakePrice = productFakePrice;
 				$('.optionSelect').each(function() {
-					price += parseFloat(options[$(this).val()]);
+					var optionPrice = parseFloat(options[$(this).val()]);
+					price += optionPrice;
+					fakePrice += optionPrice;
 				});
 				$('#price').html(price.toFixed(2));
+				$('#fakePrice').html(fakePrice.toFixed(2));
 			}
 			showPrice();
 			$('.optionSelect').change(function() {
@@ -40,6 +53,7 @@
 		<div class="col-sm-6">
 			{{ $crumbs }}
 			{{ $product->description }}
+			<h5 id="fakePriceWrap">$<span id="fakePrice"></span></h5>
 			<h3>$<span id="price"></span></h3>
 			@foreach ($product->options as $option)
 				<div class="form-group">
