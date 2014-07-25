@@ -23,6 +23,7 @@ return array(
 
 		// Controllers
 		'AdminProductCategoryController' => '\Angel\Products\AdminProductCategoryController',
-		'AdminProductController'         => '\Angel\Products\AdminProductController'
+		'AdminProductController'         => '\Angel\Products\AdminProductController',
+		'ProductController'              => '\Angel\Products\ProductController'
 	)
 );

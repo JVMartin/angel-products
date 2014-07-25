@@ -1,5 +1,7 @@
 <?php
 
+Route::get('products/{slug}', 'ProductController@view');
+
 Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function() {
 
 	$controller = 'AdminProductController';
