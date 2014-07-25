@@ -20,22 +20,23 @@
 @section('js')
 	<script>
 		$(function() {
-			var productPrice = {{ number_format($product->price) }};
+			var productPrice     = {{ number_format($product->price) }};
 			var productFakePrice = {{ number_format($product->fake_price) }};
-			var options = {{ json_encode($options) }};
+			var options          = {{ json_encode($options) }};
 
 			function showPrice() {
-				var price = productPrice;
+				var price     = productPrice;
 				var fakePrice = productFakePrice;
 				$('.optionSelect').each(function() {
 					var optionPrice = parseFloat(options[$(this).val()]);
-					price += optionPrice;
-					fakePrice += optionPrice;
+					price          += optionPrice;
+					fakePrice      += optionPrice;
 				});
 				$('#price').html(price.toFixed(2));
 				$('#fakePrice').html(fakePrice.toFixed(2));
 			}
 			showPrice();
+
 			$('.optionSelect').change(function() {
 				showPrice();
 			});
@@ -45,6 +46,11 @@
 
 @section('content')
 	<div class="row">
+		<div class="col-xs-12">
+
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-sm-6">
 			@foreach ($product->images as $image)
 				<img src="{{ $image->src() }}" style="width:100%" />
@@ -52,7 +58,11 @@
 		</div>
 		<div class="col-sm-6">
 			{{ $crumbs }}
-			{{ $product->description }}
+			<h1 style="margin:0 0 10px;">{{ $product->name }}</h1>
+			<p>
+				{{ $product->description }}
+			</p>
+			<hr />
 			<h5 id="fakePriceWrap">$<span id="fakePrice"></span></h5>
 			<h3>$<span id="price"></span></h3>
 			@foreach ($product->options as $option)
