@@ -48,7 +48,9 @@
 	<div class="row">
 		<div class="col-sm-6">
 			@foreach ($product->images as $image)
-				<img src="{{ $image->src() }}" style="width:100%" />
+				<a class="fancybox" href="{{ $image->src() }}">
+					<img src="{{ $image->src() }}" style="width:100%" />
+				</a>
 			@endforeach
 		</div>
 		<div class="col-sm-6">
