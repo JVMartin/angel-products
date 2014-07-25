@@ -116,6 +116,15 @@ class Cart {
 	}
 
 	/**
+	 * Return the cart array.
+	 * @return array - The cart.
+	 */
+	public function all()
+	{
+		return $this->cart;
+	}
+
+	/**
 	 * Retrieve an array of selected options on the item, sorted by order.
 	 *
 	 * @param string $key - The unique key, returned from add().
