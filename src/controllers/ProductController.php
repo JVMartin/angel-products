@@ -33,10 +33,8 @@ class ProductController extends \Angel\Core\AngelController {
 
 		$product = $Product::with('images', 'options')->findOrFail(Input::get('product_id'));
 
-		foreach (Input::get('options') as $option_item_id) {
-			$product->markSelectedOption($option_item_id);
-		}
-
+		$product->markSelectedOptions(Input::get('options'));
+		
 		$Cart->add($product, Input::get('qty'));
 
 		return Redirect::back()->with('success', 'This product has been added to your cart!');

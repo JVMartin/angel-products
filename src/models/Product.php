@@ -24,7 +24,7 @@ class Product extends LinkableModel {
 	/**
 	 * Mark an option_item as selected by that option_item's ID.
 	 *
-	 * @param $option_item_id
+	 * @param int $option_item_id
 	 */
 	public function markSelectedOption($option_item_id)
 	{
@@ -34,6 +34,20 @@ class Product extends LinkableModel {
 			});
 		});
 		ksort($this->selected_options);
+	}
+
+	/**
+	 * Same as markSelectedOption() but takes an array.
+	 *
+	 * @param array $option_item_id
+	 */
+	public function markSelectedOptions($options)
+	{
+		if (!is_array($options)) return false;
+
+		foreach ($options as $option_item_id) {
+			$this->markSelectedOption($option_item_id);
+		}
 	}
 
 	/**
