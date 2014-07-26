@@ -207,18 +207,4 @@ class Cart {
 		return $this->cart[$key]['price'] * $this->cart[$key]['qty'];
 	}
 
-	/**
-	 * Get the total number of items in the cart.
-	 *
-	 * @return int $total - The total number of items in the cart.
-	 */
-	public function totalItems()
-	{
-		$total = 0;
-		foreach ($this->cart as $item) {
-			$total += $item['qty'];
-		}
-		return $total;
-	}
-
 }
