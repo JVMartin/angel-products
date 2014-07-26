@@ -57,9 +57,7 @@ $Cart    = App::make('Cart');
 $product = $Product::with('options')->findOrFail(Input::get('product_id'));
 
 // Mark the selected option items by their IDs.
-foreach (Input::get('selected_options') as $option_item_id) {
-	$product->markSelectedOption($option_item_id);
-}
+$product->markSelectedOptions(Input::get('options'));
 
 // Add the product to the cart in the user's desired quantity, saving the unique key for accessing it later.
 $key = $Cart->add($product, Input::get('quantity'));
