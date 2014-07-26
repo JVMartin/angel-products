@@ -140,5 +140,5 @@ echo $Cart->total();
 echo $Cart->totalForKey($key);
 
 // The total number of items in the cart.  (Variations x their quantity)
-echo $Cart->totalItems();
+echo $Cart->count();
 ```
