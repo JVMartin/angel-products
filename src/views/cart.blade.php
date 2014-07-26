@@ -17,7 +17,7 @@
 @section('js')
 	<script>
 		$(function() {
-			
+
 		});
 	</script>
 @stop
@@ -74,6 +74,9 @@
 		<div class="row">
 			<div class="col-xs-12 text-right">
 				<h3>Subtotal: $<span id="subtotal"></span></h3>
+				<a class="btn btn-primary">
+					Proceed to Checkout
+				</a>
 			</div>
 		</div>
 	@endif
