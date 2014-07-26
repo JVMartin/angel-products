@@ -16,6 +16,9 @@
 
 @section('js')
 	<script>
+		$(function() {
+			
+		});
 	</script>
 @stop
 
@@ -67,4 +70,11 @@
 		</div>
 		<hr />
 	@endforeach
+	@if ($Cart->all())
+		<div class="row">
+			<div class="col-xs-12 text-right">
+				<h3>Subtotal: $<span id="subtotal"></span></h3>
+			</div>
+		</div>
+	@endif
 @stop

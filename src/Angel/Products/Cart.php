@@ -117,11 +117,25 @@ class Cart {
 
 	/**
 	 * Return the cart array.
+	 *
 	 * @return array - The cart.
 	 */
 	public function all()
 	{
 		return $this->cart;
+	}
+
+	/**
+	 * Count the items in the cart.
+	 * @return int $count
+	 */
+	public function count()
+	{
+		$count = 0;
+		foreach ($this->cart as $item) {
+			$count += $item['qty'];
+		}
+		return $count;
 	}
 
 	/**
