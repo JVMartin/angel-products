@@ -46,16 +46,20 @@
 
 			$('.qtyPlus').click(function() {
 				var $qty = $(this).prev();
-				var qty = parseInt($qty.val())+1;
-				qty = (qty) ? qty : 1;
-				$qty.val(qty).trigger('change');
+				adjustQuantity($qty, 1);
 			});
 			$('.qtyMinus').click(function() {
 				var $qty = $(this).next();
-				var qty = parseInt($qty.val())-1;
-				qty = (qty > 0) ? qty : 1;
-				$qty.val(qty).trigger('change');
+				adjustQuantity($qty, -1);
 			});
+
+			function adjustQuantity($qty, by) {
+				var qty = $qty.val();
+				var qtyNew = parseInt($qty.val()) + by;
+				qtyNew = (qtyNew) ? qtyNew : 1;
+				if (qty == qtyNew) return;
+				$qty.val(qtyNew).trigger('change');
+			}
 		});
 	</script>
 @stop
@@ -109,6 +113,11 @@
 					<button type="button" class="btn btn-primary btn-xs qtyPlus">
 						<span class="glyphicon glyphicon-plus"></span>
 					</button>
+					<div style="margin-top:15px;">
+						<a href="{{ url('cart-remove/' . urlencode($key)) }}" class="btn btn-xs btn-default">
+							Remove This Item
+						</a>
+					</div>
 				</div>
 			</div>
 			<hr />

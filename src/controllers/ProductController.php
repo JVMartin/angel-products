@@ -54,6 +54,15 @@ class ProductController extends \Angel\Core\AngelController {
 		return $Cart->total();
 	}
 
+	public function cart_remove($key)
+	{
+		$Cart = App::make('Cart');
+
+		$Cart->remove(urldecode($key));
+
+		return Redirect::to('cart');
+	}
+
 	public function cart()
 	{
 		$Cart = App::make('Cart');
