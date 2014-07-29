@@ -20,13 +20,41 @@
 			$('#qtyForm').submit(function(e) {
 				e.preventDefault();
 
+				$('#subtotal').html('...');
+				$('#proceed').addClass('disabled');
+
 				$.post($(this).attr('action'), $(this).serialize(), function(data) {
-					if (data == 1) return;
-					alert('There was an error connecting to our servers.');
-					console.log(data);
+					var subtotal = parseFloat(data);
+					if (!subtotal) {
+						console.log(data);
+						$('#subtotal').html('Error');
+						return;
+					}
+					$('#subtotal').html(subtotal.toFixed(2));
+					$('#proceed').removeClass('disabled');
 				}).fail(function() {
 					alert('There was an error connecting to our servers.');
 				});
+			});
+
+			$('.qty').change(function() {
+				$('#qtyForm').submit();
+			});
+			/*.keyup(function() {
+				$(this).trigger('change');
+			})*/
+
+			$('.qtyPlus').click(function() {
+				var $qty = $(this).prev();
+				var qty = parseInt($qty.val())+1;
+				qty = (qty) ? qty : 1;
+				$qty.val(qty).trigger('change');
+			});
+			$('.qtyMinus').click(function() {
+				var $qty = $(this).next();
+				var qty = parseInt($qty.val())-1;
+				qty = (qty > 0) ? qty : 1;
+				$qty.val(qty).trigger('change');
 			});
 		});
 	</script>
@@ -74,20 +102,23 @@
 				<div class="col-sm-3">
 					<h4>Quantity</h4>
 					<hr />
-					<div class="form-group">
-						{{ Form::text('qty['.$key.']', $item['qty'], array('class'=>'form-control text-center', 'style'=>'display:inline-block;width:50px;')) }}
-					</div>
+					<button type="button" class="btn btn-primary btn-xs qtyMinus">
+						<span class="glyphicon glyphicon-minus"></span>
+					</button>
+					{{ Form::text('qty['.$key.']', $item['qty'], array('class'=>'form-control text-center qty', 'style'=>'display:inline-block;width:50px;')) }}
+					<button type="button" class="btn btn-primary btn-xs qtyPlus">
+						<span class="glyphicon glyphicon-plus"></span>
+					</button>
 				</div>
 			</div>
 			<hr />
 		@endforeach
-		<button>Heyo</button>
 	{{ Form::close() }}
 	@if ($Cart->all())
 		<div class="row">
 			<div class="col-xs-12 text-right">
-				<h3>Subtotal: $<span id="subtotal"></span></h3>
-				<a class="btn btn-primary">
+				<h3>Subtotal: $<span id="subtotal">{{ number_format($Cart->total(), 2) }}</span></h3>
+				<a id="proceed" class="btn btn-primary">
 					Proceed to Checkout
 				</a>
 			</div>

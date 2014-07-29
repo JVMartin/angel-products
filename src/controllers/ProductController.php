@@ -51,7 +51,7 @@ class ProductController extends \Angel\Core\AngelController {
 			$Cart->quantity($key, $qty);
 		}
 
-		return 1;
+		return $Cart->total();
 	}
 
 	public function cart()
