@@ -43,13 +43,24 @@ class ProductController extends \Angel\Core\AngelController {
 		));
 	}
 
+	public function cart_qty()
+	{
+		$Cart = App::make('Cart');
+
+		foreach (Input::get('qty') as $key=>$qty) {
+			$Cart->quantity($key, $qty);
+		}
+
+		return 1;
+	}
+
 	public function cart()
 	{
 		$Cart = App::make('Cart');
 
 		$this->data['Cart'] = $Cart;
 
-		return View::make('products::cart', $this->data);
+		return View::make('products::products.cart', $this->data);
 	}
 
 }

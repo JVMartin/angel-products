@@ -5,6 +5,10 @@ Route::post('cart-add', array(
 	'before' => 'csrf',
 	'uses' => 'ProductController@cart_add'
 ));
+Route::post('cart-qty', array(
+	'before' => 'csrf',
+	'uses' => 'ProductController@cart_qty'
+));
 Route::get('cart', 'ProductController@cart');
 
 Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function() {
