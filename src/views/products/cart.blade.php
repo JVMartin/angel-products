@@ -38,6 +38,7 @@
 			});
 
 			$('.qty').change(function() {
+				if (!parseInt($(this).val())) $(this).val(1);
 				$('#qtyForm').submit();
 			});
 			/*.keyup(function() {
