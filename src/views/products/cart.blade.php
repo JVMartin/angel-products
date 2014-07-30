@@ -70,9 +70,7 @@
 	@endif
 	{{ Form::open(array('id'=>'qtyForm', 'url'=>'cart-qty')) }}
 		@foreach ($Cart->all() as $key=>$item)
-			<?php
-				$product = json_decode($item['product']);
-			?>
+			<?php $product = json_decode($item['product']); ?>
 			<div class="row">
 				<div class="col-sm-3">
 					<a href="{{ url('products/' . $product->slug) }}">
@@ -125,8 +123,9 @@
 		<div class="row">
 			<div class="col-xs-12 text-right">
 				<h3>Subtotal: $<span id="subtotal">{{ number_format($Cart->total(), 2) }}</span></h3>
-				<a id="proceed" class="btn btn-primary">
+				<a id="proceed" class="btn btn-primary" href="{{ url('checkout') }}">
 					Proceed to Checkout
+					<span class="glyphicon glyphicon-arrow-right"></span>
 				</a>
 			</div>
 		</div>

@@ -11,6 +11,7 @@ Route::post('cart-qty', array(
 ));
 Route::get('cart-remove/{key}', 'ProductController@cart_remove');
 Route::get('cart', 'ProductController@cart');
+Route::get('checkout', 'ProductController@checkout');
 
 Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function() {
 

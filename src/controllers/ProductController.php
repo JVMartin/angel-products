@@ -65,11 +65,16 @@ class ProductController extends \Angel\Core\AngelController {
 
 	public function cart()
 	{
-		$Cart = App::make('Cart');
-
-		$this->data['Cart'] = $Cart;
+		$this->data['Cart'] = App::make('Cart');
 
 		return View::make('products::products.cart', $this->data);
+	}
+
+	public function checkout()
+	{
+		$this->data['Cart'] = App::make('Cart');
+
+		return View::make('products::products.checkout', $this->data);
 	}
 
 }
