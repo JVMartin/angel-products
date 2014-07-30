@@ -80,7 +80,6 @@ class ProductController extends \Angel\Core\AngelController {
 	public function pay()
 	{
 		$Cart = App::make('Cart');
-		$Order = App::make('Order');
 
 		if (!Input::get('stripeToken')) {
 			return Redirect::to('checkout')
