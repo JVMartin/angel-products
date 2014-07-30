@@ -77,4 +77,38 @@ class ProductController extends \Angel\Core\AngelController {
 		return View::make('products::products.checkout', $this->data);
 	}
 
+	public function pay()
+	{
+		$Cart = App::make('Cart');
+		$Order = App::make('Order');
+
+		if (!Input::get('stripeToken')) {
+			return Redirect::to('checkout')
+				           ->withInput()
+				           ->withErrors('The Stripe token was not generated correctly.');
+		}
+
+		try {
+			Stripe_Charge::create(array(
+				'amount'   => \ToolBelt::pennies($Cart->total()),
+				'currency' => 'usd',
+				'card'     => Input::get('stripeToken')
+			));
+		} catch (Stripe_CardError $e) {
+			return Redirect::to('checkout')
+				           ->withInput()
+				           ->withErrors($e->getMessage());
+		}
+
+		Session::flash('old-cart', Session::get('cart'));
+		$Cart->destroy();
+
+		return Redirect::to('order-summary');
+	}
+
+	public function order_summary()
+	{
+		return View::make('products::orders.summary', $this->data);
+	}
+
 }

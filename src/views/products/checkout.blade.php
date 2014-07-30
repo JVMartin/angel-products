@@ -71,6 +71,19 @@
 		</div>
 		<div class="col-sm-8">
 			<h1>Checkout</h1>
+			<form action="{{ url('checkout') }}" method="POST">
+				<script
+					src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+					data-key="{{ Config::get('products::stripe.' . $settings['stripe']['value'] . '.publishable') }}"
+					data-amount="{{ \ToolBelt::pennies($Cart->total()) }}"
+					data-name="{{ $settings['title']['value'] }}"
+					{{-- data-description="For Your Health" --}}
+					@if (Auth::check())
+						data-email="{{ Auth::user()->email }}"
+					@endif
+					>
+				</script>
+			</form>
 		</div>
 	</div>
 @stop
