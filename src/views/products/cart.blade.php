@@ -15,27 +15,24 @@
 @stop
 
 @section('js')
+	{{ HTML::script('packages/angel/core/js/jquery/jquery.throttle-debounce.min.js') }}
 	<script>
 		$(function() {
+			function qtyFormSubmit() {
+				$.post($(this).attr('action'), $(this).serialize(), function(data) {
+					$('#subtotal').html(data);
+					$('#proceed').removeClass('disabled');
+				}).fail(function() {
+					alert('There was an error connecting to our servers.');
+				});
+			}
+
 			$('#qtyForm').submit(function(e) {
 				e.preventDefault();
 
 				$('#subtotal').html('...');
 				$('#proceed').addClass('disabled');
-
-				$.post($(this).attr('action'), $(this).serialize(), function(data) {
-					var subtotal = parseFloat(data);
-					if (!subtotal) {
-						console.log(data);
-						$('#subtotal').html('Error');
-						return;
-					}
-					$('#subtotal').html(subtotal.toFixed(2));
-					$('#proceed').removeClass('disabled');
-				}).fail(function() {
-					alert('There was an error connecting to our servers.');
-				});
-			});
+			}).submit($.debounce(500, qtyFormSubmit));
 
 			$('.qty').change(function() {
 				if (!parseInt($(this).val())) $(this).val(1);

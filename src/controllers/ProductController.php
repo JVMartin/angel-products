@@ -51,7 +51,7 @@ class ProductController extends \Angel\Core\AngelController {
 			$Cart->quantity($key, $qty);
 		}
 
-		return $Cart->total();
+		return number_format($Cart->total(), 2);
 	}
 
 	public function cart_remove($key)
