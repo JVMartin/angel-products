@@ -24,7 +24,23 @@ class ProductsServiceProvider extends ServiceProvider {
 		include __DIR__ . '/Cart.php';
 		include __DIR__ . '../../../routes.php';
 
-		foreach (Config::get('products::bindings') as $name=>$class) {
+		$bindings = array(
+			'Cart'              => '\Angel\Products\Cart',
+
+			// Models
+			'Product'           => '\Angel\Products\Product',
+			'ProductCategory'   => '\Angel\Products\ProductCategory',
+			'ProductImage'      => '\Angel\Products\ProductImage',
+			'ProductOption'     => '\Angel\Products\ProductOption',
+			'ProductOptionItem' => '\Angel\Products\ProductOptionItem',
+
+			// Controllers
+			'AdminProductCategoryController' => '\Angel\Products\AdminProductCategoryController',
+			'AdminProductController'         => '\Angel\Products\AdminProductController',
+			'ProductController'              => '\Angel\Products\ProductController'
+		);
+
+		foreach ($bindings as $name=>$class) {
 			$this->app->singleton($name, function() use ($class) {
 				return new $class;
 			});
