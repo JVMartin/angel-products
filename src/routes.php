@@ -22,6 +22,7 @@ Route::group(array('prefix'=>admin_uri('orders'), 'before'=>'admin'), function()
 	$controller = 'AdminOrderController';
 
 	Route::get('/', $controller . '@index');
+	Route::get('show/{id}', $controller . '@show');
 });
 
 Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function() {

@@ -19,6 +19,7 @@
 						<th style="width:80px;"></th>
 						<th style="width:80px;">ID</th>
 						<th>Email</th>
+						<th>Total</th>
 						<th>Shipped</th>
 					</tr>
 				</thead>
@@ -26,12 +27,13 @@
 					@foreach($orders as $order)
 						<tr>
 							<td>
-								<a href="{{ admin_url('orders/view/' . $order->id) }}" class="btn btn-xs btn-default">
+								<a href="{{ admin_url('orders/show/' . $order->id) }}" class="btn btn-xs btn-info">
 									<span class="glyphicon glyphicon-eye-open"></span>
 								</a>
 							</td>
 							<td>{{ $order->id }}</td>
 							<td>{{ $order->email }}</td>
+							<td>${{ number_format($order->total, 2) }}</td>
 							<td>
 								@if ($order->shipped)
 									<span class="glyphicon glyphicon-ok" style="color:#008000"></span>
