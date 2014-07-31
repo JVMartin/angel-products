@@ -17,10 +17,13 @@ class CreateOrdersTable extends Migration {
 
 			$table->increments('id');
 			$table->decimal('total', 9, 2);
+			$table->string('email');
 			$table->text('cart');
 			$table->text('shipping_address');
 			$table->text('billing_address');
 			$table->string('charge_id');
+			$table->boolean('shipped')->default(0);
+			$table->string('tracking');
 			$table->integer('user_id')->unsigned()->nullable();
 			$table->timestamps();
 		});

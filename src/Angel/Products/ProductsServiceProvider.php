@@ -37,6 +37,7 @@ class ProductsServiceProvider extends ServiceProvider {
 			// Controllers
 			'AdminProductCategoryController' => '\Angel\Products\AdminProductCategoryController',
 			'AdminProductController'         => '\Angel\Products\AdminProductController',
+			'AdminOrderController'           => '\Angel\Products\AdminOrderController',
 			'ProductController'              => '\Angel\Products\ProductController'
 		);
 

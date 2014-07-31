@@ -73,8 +73,9 @@ class ProductController extends \Angel\Core\AngelController {
 
 	public function checkout()
 	{
-		$this->data['Cart'] = App::make('Cart');
-
+		$Cart = App::make('Cart');
+		$this->data['Cart'] = $Cart;
+		if (!$Cart->count()) return Redirect::to('cart');
 		return View::make('products::products.checkout', $this->data);
 	}
 
@@ -87,6 +88,7 @@ class ProductController extends \Angel\Core\AngelController {
 		}
 
 		$validator = Validator::make(Input::all(), array(
+			'email'            => 'required|email',
 			'shipping_name'    => 'required',
 			'shipping_address' => 'required',
 			'shipping_city'    => 'required',
@@ -115,9 +117,10 @@ class ProductController extends \Angel\Core\AngelController {
 
 		$Order = App::make('Order');
 
-		$order = new $Order;
+		$order            = new $Order;
+		$order->email     = Input::get('email');
 		$order->charge_id = $charge->id;
-		$order->total = $Cart->total();
+		$order->total     = $Cart->total();
 
 		if (Input::get('billing_zip')) {
 			$billing = array(

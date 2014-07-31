@@ -18,6 +18,12 @@ Route::post('checkout', array(
 ));
 Route::get('order-summary', 'ProductController@order_summary');
 
+Route::group(array('prefix'=>admin_uri('orders'), 'before'=>'admin'), function() {
+	$controller = 'AdminOrderController';
+
+	Route::get('/', $controller . '@index');
+});
+
 Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function() {
 
 	$controller = 'AdminProductController';
@@ -26,16 +32,12 @@ Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function
 		Session::reflash();
 		return Redirect::to(admin_uri('products/categories'));
 	});
-	Route::get('add', array(
-		'uses' => $controller . '@add'
-	));
+	Route::get('add', $controller . '@add');
 	Route::post('add', array(
 		'before' => 'csrf',
 		'uses' => $controller . '@attempt_add'
 	));
-	Route::get('edit/{id}', array(
-		'uses' => $controller . '@edit'
-	));
+	Route::get('edit/{id}', $controller . '@edit');
 	Route::post('edit/{id}', array(
 		'before' => 'csrf',
 		'uses' => $controller . '@attempt_edit'
@@ -49,19 +51,13 @@ Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function
 
 		$controller = 'AdminProductCategoryController';
 
-		Route::get('/', array(
-			'uses' => $controller . '@index'
-		));
-		Route::get('add', array(
-			'uses' => $controller . '@add'
-		));
+		Route::get('/', $controller . '@index');
+		Route::get('add', $controller . '@add');
 		Route::post('add', array(
 			'before' => 'csrf',
 			'uses' => $controller . '@attempt_add'
 		));
-		Route::get('edit/{id}', array(
-			'uses' => $controller . '@edit'
-		));
+		Route::get('edit/{id}', $controller . '@edit');
 		Route::post('edit/{id}', array(
 			'before' => 'csrf',
 			'uses' => $controller . '@attempt_edit'
@@ -74,14 +70,10 @@ Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function
 			'before' => 'csrf',
 			'uses' => $controller . '@hard_delete'
 		));
-		Route::get('restore/{id}', array(
-			'uses' => $controller . '@restore'
-		));
+		Route::get('restore/{id}', $controller . '@restore');
 		Route::post('update-tree', array(
 			'uses' => $controller . '@update_tree'
 		));
-		Route::get('show-products/{id}', array(
-			'uses' => $controller . '@show_products'
-		));
+		Route::get('show-products/{id}', $controller . '@show_products');
 	});
 });

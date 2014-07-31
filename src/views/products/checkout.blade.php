@@ -141,7 +141,12 @@
 			<form action="" method="POST" id="address-form">
 				{{ Form::token() }}
 				<input type="hidden" id="stripeToken" name="stripeToken" />
-				<h3>Billing Address</h3>
+				<div class="form-group">
+					<span class="required">*</span>
+					{{ Form::label('email', 'Email') }}
+					{{ Form::text('email', null, array('class'=>'form-control', 'placeholder'=>'Email')) }}
+				</div>
+				<h3>Billing Address (Optional)</h3>
 				<hr />
 				<div class="form-group">
 					{{ Form::label('billing_name', 'Name') }}
@@ -199,7 +204,7 @@
 					{{ Form::text('shipping_zip', null, array('class'=>'form-control', 'placeholder'=>'Zip Code', 'required')) }}
 				</div>
 			</form>
-			<button type="button" class="btn btn-info" id="submit">
+			<button type="button" class="btn btn-info" id="submit" autocomplete="off">
 				Submit Payment
 			</button>
 		</div>
