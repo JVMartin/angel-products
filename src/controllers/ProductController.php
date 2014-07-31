@@ -1,6 +1,7 @@
 <?php namespace Angel\Products;
 
-use App, View, Input, Redirect;
+use Config, App, View, Input, Redirect, Validator, ToolBelt, Session, Auth;
+use Stripe, Stripe_Charge, Stripe_CardError;
 
 class ProductController extends \Angel\Core\AngelController {
 
@@ -82,27 +83,77 @@ class ProductController extends \Angel\Core\AngelController {
 		$Cart = App::make('Cart');
 
 		if (!Input::get('stripeToken')) {
-			return Redirect::to('checkout')
-				           ->withInput()
-				           ->withErrors('The Stripe token was not generated correctly.');
+			return 'The Stripe token was not generated correctly.';
 		}
 
+		$validator = Validator::make(Input::all(), array(
+			'shipping_name'    => 'required',
+			'shipping_address' => 'required',
+			'shipping_city'    => 'required',
+			'shipping_state'   => 'required|size:2',
+			'shipping_zip'   =>   'required',
+		));
+		if ($validator->fails()) {
+			$errors = '';
+			foreach($validator->messages()->all() as $error) {
+				$errors .= '<p>' . $error . '</p>';
+			}
+			return $errors;
+		}
+
+		Stripe::setApiKey(Config::get('products::stripe.' . $this->settings['stripe']['value'] . '.secret'));
+
 		try {
-			Stripe_Charge::create(array(
-				'amount'   => \ToolBelt::pennies($Cart->total()),
+			$charge = Stripe_Charge::create(array(
+				'amount'   => ToolBelt::pennies($Cart->total()),
 				'currency' => 'usd',
 				'card'     => Input::get('stripeToken')
 			));
 		} catch (Stripe_CardError $e) {
-			return Redirect::to('checkout')
-				           ->withInput()
-				           ->withErrors($e->getMessage());
+			return $e->getMessage();
 		}
 
-		Session::flash('old-cart', Session::get('cart'));
+		$order = new Order;
+		$order->charge_id = $charge->id;
+		$order->total = $Cart->total();
+
+		$shipping = array(
+			'name'      => Input::get('shipping_name'),
+			'address'   => Input::get('shipping_address'),
+			'address_2' => Input::get('shipping_address_2'),
+			'city'      => Input::get('shipping_city'),
+			'state'     => Input::get('shipping_state'),
+			'zip'       => Input::get('shipping_zip'),
+		);
+		$order->shipping_address = json_encode($shipping);
+		$charge->metadata['shipping'] = json_encode($shipping);
+
+		if (Input::get('billing_zip')) {
+			$billing = array(
+				'name'      => Input::get('billing_name'),
+				'address'   => Input::get('billing_address'),
+				'address_2' => Input::get('billing_address_2'),
+				'city'      => Input::get('billing_city'),
+				'state'     => Input::get('billing_state'),
+				'zip'       => Input::get('billing_zip'),
+			);
+			$order->billing_address = json_encode($billing);
+		}
+
+		if (Auth::check()) {
+			$order->user_id = Auth::user()->id;
+		}
+
+		$order->cart = json_encode($Cart->all());
+		$order->save();
+
+		$charge->metadata['order_id'] = $order->id;
+		$charge->save();
+
+		Session::put('just-ordered', $order->id);
 		$Cart->destroy();
 
-		return Redirect::to('order-summary');
+		return 1;
 	}
 
 	public function order_summary()

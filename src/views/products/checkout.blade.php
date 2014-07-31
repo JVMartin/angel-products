@@ -29,14 +29,31 @@
 		function stripeResponseHandler(status, response) {
 			if (response.error) {
 				// Show the errors on the form
-				$('#payment-errors').html('<div class="alert alert-danger">'+response.error.message+'</div>');
-				$('#submit').prop('disabled', false).html('Submit Payment');
+				$('#address-errors').html('');
+				doError($('#payment-errors'), response.error.message);
 				return;
 			}
+			$('#payment-errors').html('');
+
 			var token = response.id;
 			$('#stripeToken').val(token);
-			//$('#address-form').submit();
+			$.post('{{ url('checkout') }}', $('#address-form').serialize(), function(data) {
+				if (data != 1) {
+					doError($('#address-errors'), data);
+					console.log(data);
+				}
+			}).fail(function() {
+				doError($('#address-errors'), 'Could not connect to the server.');
+			});
 		};
+
+		function doError($where, error) {
+			$where.html('<div class="alert alert-danger">'+error+'</div>');
+			$('#submit').prop('disabled', false).html('Submit Payment');
+			$('html, body').stop().animate({
+				scrollTop: $where.offset().top - 50
+			}, 500);
+		}
 	</script>
 @stop
 
@@ -100,7 +117,7 @@
 				<div class="form-group" style="width:400px;">
 					<span class="required">*</span>
 					{{ Form::label(null, 'Card Number') }}
-					{{ Form::text(null, null, array('class'=>'form-control', 'placeholder'=>'Card Number', 'data-stripe'=>'number')) }}
+					{{ Form::text(null, null, array('id'=>'card', 'class'=>'form-control', 'placeholder'=>'Card Number', 'data-stripe'=>'number')) }}
 				</div>
 				<div class="form-group" style="width:100px;display:inline-block;">
 					<span class="required">*</span>
@@ -118,10 +135,43 @@
 					{{ Form::text(null, null, array('class'=>'form-control', 'placeholder'=>'CVC', 'data-stripe'=>'cvc')) }}
 				</div>
 			</form>
-			<form action="{{ url('checkout') }}" method="POST" id="address-form">
-				<input type="hidden" id="stripeToken" nam="stripeToken" />
+			<div id="address-errors"></div>
+			<form action="" method="POST" id="address-form">
+				{{ Form::token() }}
+				<input type="hidden" id="stripeToken" name="stripeToken" />
+				<h3>Billing Address</h3>
+				<hr />
+				<div class="form-group">
+					{{ Form::label('billing_name', 'Name') }}
+					{{ Form::text('billing_name', null, array('class'=>'form-control', 'placeholder'=>'Name')) }}
+				</div>
+				<div class="form-group">
+					{{ Form::label('billing_address', 'Address') }}
+					{{ Form::text('billing_address', null, array('class'=>'form-control', 'placeholder'=>'Address')) }}
+				</div>
+				<div class="form-group">
+					{{ Form::label('billing_address_2', 'Address 2') }}
+					{{ Form::text('billing_address_2', null, array('class'=>'form-control', 'placeholder'=>'Address 2')) }}
+				</div>
+				<div class="form-group">
+					{{ Form::label('billing_city', 'City') }}
+					{{ Form::text('billing_city', null, array('class'=>'form-control', 'placeholder'=>'City')) }}
+				</div>
+				<div class="form-group" style="width:70px;">
+					{{ Form::label('billing_state', 'State') }}
+					{{ Form::text('billing_state', null, array('class'=>'form-control', 'placeholder'=>'State')) }}
+				</div>
+				<div class="form-group" style="width:120px;">
+					{{ Form::label('billing_zip', 'Zip Code') }}
+					{{ Form::text('billing_zip', null, array('class'=>'form-control', 'placeholder'=>'Zip Code')) }}
+				</div>
 				<h3>Shipping Address</h3>
 				<hr />
+				<div class="form-group">
+					<span class="required">*</span>
+					{{ Form::label('shipping_name', 'Name') }}
+					{{ Form::text('shipping_name', null, array('class'=>'form-control', 'placeholder'=>'Name')) }}
+				</div>
 				<div class="form-group">
 					<span class="required">*</span>
 					{{ Form::label('shipping_address', 'Address') }}
@@ -136,13 +186,18 @@
 					{{ Form::label('shipping_city', 'City') }}
 					{{ Form::text('shipping_city', null, array('class'=>'form-control', 'placeholder'=>'City')) }}
 				</div>
-				<div class="form-group">
+				<div class="form-group" style="width:70px;">
 					<span class="required">*</span>
 					{{ Form::label('shipping_state', 'State') }}
 					{{ Form::text('shipping_state', null, array('class'=>'form-control', 'placeholder'=>'State')) }}
 				</div>
+				<div class="form-group" style="width:120px;">
+					<span class="required">*</span>
+					{{ Form::label('shipping_zip', 'Zip Code') }}
+					{{ Form::text('shipping_zip', null, array('class'=>'form-control', 'placeholder'=>'Zip Code', 'required')) }}
+				</div>
 			</form>
-			<button type="button" class="btn btn-default" id="submit">
+			<button type="button" class="btn btn-info" id="submit">
 				Submit Payment
 			</button>
 		</div>
