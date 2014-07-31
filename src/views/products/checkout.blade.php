@@ -41,7 +41,9 @@
 				if (data != 1) {
 					doError($('#address-errors'), data);
 					console.log(data);
+					return;
 				}
+				window.location = '{{ url('order-summary') }}';
 			}).fail(function() {
 				doError($('#address-errors'), 'Could not connect to the server.');
 			});

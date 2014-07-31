@@ -91,7 +91,7 @@ class ProductController extends \Angel\Core\AngelController {
 			'shipping_address' => 'required',
 			'shipping_city'    => 'required',
 			'shipping_state'   => 'required|size:2',
-			'shipping_zip'   =>   'required',
+			'shipping_zip'     => 'required',
 		));
 		if ($validator->fails()) {
 			$errors = '';
@@ -113,20 +113,11 @@ class ProductController extends \Angel\Core\AngelController {
 			return $e->getMessage();
 		}
 
-		$order = new Order;
+		$Order = App::make('Order');
+
+		$order = new $Order;
 		$order->charge_id = $charge->id;
 		$order->total = $Cart->total();
-
-		$shipping = array(
-			'name'      => Input::get('shipping_name'),
-			'address'   => Input::get('shipping_address'),
-			'address_2' => Input::get('shipping_address_2'),
-			'city'      => Input::get('shipping_city'),
-			'state'     => Input::get('shipping_state'),
-			'zip'       => Input::get('shipping_zip'),
-		);
-		$order->shipping_address = json_encode($shipping);
-		$charge->metadata['shipping'] = json_encode($shipping);
 
 		if (Input::get('billing_zip')) {
 			$billing = array(
@@ -139,6 +130,17 @@ class ProductController extends \Angel\Core\AngelController {
 			);
 			$order->billing_address = json_encode($billing);
 		}
+
+		$shipping = array(
+			'name'      => Input::get('shipping_name'),
+			'address'   => Input::get('shipping_address'),
+			'address_2' => Input::get('shipping_address_2'),
+			'city'      => Input::get('shipping_city'),
+			'state'     => Input::get('shipping_state'),
+			'zip'       => Input::get('shipping_zip'),
+		);
+		$order->shipping_address = json_encode($shipping);
+		$charge->metadata['shipping'] = json_encode($shipping);
 
 		if (Auth::check()) {
 			$order->user_id = Auth::user()->id;
@@ -158,6 +160,20 @@ class ProductController extends \Angel\Core\AngelController {
 
 	public function order_summary()
 	{
+		if (!Session::get('just-ordered')) {
+			return Redirect::to('/');
+		}
+
+		$Order = App::make('Order');
+
+		$order = $Order->findOrFail(Session::get('just-ordered'));
+
+		$this->data['order']            = $order;
+		$this->data['cart']             = json_decode($order->cart);
+		$this->data['billing_address']  = json_decode($order->billing_address);
+		$this->data['shipping_address'] = json_decode($order->shipping_address);
+		$this->data['shipping_address'] = json_decode($order->shipping_address);
+
 		return View::make('products::orders.summary', $this->data);
 	}
 

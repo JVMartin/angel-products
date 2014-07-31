@@ -1,7 +1,6 @@
 <?php namespace Angel\Products;
 
 use Illuminate\Support\ServiceProvider;
-use Config;
 
 class ProductsServiceProvider extends ServiceProvider {
 
@@ -33,6 +32,7 @@ class ProductsServiceProvider extends ServiceProvider {
 			'ProductImage'      => '\Angel\Products\ProductImage',
 			'ProductOption'     => '\Angel\Products\ProductOption',
 			'ProductOptionItem' => '\Angel\Products\ProductOptionItem',
+			'Order'             => '\Angel\Products\Order',
 
 			// Controllers
 			'AdminProductCategoryController' => '\Angel\Products\AdminProductCategoryController',
