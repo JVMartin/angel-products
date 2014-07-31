@@ -1,6 +1,8 @@
 <?php
 
-Route::get('products/{slug}', 'ProductController@view');
+App::before(function() {
+	Route::get('products/{slug}', 'ProductController@view');
+});
 Route::post('cart-add', array(
 	'before' => 'csrf',
 	'uses' => 'ProductController@cart_add'
