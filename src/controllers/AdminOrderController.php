@@ -53,6 +53,11 @@ class AdminOrderController extends \Angel\Core\AdminCrudController {
 	{
 		$Order = App::make('Order');
 		$order = $Order::findOrFail($id);
+
+		if (!$order->tracking) {
+			return Redirect::to(admin_uri('orders/show/' . $order->id))->withErrors('You must first enter a tracking number.');
+		}
+
 		$order->tracking_sent = true;
 		$order->save();
 
