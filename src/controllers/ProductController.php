@@ -155,7 +155,6 @@ class ProductController extends \Angel\Core\AngelController {
 		$charge->metadata['order_id'] = $order->id;
 		$charge->save();
 
-
 		Session::put('just-ordered', $order->id);
 		$Cart->destroy();
 
