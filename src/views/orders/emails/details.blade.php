@@ -1,13 +1,25 @@
 <?php
-$cart             = json_decode($order->cart);
+$cart             = json_decode($order->cart, true);
 $billing_address  = json_decode($order->billing_address);
 $shipping_address = json_decode($order->shipping_address);
+
+$Cart = App::make('Cart');
+$Cart->load($cart);
 ?>
+<p>
+	Thank you for your order!  Here is your receipt.
+</p>
 <p>
 	<b>Order ID:</b>
 </p>
 <p>
 	{{ $order->id }}
+</p>
+<p>
+	<b>Order Time:</b>
+</p>
+<p>
+	{{ $order->created_at }}
 </p>
 @if (count($billing_address))
 	<p>
@@ -21,7 +33,7 @@ $shipping_address = json_decode($order->shipping_address);
 @include('products::orders.address', array('address'=>$shipping_address))
 <hr />
 @foreach ($cart as $key=>$item)
-	<?php $product = json_decode($item->product); ?>
+	<?php $product = json_decode($item['product']); ?>
 	<div class="row">
 		<div class="col-sm-3">
 			<a href="{{ url('products/' . $product->slug) }}">
@@ -35,20 +47,25 @@ $shipping_address = json_decode($order->shipping_address);
 				</a>
 			</h4>
 			<hr />
-			@foreach ($product->selected_options as $option)
-				<p>{{ $option->name }}</p>
+			@foreach ($Cart->getOptions($key) as $group_name=>$option)
+				<p>
+					<b>{{ $group_name }}:</b>
+				</p>
+				<p>
+					{{ $option->name }}
+				</p>
 			@endforeach
 		</div>
 		<div class="col-sm-3">
 			<h4>Price</h4>
 			<hr />
-			<h5 style="text-decoration:line-through;font-style:italic;">${{ number_format($item->fake_price, 2) }}</h5>
-			<h3>${{ number_format($item->price, 2) }}</h3>
+			<h5 style="text-decoration:line-through;font-style:italic;">${{ number_format($item['fake_price'], 2) }}</h5>
+			<h3>${{ number_format($item['price'], 2) }}</h3>
 		</div>
 		<div class="col-sm-3">
 			<h4>Quantity</h4>
 			<hr />
-			{{ $item->qty }}
+			{{ $item['qty'] }}
 		</div>
 	</div>
 	<hr />

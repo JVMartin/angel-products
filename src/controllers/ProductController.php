@@ -27,6 +27,13 @@ class ProductController extends \Angel\Core\AngelController {
 		return View::make('products::products.view', $this->data);
 	}
 
+	public function cart()
+	{
+		$this->data['Cart'] = App::make('Cart');
+
+		return View::make('products::products.cart', $this->data);
+	}
+
 	public function cart_add()
 	{
 		$Cart    = App::make('Cart');
@@ -62,13 +69,6 @@ class ProductController extends \Angel\Core\AngelController {
 		$Cart->remove(urldecode($key));
 
 		return Redirect::to('cart');
-	}
-
-	public function cart()
-	{
-		$this->data['Cart'] = App::make('Cart');
-
-		return View::make('products::products.cart', $this->data);
 	}
 
 	public function checkout()
