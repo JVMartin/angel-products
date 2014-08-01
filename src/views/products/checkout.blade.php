@@ -77,16 +77,18 @@
 						@foreach ($Cart->all() as $key=>$item)
 							<tr>
 								<td>
-									<?php $product = json_decode($item['product']); ?>
-									{{ $product->name }}
 									<?php
-										$itemOptions = $Cart->getOptions($key);
-										if (count($itemOptions)) {
-											$options = array();
-											foreach ($itemOptions as $option) {
-												$options[] = $option->name;
+										$product = json_decode($item['product']);
+										echo $product->name;
+										$options = $Cart->getOptions($key);
+										if (count($options)) {
+											echo ' (';
+											$i = 0;
+											foreach ($options as $group_name=>$option) {
+												echo $group_name . ': ' . $option->name;
+												if (++$i < count($options)) echo ', ';
 											}
-											echo '(' . implode($options, ', ') . ')';
+											echo ')';
 										}
 									?>
 								</td>

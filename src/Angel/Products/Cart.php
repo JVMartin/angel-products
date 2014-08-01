@@ -30,6 +30,18 @@ class Cart {
 	}
 
 	/**
+	 * Load a cart array in.  This is so we can use the cart getOptions(), etc.
+	 * for this class from order summaries and whatnot after the card has been charged
+	 * and the cart has been destroyed from the session.
+	 *
+	 * @param array $cart - The cart to load.
+	 */
+	public function load($cart)
+	{
+		$this->cart = $cart;
+	}
+
+	/**
 	 * Empty the cart, removing all items.
 	 */
 	public function destroy()
