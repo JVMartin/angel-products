@@ -13,7 +13,7 @@
 
 @section('content')
 	<h1>Order Detail</h1>
-	{{ Form::open(array('url'=>admin_uri('orders/mark-shipped/' . $order->id), 'class'=>'form form-inline')) }}
+	{{ Form::open(array('url'=>admin_uri('orders/mark-shipped/' . $order->id), 'role'=>'form')) }}
 		<p>
 			Shipping Status:
 			@if ($order->shipped)
