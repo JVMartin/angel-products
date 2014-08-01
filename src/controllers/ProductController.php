@@ -155,8 +155,14 @@ class ProductController extends \Angel\Core\AngelController {
 		$charge->metadata['order_id'] = $order->id;
 		$charge->save();
 
+
 		Session::put('just-ordered', $order->id);
 		$Cart->destroy();
+
+		$this->data['order'] = $order;
+		Mail::send('products::orders.emails.receipt', $this->data, function($message) use ($order) {
+			$message->to($order->email)->subject('Receipt for Order #' . $order->id);
+		});
 
 		return 1;
 	}
