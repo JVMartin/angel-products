@@ -23,6 +23,10 @@ Route::group(array('prefix'=>admin_uri('orders'), 'before'=>'admin'), function()
 
 	Route::get('/', $controller . '@index');
 	Route::get('show/{id}', $controller . '@show');
+	Route::post('mark-shipped/{id}', array(
+		'before' => 'csrf',
+		'uses' => $controller . '@mark_shipped'
+	));
 });
 
 Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function() {

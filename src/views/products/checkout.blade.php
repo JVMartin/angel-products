@@ -116,7 +116,7 @@
 			<hr />
 			<div id="payment-errors"></div>
 			<form action="" method="POST" id="payment-form">
-				<div class="form-group" style="width:400px;">
+				<div class="form-group" style="max-width:400px;">
 					<span class="required">*</span>
 					{{ Form::label(null, 'Card Number') }}
 					{{ Form::text(null, null, array('id'=>'card', 'class'=>'form-control', 'placeholder'=>'Card Number', 'data-stripe'=>'number')) }}
