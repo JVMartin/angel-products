@@ -144,7 +144,7 @@
 				<div class="form-group">
 					<span class="required">*</span>
 					{{ Form::label('email', 'Email') }}
-					{{ Form::text('email', null, array('class'=>'form-control', 'placeholder'=>'Email')) }}
+					{{ Form::text('email', (Auth::check()) ? Auth::user()->email : null, array('class'=>'form-control', 'placeholder'=>'Email')) }}
 				</div>
 				<h3>Billing Address (Optional)</h3>
 				<hr />
