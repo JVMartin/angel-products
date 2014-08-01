@@ -168,15 +168,7 @@ class ProductController extends \Angel\Core\AngelController {
 		}
 
 		$Order = App::make('Order');
-
-		$order = $Order->findOrFail(Session::get('just-ordered'));
-
-		$this->data['order']            = $order;
-		$this->data['cart']             = json_decode($order->cart);
-		$this->data['billing_address']  = json_decode($order->billing_address);
-		$this->data['shipping_address'] = json_decode($order->shipping_address);
-		$this->data['shipping_address'] = json_decode($order->shipping_address);
-
+		$this->data['order'] = $Order::findOrFail(Session::get('just-ordered'));
 		return View::make('products::orders.summary', $this->data);
 	}
 
