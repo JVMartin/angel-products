@@ -1,6 +1,6 @@
 <?php namespace Angel\Products;
 
-use Config, App, View, Input, Redirect, Validator, ToolBelt, Session, Auth;
+use Config, App, View, Input, Redirect, Validator, ToolBelt, Session, Auth, Mail;
 use Stripe, Stripe_Charge, Stripe_CardError;
 
 class ProductController extends \Angel\Core\AngelController {
