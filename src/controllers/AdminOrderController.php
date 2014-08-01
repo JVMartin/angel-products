@@ -1,6 +1,6 @@
 <?php namespace Angel\Products;
 
-use App, View, Input, Redirect;
+use App, View, Input, Redirect, Mail;
 
 class AdminOrderController extends \Angel\Core\AdminCrudController {
 
@@ -38,6 +38,30 @@ class AdminOrderController extends \Angel\Core\AdminCrudController {
 		$order->shipped = Input::has('mark-shipped');
 		$order->save();
 		return Redirect::to(admin_uri('orders/show/' . $order->id));
+	}
+
+	public function tracking($id)
+	{
+		$Order = App::make('Order');
+		$order = $Order::findOrFail($id);
+		$order->tracking = Input::get('tracking');
+		$order->save();
+		return Redirect::to(admin_uri('orders/show/' . $order->id))->with('success', 'Tracking number updated.');
+	}
+
+	public function send_tracking($id)
+	{
+		$Order = App::make('Order');
+		$order = $Order::findOrFail($id);
+		$order->tracking_sent = true;
+		$order->save();
+
+		$this->data['order'] = $order;
+		Mail::send('products::orders.emails.tracking', $this->data, function($message) use ($order) {
+			$message->to($order->email)->subject('Tracking Number for Order #' . $order->id);
+		});
+
+		return Redirect::to(admin_uri('orders/show/' . $order->id))->with('success', 'Tracking number emailed to customer.');
 	}
 
 }

@@ -27,6 +27,14 @@ Route::group(array('prefix'=>admin_uri('orders'), 'before'=>'admin'), function()
 		'before' => 'csrf',
 		'uses' => $controller . '@mark_shipped'
 	));
+	Route::post('tracking/{id}', array(
+		'before' => 'csrf',
+		'uses' => $controller . '@tracking'
+	));
+	Route::post('send-tracking/{id}', array(
+		'before' => 'csrf',
+		'uses' => $controller . '@send_tracking'
+	));
 });
 
 Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function() {

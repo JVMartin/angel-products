@@ -24,6 +24,7 @@ class CreateOrdersTable extends Migration {
 			$table->string('charge_id');
 			$table->boolean('shipped')->default(0);
 			$table->string('tracking');
+			$table->boolean('tracking_sent')->default(0);
 			$table->integer('user_id')->unsigned()->nullable();
 			$table->timestamps();
 		});
