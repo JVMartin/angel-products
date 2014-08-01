@@ -79,7 +79,7 @@ class ProductController extends \Angel\Core\AngelController {
 		return View::make('products::products.checkout', $this->data);
 	}
 
-	public function pay()
+	public function charge()
 	{
 		$Cart = App::make('Cart');
 

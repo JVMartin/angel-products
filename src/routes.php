@@ -14,7 +14,7 @@ Route::get('cart', 'ProductController@cart');
 Route::get('checkout', 'ProductController@checkout');
 Route::post('checkout', array(
 	'before' => 'csrf',
-	'uses' => 'ProductController@pay'
+	'uses' => 'ProductController@charge'
 ));
 Route::get('order-summary', 'ProductController@order_summary');
 
