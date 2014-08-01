@@ -18,6 +18,7 @@
 					<tr>
 						<th style="width:80px;"></th>
 						<th style="width:80px;">ID</th>
+						<th>Date</th>
 						<th>Email</th>
 						<th>Total</th>
 						<th>Shipped</th>
@@ -32,6 +33,7 @@
 								</a>
 							</td>
 							<td>{{ $order->id }}</td>
+							<td>{{ $order->created_at }}</td>
 							<td>{{ $order->email }}</td>
 							<td>${{ number_format($order->total, 2) }}</td>
 							<td>

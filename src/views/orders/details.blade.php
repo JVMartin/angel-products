@@ -11,6 +11,12 @@ $shipping_address = json_decode($order->shipping_address);
 		<p>
 			{{ $order->id }}
 		</p>
+		<p>
+			<b>Order Time:</b>
+		</p>
+		<p>
+			{{ $order->created_at }}
+		</p>
 		@if (count($billing_address))
 			<p>
 				<b>Billed To:</b>
