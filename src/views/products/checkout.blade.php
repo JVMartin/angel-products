@@ -101,7 +101,17 @@
 							</tr>
 						@endforeach
 						<tr>
-							<td><b>Subtotal</b></td>
+							<td>Taxes</td>
+							<td></td>
+							<td>$0.00</td>
+						</tr>
+						<tr>
+							<td>Shipping</td>
+							<td></td>
+							<td>$0.00</td>
+						</tr>
+						<tr>
+							<td><b>Total</b></td>
 							<td></td>
 							<td><b>${{ number_format($Cart->total(), 2) }}</b></td>
 						</tr>
@@ -114,6 +124,11 @@
 			</div>
 		</div>
 		<div class="col-sm-8">
+			@if ($settings['stripe']['value'] == 'test')
+				<div class="alert alert-info">
+					Stripe is in test mode.
+				</div>
+			@endif
 			<h1>Checkout</h1>
 			<hr />
 			<div id="payment-errors"></div>
