@@ -52,12 +52,16 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		);
 	}
 
+	/**
+	 * Handle images and options.
+	 */
 	public function after_save($product, &$changes = array())
 	{
 		$ProductImage      = App::make('ProductImage');
 		$ProductOption     = App::make('ProductOption');
 		$ProductOptionItem = App::make('ProductOptionItem');
 
+		// Get all existing images for the product
 		$images       = $ProductImage::where('product_id', $product->id)->get();
 		$input_ids    = Input::get('imageIDs');
 		$input_images = Input::get('images');
@@ -66,10 +70,13 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			$input_image = $input_images[$order];
 			$input_thumb = $input_thumbs[$order];
 
+			// Grab the existing image from the collection if it exists
 			$image = $images->find($image_id);
-			// Skip empty images that don't exist
+
+			// If there's no existing image and the input is empty, don't create a new one
 			if (!$image && !$input_image) continue;
 
+			// Update image or create new one
 			$image = ($image) ? $image : new $ProductImage;
 			$image->product_id	= $product->id;
 			$image->image		= $input_image;
@@ -78,13 +85,14 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			$image->save();
 		}
 
-		// Delete deleted images
+		// Delete all images not in input
 		foreach ($images as $image) {
 			if (!in_array($image->id, $input_ids)) {
 				$image->delete();
 			}
 		}
 
+		// Get all existing options and option items
 		$options    = $ProductOption::where('product_id', $product->id)->get();
 		$option_ids = array();
 		foreach ($options as $option) {
@@ -96,12 +104,14 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		$input_option_ids = array();
 		$input_item_ids   = array();
 		foreach ($input_options as $order=>$input_option) {
-			$input_option_ids[] = $input_option['id'];
+			if ($input_option['id']) $input_option_ids[] = $input_option['id'];
 
-			if (!isset($input_option['name']) || !$input_option['name']) continue;
+			// Don't create new options when there is no name
+			if (!$input_option['id'] && (!isset($input_option['name']) || !$input_option['name'])) continue;
 
 			$option = $options->find($input_option['id']);
 
+			// Update option or create new one
 			$option = ($option) ? $option : new $ProductOption;
 			$option->product_id = $product->id;
 			$option->order      = $order;
@@ -109,12 +119,14 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			$option->save();
 
 			foreach ($input_option['items'] as $order=>$input_item) {
-				$input_item_ids[] = $input_item['id'];
+				if ($input_item['id']) $input_item_ids[] = $input_item['id'];
 
-				if (!isset($input_item['name']) || !$input_item['name']) continue;
+				// Don't create new option items when there is no name
+				if (!$input_item['id'] && (!isset($input_item['name']) || !$input_item['name'])) continue;
 
 				$item = $items->find($input_item['id']);
 
+				// Update option item or create new one
 				$item = ($item) ? $item : new $ProductOptionItem;
 				$item->product_option_id = $option->id;
 				$item->order             = $order;
@@ -125,12 +137,14 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			}
 		}
 
+		// Delete all options not in input
 		foreach ($options as $option) {
 			if (!in_array($option->id, $input_option_ids)) {
 				$option->delete();
 			}
 		}
 
+		// Delete all option items not in input
 		foreach ($items as $item) {
 			if (!in_array($item->id, $input_item_ids)) {
 				$item->delete();
