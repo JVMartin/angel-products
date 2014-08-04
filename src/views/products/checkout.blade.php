@@ -45,7 +45,7 @@
 				}
 				window.location = '{{ url('order-summary') }}';
 			}).fail(function() {
-				doError($('#address-errors'), 'Could not connect to the server.');
+				doError($('#address-errors'), 'We cannot process your payment at this time.');
 			});
 		};
 
