@@ -48,7 +48,7 @@ class ProductController extends \Angel\Core\AngelController {
 		return Redirect::back()->with('success', array(
 			'This product has been added to your cart!',
 			'<a href="' . url('cart') . '">View Cart</a>'
-		));
+		))->withInput(); // With input so that the options drop-downs stay the same.
 	}
 
 	public function cart_qty()
