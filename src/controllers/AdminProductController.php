@@ -53,20 +53,35 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 
 	public function after_save($product, &$changes = array())
 	{
-		$ProductImage = App::make('ProductImage');
-		$ProductOption = App::make('ProductOption');
+		$ProductImage      = App::make('ProductImage');
+		$ProductOption     = App::make('ProductOption');
 		$ProductOptionItem = App::make('ProductOptionItem');
 
-		$ProductImage::where('product_id', $product->id)->delete();
-		$thumbs = Input::get('imageThumbs');
-		foreach (Input::get('images') as $i=>$data_image) {
-			if (!$data_image) continue;
-			$image = new $ProductImage;
+		$images       = $ProductImage::where('product_id', $product->id)->get();
+		$input_ids    = Input::get('imageIDs');
+		$input_images = Input::get('images');
+		$input_thumbs = Input::get('imageThumbs');
+		foreach ($input_ids as $order=>$image_id) {
+			$input_image = $input_images[$order];
+			$input_thumb = $input_thumbs[$order];
+
+			$old_image = $images->find($image_id);
+			// Skip empty images that don't exist
+			if (!$old_image && !$input_image) continue;
+
+			$image = ($old_image) ? $old_image : new $ProductImage;
 			$image->product_id	= $product->id;
-			$image->image		= $data_image;
-			$image->order		= $i;
-			$image->thumb		= $thumbs[$i];
+			$image->image		= $input_image;
+			$image->order		= $order;
+			$image->thumb		= $input_thumb;
 			$image->save();
+		}
+
+		// Delete deleted images
+		foreach ($images as $image) {
+			if (!in_array($image->id, $input_ids)) {
+				$image->delete();
+			}
 		}
 
 		$ProductOption::where('product_id', $product->id)->delete();

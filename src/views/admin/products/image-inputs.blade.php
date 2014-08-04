@@ -5,6 +5,7 @@
 		</button>
 	</td>
 	<td>
+		<input type="hidden" name="imageIDs[]" value="{{ isset($image) ? $image->id : '' }}" />
 		<input name="images[]" class="form-control" placeholder="Image" value="{{ isset($image) ? $image->image : '' }}" />
 		<div class="text-right top-nudge">
 			<button type="button" class="btn btn-default imageBrowse">Browse...</button>
