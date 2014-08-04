@@ -221,7 +221,7 @@
 					{{ Form::text('shipping_zip', null, array('class'=>'form-control', 'placeholder'=>'Zip Code', 'required')) }}
 				</div>
 			</form>
-			<button type="button" class="btn btn-info" id="submit" autocomplete="off">
+			<button type="button" class="btn btn-info" id="submit" autocomplete="off" style="margin-bottom:15px;">
 				Submit Payment
 			</button>
 		</div>
