@@ -58,6 +58,10 @@
 				if (qty == qtyNew) return;
 				$qty.val(qtyNew).trigger('change');
 			}
+
+			$('.removeItem').click(function() {
+				$(this).addClass('disabled').html('Removing item...');
+			});
 		});
 	</script>
 @stop
@@ -110,7 +114,7 @@
 						<span class="glyphicon glyphicon-plus"></span>
 					</button>
 					<div style="margin-top:15px;">
-						<a href="{{ url('cart-remove/' . urlencode($key)) }}" class="btn btn-xs btn-default">
+						<a href="{{ url('cart-remove/' . urlencode($key)) }}" class="btn btn-xs btn-default removeItem">
 							Remove This Item
 						</a>
 					</div>
