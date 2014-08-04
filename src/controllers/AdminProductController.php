@@ -1,5 +1,6 @@
 <?php namespace Angel\Products;
 
+use Illuminate\Database\Eloquent\Collection;
 use Input, App, Redirect;
 
 class AdminProductController extends \Angel\Core\AdminCrudController {
@@ -65,11 +66,11 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			$input_image = $input_images[$order];
 			$input_thumb = $input_thumbs[$order];
 
-			$old_image = $images->find($image_id);
+			$image = $images->find($image_id);
 			// Skip empty images that don't exist
-			if (!$old_image && !$input_image) continue;
+			if (!$image && !$input_image) continue;
 
-			$image = ($old_image) ? $old_image : new $ProductImage;
+			$image = ($image) ? $image : new $ProductImage;
 			$image->product_id	= $product->id;
 			$image->image		= $input_image;
 			$image->order		= $order;
@@ -84,24 +85,55 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			}
 		}
 
-		$ProductOption::where('product_id', $product->id)->delete();
-		foreach (Input::get('options') as $order=>$data_option) {
-			if (!isset($data_option['name']) || !$data_option['name']) continue;
-			$option = new $ProductOption;
+		$options    = $ProductOption::where('product_id', $product->id)->get();
+		$option_ids = array();
+		foreach ($options as $option) {
+			$option_ids[] = $option->id;
+		}
+		$items = (count($option_ids)) ? $ProductOptionItem::whereIn('product_option_id', $option_ids)->get() : new Collection;
+
+		$input_options = Input::get('options');
+		$input_option_ids = array();
+		$input_item_ids   = array();
+		foreach ($input_options as $order=>$input_option) {
+			$input_option_ids[] = $input_option['id'];
+
+			if (!isset($input_option['name']) || !$input_option['name']) continue;
+
+			$option = $options->find($input_option['id']);
+
+			$option = ($option) ? $option : new $ProductOption;
 			$option->product_id = $product->id;
 			$option->order      = $order;
-			$option->name       = $data_option['name'];
+			$option->name       = $input_option['name'];
 			$option->save();
 
-			foreach ($data_option['items'] as $order=>$data_item) {
-				if (!isset($data_item['name']) || !$data_item['name']) continue;
-				$item = new $ProductOptionItem;
+			foreach ($input_option['items'] as $order=>$input_item) {
+				$input_item_ids[] = $input_item['id'];
+
+				if (!isset($input_item['name']) || !$input_item['name']) continue;
+
+				$item = $items->find($input_item['id']);
+
+				$item = ($item) ? $item : new $ProductOptionItem;
 				$item->product_option_id = $option->id;
 				$item->order             = $order;
-				$item->name              = $data_item['name'];
-				$item->price             = $data_item['price'];
-				$item->image             = $data_item['image'];
+				$item->name              = $input_item['name'];
+				$item->price             = $input_item['price'];
+				$item->image             = $input_item['image'];
 				$item->save();
+			}
+		}
+
+		foreach ($options as $option) {
+			if (!in_array($option->id, $input_option_ids)) {
+				$option->delete();
+			}
+		}
+
+		foreach ($items as $item) {
+			if (!in_array($item->id, $input_item_ids)) {
+				$item->delete();
 			}
 		}
 	}

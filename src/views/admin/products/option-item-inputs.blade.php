@@ -3,6 +3,7 @@
 		<button type="button" class="btn btn-xs btn-default handle">
 			<span class="glyphicon glyphicon-resize-vertical"></span>
 		</button>
+		<input type="hidden" class="optionItemID" value="{{ isset($optionItem) ? $optionItem->id : '' }}" />
 		<input type="text" class="form-control form-control-inline optionItemName" placeholder="Option Name" value="{{ isset($optionItem) ? $optionItem->name : '' }}" />
 	</div>
 	<div class="col-sm-2">

@@ -12,7 +12,7 @@ class ProductOption extends Eloquent {
 	///////////////////////////////////////////////
 	public function items()
 	{
-		return $this->hasMany(App::make('ProductOptionItem'));
+		return $this->hasMany(App::make('ProductOptionItem'))->orderBy('order');
 	}
 
 	public function drop_down()

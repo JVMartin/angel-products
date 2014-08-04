@@ -105,9 +105,11 @@
 				var optCount = 0;
 				$('.option').each(function() {
 					console.log(optCount);
+					$(this).find('.optionID').attr('name', 'options['+optCount+'][id]');
 					$(this).find('.optionName').attr('name', 'options['+optCount+'][name]');
 					var optItemCount = 0;
 					$(this).find('.optionItem').each(function() {
+						$(this).find('.optionItemID').attr('name', 'options['+optCount+'][items]['+optItemCount+'][id]');
 						$(this).find('.optionItemName').attr('name', 'options['+optCount+'][items]['+optItemCount+'][name]');
 						$(this).find('.optionItemPrice').attr('name', 'options['+optCount+'][items]['+optItemCount+'][price]');
 						$(this).find('.optionItemImage').attr('name', 'options['+optCount+'][items]['+optItemCount+'][image]');

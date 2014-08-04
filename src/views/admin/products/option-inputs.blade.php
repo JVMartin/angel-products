@@ -3,6 +3,7 @@
 		<button type="button" class="btn btn-xs btn-default optionHandle">
 			<span class="glyphicon glyphicon-resize-vertical"></span>
 		</button>
+		<input type="hidden" class="optionID" value="{{ isset($option) ? $option->id : '' }}" />
 		<input type="text" class="form-control form-control-inline optionName" placeholder="Option Group Name" value="{{ isset($option) ? $option->name : '' }}" />
 		<button type="button" class="removeOption btn btn-xs btn-danger" style="float:right;">
 			<span class="glyphicon glyphicon-remove"></span>
