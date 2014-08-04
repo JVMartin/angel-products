@@ -40,6 +40,10 @@
 			$('.optionSelect').change(function() {
 				showPrice();
 			});
+
+			$('.addToCart').click(function() {
+				$(this).addClass('disabled').html('<span class="glyphicon glyphicon-shopping-cart"></span> Adding to cart...');
+			});
 		});
 	</script>
 @stop
@@ -75,7 +79,7 @@
 					{{ Form::text('qty', 1, array('class'=>'form-control text-center', 'style'=>'display:inline-block;width:50px;')) }}
 				</div>
 				{{ Form::hidden('product_id', $product->id) }}
-				<button type="submit" class="btn btn-primary">
+				<button type="submit" class="btn btn-primary addToCart">
 					<span class="glyphicon glyphicon-shopping-cart"></span>
 					Add To Cart
 				</button>
