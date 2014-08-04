@@ -67,6 +67,8 @@
 @stop
 
 @section('content')
+	<h1>Shopping Cart</h1>
+	<hr />
 	@if (!$Cart->all())
 		<div class="alert alert-info">
 			There are no items in your cart!
