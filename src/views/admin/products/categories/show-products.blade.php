@@ -76,7 +76,7 @@
 								<td>{{ $product->name }}</td>
 								<td>{{ $product->price }}</td>
 								<td>
-
+									<img src="{{ asset($product->images->first()->image) }}" style="width:120px;" />
 								</td>
 							</tr>
 						@endforeach
