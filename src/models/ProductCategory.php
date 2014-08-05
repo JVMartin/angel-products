@@ -5,8 +5,6 @@ use View, Config;
 
 class ProductCategory extends LinkableModel {
 
-	public $reorderable = true;
-
 	protected $table = 'products_categories';
 
 	// Columns to update/insert on edit/add

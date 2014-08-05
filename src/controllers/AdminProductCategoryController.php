@@ -10,7 +10,8 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 	protected $singular	= 'category';
 	protected $package	= 'products';
 
-	protected $slug     = 'name';
+	protected $slug        = 'name';
+	protected $reorderable = true;
 
 	public function index($id = null)
 	{
