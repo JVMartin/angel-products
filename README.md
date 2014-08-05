@@ -2,6 +2,8 @@ Angel Products
 ==============
 This is an eCommerce module for the [Angel CMS](https://github.com/JVMartin/angel).
 
+The module works with Stripe automatically, or you can easily extend it to use other payment gateways.
+
 Installation
 ------------
 Add the following requirements to your `composer.json` file:
@@ -21,15 +23,17 @@ Add the following service provider to your `providers` array in `app/config/app.
 Issue the following commands:
 ```bash
 php artisan migrate --package="angel/products"   # Run the migrations
-php artisan asset:publish angel/products         # Publish the assets
+php artisan asset:publish                        # Publish the assets
+php artisan config:publish angel/products        # Publish the config
 ```
 
-Finally, open up your `app/config/packages/angel/core/config.php` and add the module to the `menu` array:
+Open up your `app/config/packages/angel/core/config.php` and add the products and orders routes to the `menu` array:
 ```php
 'menu' => array(
 	'Pages'     => 'pages',
 	'Menus'     => 'menus',
 	'Products'  => 'products', // <--- Add this line
+	'Orders'    => 'orders',   // <--- Add this line
 	'Users'     => 'users',
 	'Settings'  => 'settings'
 ),
@@ -39,8 +43,22 @@ Finally, open up your `app/config/packages/angel/core/config.php` and add the mo
 ```php
 'linkable_models' => array(
 	'Page'             => 'pages',
-	'Product'          => 'products',			// <--- Add this line
-	'ProductCategory'  => 'products/categories'	// <--- Add this line
+	'Product'          => 'products',           // <--- Add this line
+	'ProductCategory'  => 'products/categories' // <--- Add this line
+)
+```
+
+Open up your `app/config/packages/angel/products/config.php` and set your Stripe API keys:
+```php
+'stripe' => array(
+	'test' => array(
+		'secret'      => 'xxxxxxxxxxxxxx',
+		'publishable' => 'xxxxxxxxxxxxxx'
+	),
+	'live' => array(
+		'secret'      => 'xxxxxxxxxxxxxx',
+		'publishable' => 'xxxxxxxxxxxxxx'
+	)
 )
 ```
 
