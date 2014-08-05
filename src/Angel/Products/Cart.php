@@ -4,7 +4,7 @@ use Session;
 
 class Cart {
 
-	private $cart;
+	protected $cart;
 
 	function __construct()
 	{
@@ -14,7 +14,7 @@ class Cart {
 	/**
 	 * Retrieve the cart from the session or create it.
 	 */
-	private function init()
+	protected function init()
 	{
 		if (!Session::has('cart')) Session::put('cart', array());
 
@@ -24,7 +24,7 @@ class Cart {
 	/**
 	 * Save the cart back into the session.
 	 */
-	private function save()
+	protected function save()
 	{
 		Session::put('cart', $this->cart);
 	}
