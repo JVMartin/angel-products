@@ -13,6 +13,15 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 	protected $slug        = 'name';
 	protected $reorderable = true;
 
+	// Columns to update on edit/add
+	protected static function columns()
+	{
+		return array(
+			'name',
+			'image'
+		);
+	}
+
 	public function index($id = null)
 	{
 		$ProductCategory = App::make('ProductCategory');

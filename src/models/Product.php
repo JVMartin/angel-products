@@ -5,20 +5,6 @@ use Config, App;
 
 class Product extends LinkableModel {
 
-	// Columns to update/insert on edit/add from CrudController
-	public static function columns()
-	{
-		return array(
-			'name',
-			'size',
-			'description',
-			'category_id',
-			'price',
-			'fake_price',
-			'new'
-		);
-	}
-
 	public $selected_options = array();
 
 	/**

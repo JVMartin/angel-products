@@ -7,15 +7,6 @@ class ProductCategory extends LinkableModel {
 
 	protected $table = 'products_categories';
 
-	// Columns to update/insert on edit/add
-	public static function columns()
-	{
-		return array(
-			'name',
-			'image'
-		);
-	}
-
 	public function children()
 	{
 		return $this->hasMany(get_class($this), 'parent_id')->orderBy('order');
