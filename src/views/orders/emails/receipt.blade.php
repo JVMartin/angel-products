@@ -34,9 +34,11 @@ $Cart->load($cart);
 <hr />
 @foreach ($cart as $key=>$item)
 	<?php $product = json_decode($item['product']); ?>
-	<p>
-		<img src="{{ $message->embed(public_path() . $product->images[0]->image) }}" style="width:240px" width="240" />
-	</p>
+	@if (isset($product->images) && count($product->images))
+		<p>
+			<img src="{{ $message->embed(public_path() . $product->images[0]->image) }}" style="width:240px" width="240" />
+		</p>
+	@endif
 	<p>
 		<a href="{{ url('products/' . $product->slug) }}">
 			{{ $product->name }}

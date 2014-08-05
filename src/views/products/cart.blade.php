@@ -79,9 +79,11 @@
 			<?php $product = json_decode($item['product']); ?>
 			<div class="row">
 				<div class="col-sm-3">
-					<a href="{{ url('products/' . $product->slug) }}">
-						<img src="{{ $product->images[0]->image }}" style="width:100%" />
-					</a>
+					@if (isset($product->images) && count($product->images))
+						<a href="{{ url('products/' . $product->slug) }}">
+							<img src="{{ $product->images[0]->image }}" style="width:100%" />
+						</a>
+					@endif
 				</div>
 				<div class="col-sm-3">
 					<h4>
