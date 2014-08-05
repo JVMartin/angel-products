@@ -120,6 +120,18 @@
 			}
 			fixOptions();
 
+			$('#productForm').submit(function() {
+				var notReady = false;
+				if ($('.optionName').length > 1 || $('.optionItem').length > 1) {
+					$('.optionName').each(function() {
+						if (!$(this).val()) notReady = true;
+					});
+				}
+				if (notReady) {
+					if (!confirm('If you proceed, you will abandon any option groups that don\'t have names!  Proceed?')) return false;
+				}
+			});
+
 		});
 	</script>
 @stop
@@ -136,9 +148,9 @@
 	@endif
 
 	@if ($action == 'edit')
-		{{ Form::model($product) }}
+		{{ Form::model($product, array('role'=>'form', 'id'=>'productForm')) }}
 	@elseif ($action == 'add')
-		{{ Form::open(array('role'=>'form', 'method'=>'post')) }}
+		{{ Form::open(array('role'=>'form', 'id'=>'productForm')) }}
 	@endif
 
 		@if (isset($menu_id))
