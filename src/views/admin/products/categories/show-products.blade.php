@@ -76,7 +76,9 @@
 								<td>{{ $product->name }}</td>
 								<td>{{ $product->price }}</td>
 								<td>
-									<img src="{{ asset($product->images->first()->image) }}" style="width:120px;" />
+									@if ($product->images->count())
+										<img src="{{ asset($product->images->first()->image) }}" style="width:120px;" />
+									@endif
 								</td>
 							</tr>
 						@endforeach
