@@ -2,6 +2,8 @@ Angel Products
 ==============
 This is an eCommerce module for the [Angel CMS](https://github.com/JVMartin/angel).
 
+The module works with Stripe automatically, or you can easily extend it to use other payment gateways.
+
 Installation
 ------------
 Add the following requirements to your `composer.json` file:
