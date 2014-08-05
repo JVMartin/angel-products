@@ -22,7 +22,7 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 		);
 	}
 
-	public function index($id = null)
+	public function index()
 	{
 		$ProductCategory = App::make('ProductCategory');
 
