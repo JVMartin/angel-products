@@ -55,9 +55,9 @@ Route::group(array('prefix'=>admin_uri('products'), 'before'=>'admin'), function
 		'before' => 'csrf',
 		'uses' => $controller . '@attempt_edit'
 	));
-	Route::post('hard-delete/{id}', array(
+	Route::post('delete/{id}', array(
 		'before' => 'csrf',
-		'uses' => $controller . '@hard_delete'
+		'uses' => $controller . '@delete'
 	));
 
 	Route::group(array('prefix'=>'categories'), function() {

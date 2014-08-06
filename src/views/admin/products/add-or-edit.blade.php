@@ -140,7 +140,7 @@
 	<h1>{{ ucfirst($action) }} Product</h1>
 	@if ($action == 'edit')
 		{{ Form::open(array('role'=>'form',
-							'url'=>'admin/products/hard-delete/'.$product->id,
+							'url'=>'admin/products/delete/'.$product->id,
 							'class'=>'deleteForm',
 							'data-confirm'=>'Delete this product forever?  This action cannot be undone!')) }}
 			<input type="submit" class="btn btn-sm btn-danger" value="Delete Forever" />

@@ -12,7 +12,7 @@
 	<h1>{{ ucfirst($action) }} Product Category</h1>
 	@if ($action == 'edit')
 		{{ Form::open(array('role'=>'form',
-							'url'=>admin_uri('products/categories/hard-delete/'.$category->id),
+							'url'=>admin_uri('products/categories/delete/'.$category->id),
 							'class'=>'deleteForm',
 							'data-confirm'=>'Delete this category (AND ALL NESTED PRODUCTS) forever?')) }}
 			<input type="submit" class="btn btn-sm btn-danger" value="Delete Forever" />
