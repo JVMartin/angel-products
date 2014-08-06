@@ -27,6 +27,10 @@ class CreateProductsTable extends Migration {
 			$table->timestamps(); // Adds `created_at` and `updated_at` columns
 
 			$table->foreign('category_id')->references('id')->on('products_categories')->onDelete('cascade');
+
+			if (ToolBelt::mysql_greater(5, 6, 4)) {
+				DB::statement('ALTER TABLE `products` ADD FULLTEXT search(`name`, `description`)');
+			}
 		});
 	}
 
