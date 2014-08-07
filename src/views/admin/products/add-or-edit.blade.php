@@ -104,7 +104,6 @@
 			function fixOptions() {
 				var optCount = 0;
 				$('.option').each(function() {
-					console.log(optCount);
 					$(this).find('.optionID').attr('name', 'options['+optCount+'][id]');
 					$(this).find('.optionName').attr('name', 'options['+optCount+'][name]');
 					var optItemCount = 0;
