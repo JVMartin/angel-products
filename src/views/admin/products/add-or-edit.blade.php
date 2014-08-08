@@ -40,12 +40,10 @@
 			});
 
 			$('#imagesTable').on('click', '.removeImage', function() {
-				var $tr = $(this).closest('tr');
-				if ($tr.parent().children('tr').length == 1) {
-					alert('Let\'s keep at least one.');
-					return;
-				}
 				$(this).closest('tr').remove();
+				if ($('#imagesTable tbody').children('tr').length < 1) {
+					$('#imagesTable tbody').append($imageTR.clone());
+				}
 			});
 
 			//-----------
