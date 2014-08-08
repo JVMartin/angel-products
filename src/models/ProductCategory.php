@@ -1,7 +1,7 @@
 <?php namespace Angel\Products;
 
 use Angel\Core\LinkableModel;
-use View, Config;
+use View, Config, App;
 
 class ProductCategory extends LinkableModel {
 
@@ -10,6 +10,10 @@ class ProductCategory extends LinkableModel {
 	public function children()
 	{
 		return $this->hasMany(get_class($this), 'parent_id')->orderBy('order');
+	}
+	public function products()
+	{
+		return $this->hasMany(App::make('Product'), 'category_id');
 	}
 
 	/**
@@ -60,15 +64,6 @@ class ProductCategory extends LinkableModel {
 		}
 
 		return $branch;
-	}
-
-	public static function drop_down($categories)
-	{
-		$arr = array();
-		foreach ($categories as $category) {
-			$arr[$category->id] = $category->name_full();
-		}
-		return $arr;
 	}
 
 	///////////////////////////////////////////////

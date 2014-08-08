@@ -174,8 +174,7 @@
 								{{ Form::label('category_id', 'Category') }}
 							</td>
 							<td>
-								<?php $ProductCategory = App::make('ProductCategory'); ?>
-								{{ Form::select('category_id', $ProductCategory::drop_down($categories), Input::get('to_category'), array('id'=>'categoryDrop', 'class'=>'form-control', 'style'=>'width:auto;', 'required')) }}
+								{{ Form::select('category_id', $ProductCategory::drop_down_with($categories), Input::get('to_category'), array('id'=>'categoryDrop', 'class'=>'form-control', 'style'=>'width:auto;', 'required')) }}
 							</td>
 						</tr>
 						<tr>
@@ -287,6 +286,36 @@
 								<button id="addOption" type="button" class="btn btn-sm btn-primary">
 									<span class="glyphicon glyphicon-plus"></span>
 									Add Option Group
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b>Related Products</b>
+							</td>
+							<td>
+								<table id="relatedProductsTable" class="table table-striped" style="width:100%;">
+									<thead>
+										<tr>
+											<th></th>
+											<th>Category</th>
+											<th>Product</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										@if (isset($product))
+											@foreach ($product->related as $relatedProduct)
+												@include('products::admin.products.related-inputs')
+											@endforeach
+										@endif
+										<?php unset($relatedProduct); ?>
+										@include('products::admin.products.related-inputs')
+									</tbody>
+								</table>
+								<button id="addRelatedProduct" type="button" class="btn btn-sm btn-primary">
+									<span class="glyphicon glyphicon-plus"></span>
+									Add Related Product
 								</button>
 							</td>
 						</tr>

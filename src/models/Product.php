@@ -7,6 +7,26 @@ class Product extends LinkableModel {
 
 	public $selected_options = array();
 
+	///////////////////////////////////////////////
+	//               Relationships               //
+	///////////////////////////////////////////////
+	public function category()
+	{
+		return $this->belongsTo(App::make('ProductCategory'));
+	}
+	public function options()
+	{
+		return $this->hasMany(App::make('ProductOption'))->with('items')->orderBy('order');
+	}
+	public function images()
+	{
+		return $this->hasMany(App::make('ProductImage'))->orderBy('order');
+	}
+	public function related()
+	{
+		return $this->belongsToMany(App::make('Product'), 'products_related_products', 'related_id');
+	}
+
 	/**
 	 * Mark an option_item as selected by that option_item's ID.
 	 *
@@ -72,22 +92,6 @@ class Product extends LinkableModel {
 		$array = parent::toArray();
 		$array['selected_options'] = $this->selected_options;
 		return $array;
-	}
-
-	///////////////////////////////////////////////
-	//               Relationships               //
-	///////////////////////////////////////////////
-	public function category()
-	{
-		return $this->belongsTo(App::make('ProductCategory'));
-	}
-	public function options()
-	{
-		return $this->hasMany(App::make('ProductOption'))->with('items')->orderBy('order');
-	}
-	public function images()
-	{
-		return $this->hasMany(App::make('ProductImage'))->orderBy('order');
 	}
 
 	///////////////////////////////////////////////
