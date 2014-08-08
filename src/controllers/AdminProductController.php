@@ -81,30 +81,42 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		$this->handle_related($product, $changes);
 	}
 
-	protected function handle_related($product, &$changes)
+	protected function handle_images($product, &$changes)
 	{
-		$input_related = Input::get('related') ? Input::get('related') : array();
-		$old_related   = array();
+		$ProductImage = App::make('ProductImage');
 
-		// Loop through old related products and change log the deletions.
-		foreach ($product->related()->select('id')->get() as $related_product) {
-			$old_related[] = $related_product->id;
-			if (!in_array($related_product->id, $input_related)) {
-				$changes['Deleted related product ID#' . $related_product->id . ' Name: ' . $related_product->name] = array();
-			}
+		// Get all existing images for the product
+		$images       = $ProductImage::where('product_id', $product->id)->get();
+		$input_ids    = Input::get('imageIDs');
+		$input_images = Input::get('images');
+		$input_thumbs = Input::get('imageThumbs');
+		foreach ($input_ids as $order=>$image_id) {
+			$input_image = $input_images[$order];
+			$input_thumb = $input_thumbs[$order];
+
+			// Grab the existing image from the collection if it exists
+			$image     = $images->find($image_id);
+			$old_array = ($image) ? $image->toArray() : array();
+
+			// If there's no existing image and the input is empty, don't create a new one
+			if (!$image && !$input_image) continue;
+
+			// Update image or create new one
+			$image = ($image) ? $image : new $ProductImage;
+			$image->product_id	= $product->id;
+			$image->order		= $order;
+			$image->image		= $input_image;
+			$image->thumb		= $input_thumb;
+			$image->save();
+
+			$this->log_relation_change($image, $old_array, array('order', 'image', 'thumb'), $changes);
 		}
 
-		// Detach all related products.
-		$product->related()->detach();
-
-		// Loop through input related products, attach them, and change log the additions.
-		$noTwice = array();
-		foreach ($input_related as $order => $related_id) {
-			if (in_array($related_id, $noTwice)) continue; // No repeats, please.
-			$product->related()->attach($related_id, array('order' => $order));
-			$noTwice[] = $related_id;
-			if (!in_array($related_id, $old_related)) {
-				$changes['Added related product ID#' . $related_id] = array();
+		// Delete all images not in input
+		foreach ($images as $image) {
+			if (!in_array($image->id, $input_ids)) {
+				$this->log_relation_deletion($image, $changes);
+				$image->delete();
 			}
 		}
 	}
@@ -122,7 +134,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		}
 		$items = (count($option_ids)) ? $ProductOptionItem::whereIn('product_option_id', $option_ids)->get() : new Collection;
 
-		$input_options = Input::get('options');
+		$input_options    = Input::get('options');
 		$input_option_ids = array();
 		$input_item_ids   = array();
 		foreach ($input_options as $order=>$input_option) {
@@ -131,7 +143,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			// Don't create new options when there is no name
 			if (!$input_option['id'] && (!isset($input_option['name']) || !$input_option['name'])) continue;
 
-			$option = $options->find($input_option['id']);
+			$option    = $options->find($input_option['id']);
 			$old_array = ($option) ? $option->toArray() : array();
 
 			// Update option or create new one
@@ -149,7 +161,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 				// Don't create new option items when there is no name
 				if (!$input_item['id'] && (!isset($input_item['name']) || !$input_item['name'])) continue;
 
-				$item = $items->find($input_item['id']);
+				$item      = $items->find($input_item['id']);
 				$old_array = ($item) ? $item->toArray() : array();
 
 				// Update option item or create new one
@@ -182,68 +194,31 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		}
 	}
 
-	protected function log_relation_name($object)
+
+	protected function handle_related($product, &$changes)
 	{
-		$name = short_name($object) . ' ID#' . $object->id;
-		if (isset($object->name) && $object->name) $name .= ' Name: ' . $object->name;
-		return $name;
-	}
+		$input_related = Input::get('related') ? Input::get('related') : array();
+		$old_related   = array();
 
-	protected function log_relation_change($object, $old_array, $columns, &$changes)
-	{
-		$name = $this->log_relation_name($object);
-		if (!count($old_array)) {
-			$changes['Created new ' . $name] = array();
-			return;
-		}
-		foreach ($columns as $column) {
-			if ($object->$column == $old_array[$column]) continue;
-			$changes['Changed ' . $name . ' Column: ' . $column] = array(
-				'old' => $old_array[$column],
-				'new' => $object->$column
-			);
-		}
-	}
-
-	protected function log_relation_deletion($object, &$changes)
-	{
-		$name = $this->log_relation_name($object);
-		$changes['Deleted ' . $name] = array();
-	}
-
-	protected function handle_images($product)
-	{
-		$ProductImage = App::make('ProductImage');
-
-		// Get all existing images for the product
-		$images       = $ProductImage::where('product_id', $product->id)->get();
-		$input_ids    = Input::get('imageIDs');
-		$input_images = Input::get('images');
-		$input_thumbs = Input::get('imageThumbs');
-		foreach ($input_ids as $order=>$image_id) {
-			$input_image = $input_images[$order];
-			$input_thumb = $input_thumbs[$order];
-
-			// Grab the existing image from the collection if it exists
-			$image = $images->find($image_id);
-
-			// If there's no existing image and the input is empty, don't create a new one
-			if (!$image && !$input_image) continue;
-
-			// Update image or create new one
-			$image = ($image) ? $image : new $ProductImage;
-			$image->product_id	= $product->id;
-			$image->image		= $input_image;
-			$image->order		= $order;
-			$image->thumb		= $input_thumb;
-			$image->save();
+		// Loop through old related products and change log the deletions.
+		foreach ($product->related()->select('id')->get() as $related_product) {
+			$old_related[] = $related_product->id;
+			if (!in_array($related_product->id, $input_related)) {
+				$changes['Deleted related product ID#' . $related_product->id . ' Name: ' . $related_product->name] = array();
+			}
 		}
 
-		// Delete all images not in input
-		foreach ($images as $image) {
-			if (!in_array($image->id, $input_ids)) {
-				$changes['Deleted Image ID#' . $image->id] = array();
-				$image->delete();
+		// Detach all related products.
+		$product->related()->detach();
+
+		// Loop through input related products, attach them, and change log the additions.
+		$noTwice = array();
+		foreach ($input_related as $order => $related_id) {
+			if (in_array($related_id, $noTwice)) continue; // No repeats, please.
+			$product->related()->attach($related_id, array('order' => $order));
+			$noTwice[] = $related_id;
+			if (!in_array($related_id, $old_related)) {
+				$changes['Added related product ID#' . $related_id] = array();
 			}
 		}
 	}
