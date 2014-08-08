@@ -168,6 +168,11 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 				$item->delete();
 			}
 		}
+
+		$product->related()->detach();
+		foreach (Input::get('related') as $order => $related_id) {
+			$product->related()->attach($related_id, array('order' => $order));
+		}
 	}
 
 }

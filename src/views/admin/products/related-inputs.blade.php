@@ -9,7 +9,9 @@
 	</td>
 	<td>
 		@foreach ($categories as $category)
-			{{ Form::select('related[]', $Product::drop_down_with($category->products), isset($relatedProduct) ? $relatedProduct->id : null, array('class'=>'form-control relatedCategoryProducts category' . $category->id, 'style'=>'width:auto;display:none;')) }}
+			@if ($category->products->count())
+				{{ Form::select('related[]', $Product::drop_down_with($category->products), isset($relatedProduct) ? $relatedProduct->id : null, array('class'=>'form-control relatedCategoryProducts category' . $category->id, 'style'=>'width:auto;display:none;')) }}
+			@endif
 		@endforeach
 	</td>
 	<td>
