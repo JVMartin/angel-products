@@ -90,7 +90,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		foreach ($product->related()->select('id')->get() as $related_product) {
 			$old_related[] = $related_product->id;
 			if (!in_array($related_product->id, $input_related)) {
-				$changes['Deleted related product ID#' . $related_product->id] = array();
+				$changes['Deleted related product ID#' . $related_product->id . ' Name: ' . $related_product->name] = array();
 			}
 		}
 
@@ -132,6 +132,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			if (!$input_option['id'] && (!isset($input_option['name']) || !$input_option['name'])) continue;
 
 			$option = $options->find($input_option['id']);
+			$old_array = ($option) ? $option->toArray() : array();
 
 			// Update option or create new one
 			$option = ($option) ? $option : new $ProductOption;
@@ -140,6 +141,8 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			$option->name       = $input_option['name'];
 			$option->save();
 
+			$this->log_relation_change($option, $old_array, array('order', 'name'), $changes);
+
 			foreach ($input_option['items'] as $order=>$input_item) {
 				if ($input_item['id']) $input_item_ids[] = $input_item['id'];
 
@@ -147,6 +150,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 				if (!$input_item['id'] && (!isset($input_item['name']) || !$input_item['name'])) continue;
 
 				$item = $items->find($input_item['id']);
+				$old_array = ($item) ? $item->toArray() : array();
 
 				// Update option item or create new one
 				$item = ($item) ? $item : new $ProductOptionItem;
@@ -156,13 +160,15 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 				$item->price             = $input_item['price'];
 				$item->image             = $input_item['image'];
 				$item->save();
+
+				$this->log_relation_change($item, $old_array, array('order', 'name', 'price', 'image'), $changes);
 			}
 		}
 
 		// Delete all options not in input
 		foreach ($options as $option) {
 			if (!in_array($option->id, $input_option_ids)) {
-				$changes['Deleted ProductOption ID#' . $option->id] = array();
+				$this->log_relation_deletion($option, $changes);
 				$option->delete();
 			}
 		}
@@ -170,10 +176,39 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		// Delete all option items not in input
 		foreach ($items as $item) {
 			if (!in_array($item->id, $input_item_ids)) {
-				$changes['Deleted ProductOptionItem ID#' . $option->id] = array();
+				$this->log_relation_deletion($item, $changes);
 				$item->delete();
 			}
 		}
+	}
+
+	protected function log_relation_name($object)
+	{
+		$name = short_name($object) . ' ID#' . $object->id;
+		if (isset($object->name) && $object->name) $name .= ' Name: ' . $object->name;
+		return $name;
+	}
+
+	protected function log_relation_change($object, $old_array, $columns, &$changes)
+	{
+		$name = $this->log_relation_name($object);
+		if (!count($old_array)) {
+			$changes['Created new ' . $name] = array();
+			return;
+		}
+		foreach ($columns as $column) {
+			if ($object->$column == $old_array[$column]) continue;
+			$changes['Changed ' . $name . ' Column: ' . $column] = array(
+				'old' => $old_array[$column],
+				'new' => $object->$column
+			);
+		}
+	}
+
+	protected function log_relation_deletion($object, &$changes)
+	{
+		$name = $this->log_relation_name($object);
+		$changes['Deleted ' . $name] = array();
 	}
 
 	protected function handle_images($product)
