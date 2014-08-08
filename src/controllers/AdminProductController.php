@@ -78,14 +78,34 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 	{
 		$this->handle_images($product, $changes);
 		$this->handle_options($product, $changes);
-		$this->handle_related($product);
+		$this->handle_related($product, $changes);
 	}
 
-	protected function handle_related($product)
+	protected function handle_related($product, &$changes)
 	{
+		$input_related = Input::get('related') ? Input::get('related') : array();
+		$old_related   = array();
+
+		// Loop through old related products and change log the deletions.
+		foreach ($product->related()->select('id')->get() as $related_product) {
+			$old_related[] = $related_product->id;
+			if (!in_array($related_product->id, $input_related)) {
+				$changes['Deleted related product ID#' . $related_product->id] = array();
+			}
+		}
+
+		// Detach all related products.
 		$product->related()->detach();
-		foreach (Input::get('related') as $order => $related_id) {
+
+		// Loop through input related products, attach them, and change log the additions.
+		$noTwice = array();
+		foreach ($input_related as $order => $related_id) {
+			if (in_array($related_id, $noTwice)) continue; // No repeats, please.
 			$product->related()->attach($related_id, array('order' => $order));
+			$noTwice[] = $related_id;
+			if (!in_array($related_id, $old_related)) {
+				$changes['Added related product ID#' . $related_id] = array();
+			}
 		}
 	}
 
