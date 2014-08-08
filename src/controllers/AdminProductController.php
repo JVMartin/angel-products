@@ -11,7 +11,8 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 	protected $singular	= 'product';
 	protected $package	= 'products';
 
-	protected $slug     = 'name';
+	protected $log_changes = true;
+	protected $slug        = 'name';
 
 	// Columns to update on edit/add
 	protected static function columns()
@@ -75,40 +76,23 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 	 */
 	public function after_save($product, &$changes = array())
 	{
-		$ProductImage      = App::make('ProductImage');
+		$this->handle_images($product);
+		$this->handle_options($product);
+		$this->handle_related($product);
+	}
+
+	protected function handle_related($product)
+	{
+		$product->related()->detach();
+		foreach (Input::get('related') as $order => $related_id) {
+			$product->related()->attach($related_id, array('order' => $order));
+		}
+	}
+
+	protected function handle_options($product)
+	{
 		$ProductOption     = App::make('ProductOption');
 		$ProductOptionItem = App::make('ProductOptionItem');
-
-		// Get all existing images for the product
-		$images       = $ProductImage::where('product_id', $product->id)->get();
-		$input_ids    = Input::get('imageIDs');
-		$input_images = Input::get('images');
-		$input_thumbs = Input::get('imageThumbs');
-		foreach ($input_ids as $order=>$image_id) {
-			$input_image = $input_images[$order];
-			$input_thumb = $input_thumbs[$order];
-
-			// Grab the existing image from the collection if it exists
-			$image = $images->find($image_id);
-
-			// If there's no existing image and the input is empty, don't create a new one
-			if (!$image && !$input_image) continue;
-
-			// Update image or create new one
-			$image = ($image) ? $image : new $ProductImage;
-			$image->product_id	= $product->id;
-			$image->image		= $input_image;
-			$image->order		= $order;
-			$image->thumb		= $input_thumb;
-			$image->save();
-		}
-
-		// Delete all images not in input
-		foreach ($images as $image) {
-			if (!in_array($image->id, $input_ids)) {
-				$image->delete();
-			}
-		}
 
 		// Get all existing options and option items
 		$options    = $ProductOption::where('product_id', $product->id)->get();
@@ -168,10 +152,41 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 				$item->delete();
 			}
 		}
+	}
 
-		$product->related()->detach();
-		foreach (Input::get('related') as $order => $related_id) {
-			$product->related()->attach($related_id, array('order' => $order));
+	protected function handle_images($product)
+	{
+		$ProductImage = App::make('ProductImage');
+
+		// Get all existing images for the product
+		$images       = $ProductImage::where('product_id', $product->id)->get();
+		$input_ids    = Input::get('imageIDs');
+		$input_images = Input::get('images');
+		$input_thumbs = Input::get('imageThumbs');
+		foreach ($input_ids as $order=>$image_id) {
+			$input_image = $input_images[$order];
+			$input_thumb = $input_thumbs[$order];
+
+			// Grab the existing image from the collection if it exists
+			$image = $images->find($image_id);
+
+			// If there's no existing image and the input is empty, don't create a new one
+			if (!$image && !$input_image) continue;
+
+			// Update image or create new one
+			$image = ($image) ? $image : new $ProductImage;
+			$image->product_id	= $product->id;
+			$image->image		= $input_image;
+			$image->order		= $order;
+			$image->thumb		= $input_thumb;
+			$image->save();
+		}
+
+		// Delete all images not in input
+		foreach ($images as $image) {
+			if (!in_array($image->id, $input_ids)) {
+				$image->delete();
+			}
 		}
 	}
 
