@@ -75,20 +75,18 @@
 			});
 
 			$('#options').on('click', '.removeOption', function() {
-				if ($('.option').length == 1) {
-					alert('Let\'s keep at least one.');
-					return;
-				}
 				$(this).closest('.option').remove();
+				if ($('.option').length < 1) {
+					$('#options').append($option.clone());
+				}
 				fixOptions();
 			});
 			$('#options').on('click', '.removeOptionItem', function() {
-				var $optionItem = $(this).closest('.optionItem');
-				if ($optionItem.parent().children('.optionItem').length == 1) {
-					alert('Let\'s keep at least one.');
-					return;
+				var $tempOption = $(this).closest('.option');
+				$(this).closest('.optionItem').remove();
+				if ($tempOption.find('.optionItem').length < 1) {
+					$tempOption.find('.options').append($optionItem.clone());
 				}
-				$optionItem.remove();
 				fixOptions();
 			});
 
