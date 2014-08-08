@@ -26,6 +26,16 @@ class Product extends LinkableModel {
 	{
 		return $this->belongsToMany(App::make('Product'), 'products_related_products', 'related_id')->orderBy('products_related_products.order');
 	}
+	public function changes()
+	{
+		$Change = App::make('Change');
+
+		return $Change::where('fmodel', 'Product')
+			->where('fid', $this->id)
+			->with('user')
+			->orderBy('created_at', 'DESC')
+			->get();
+	}
 
 	/**
 	 * Mark an option_item as selected by that option_item's ID.

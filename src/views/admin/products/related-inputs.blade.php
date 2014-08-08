@@ -5,7 +5,7 @@
 		</button>
 	</td>
 	<td>
-		{{ Form::select(null, $ProductCategory::drop_down_with($categories), isset($relatedProduct) ? $relatedProduct->category->id : null, array('class'=>'form-control relatedCategory', 'style'=>'width:auto;')) }}
+		{{ Form::select(null, $ProductCategory::drop_down_with($categories), isset($relatedProduct) ? $relatedProduct->category_id : null, array('class'=>'form-control relatedCategory', 'style'=>'width:auto;')) }}
 	</td>
 	<td>
 		@foreach ($categories as $category)

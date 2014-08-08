@@ -342,6 +342,25 @@
 								</button>
 							</td>
 						</tr>
+						@if ($action == 'edit')
+							<tr>
+								<td>
+								</td>
+								<td>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="expandBelow">
+												<span class="glyphicon glyphicon-chevron-down"></span> Change Log
+											</div>
+											<div class="expander changesExpander">
+												<?php $changes = $product->changes(); ?>
+												@include('core::admin.changes.log')
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						@endif
 					</tbody>
 				</table>
 			</div>{{-- Left Column --}}
