@@ -76,8 +76,8 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 	 */
 	public function after_save($product, &$changes = array())
 	{
-		$this->handle_images($product);
-		$this->handle_options($product);
+		$this->handle_images($product, $changes);
+		$this->handle_options($product, $changes);
 		$this->handle_related($product);
 	}
 
@@ -89,7 +89,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		}
 	}
 
-	protected function handle_options($product)
+	protected function handle_options($product, &$changes)
 	{
 		$ProductOption     = App::make('ProductOption');
 		$ProductOptionItem = App::make('ProductOptionItem');
@@ -142,6 +142,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		// Delete all options not in input
 		foreach ($options as $option) {
 			if (!in_array($option->id, $input_option_ids)) {
+				$changes['Deleted ProductOption ID#' . $option->id] = array();
 				$option->delete();
 			}
 		}
@@ -149,6 +150,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		// Delete all option items not in input
 		foreach ($items as $item) {
 			if (!in_array($item->id, $input_item_ids)) {
+				$changes['Deleted ProductOptionItem ID#' . $option->id] = array();
 				$item->delete();
 			}
 		}
@@ -185,6 +187,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		// Delete all images not in input
 		foreach ($images as $image) {
 			if (!in_array($image->id, $input_ids)) {
+				$changes['Deleted Image ID#' . $image->id] = array();
 				$image->delete();
 			}
 		}
