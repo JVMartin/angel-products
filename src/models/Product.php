@@ -24,7 +24,7 @@ class Product extends LinkableModel {
 	}
 	public function related()
 	{
-		return $this->belongsToMany(App::make('Product'), 'products_related_products', 'related_id');
+		return $this->belongsToMany(App::make('Product'), 'products_related_products', 'related_id')->orderBy('products_related_products.order');
 	}
 
 	/**

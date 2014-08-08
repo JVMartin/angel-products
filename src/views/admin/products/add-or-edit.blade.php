@@ -127,6 +127,29 @@
 				}
 			});
 
+			$('#relatedProductsTable').on('change', '.relatedCategory', function() {
+				var $categoryID = $(this).val();
+				var $tr = $(this).closest('tr');
+				$tr.find('.relatedCategoryProducts').hide().prop('disabled', true);
+				$tr.find('.relatedCategoryProducts.category' + $categoryID).show().prop('disabled', false);
+			}).on('click', '.removeRelated', function() {
+				$(this).closest('tr').remove();
+			});
+
+			$('.relatedCategory').trigger('change');
+
+			var $relatedProduct = $('.relatedProduct').last().clone();
+			$('.relatedProduct').last().remove();
+
+			$('#addRelatedProduct').click(function() {
+				$('#relatedProductsTable tbody').append($relatedProduct.clone());
+			});
+
+			$('#relatedProductsTable tbody').sortable(sortObj);
+
+			$('form').submit(function() {
+				$('#save').addClass('disabled').val('Saving...');
+			});
 		});
 	</script>
 @stop
@@ -324,7 +347,7 @@
 			</div>{{-- Left Column --}}
 		</div>{{-- Row --}}
 		<div class="text-right pad">
-			<input type="submit" class="btn btn-primary" value="Save" />
+			<input type="submit" class="btn btn-primary" value="Save" id="save" />
 		</div>
 	{{ Form::close() }}
 @stop
