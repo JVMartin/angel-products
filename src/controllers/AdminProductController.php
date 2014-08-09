@@ -194,7 +194,6 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		}
 	}
 
-
 	protected function handle_related($product, &$changes)
 	{
 		$input_related = Input::get('related') ? Input::get('related') : array();
