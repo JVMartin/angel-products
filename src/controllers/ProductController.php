@@ -29,7 +29,7 @@ class ProductController extends \Angel\Core\AngelController {
 
 		$this->data['product'] = $product;
 		$this->data['options'] = $options;
-		$this->data['crumbs'] = $ProductCategory::crumbs($categories, $product->categories()->first()->id, url('products/categories/{slug}'));
+		$this->data['crumbs']  = $ProductCategory::crumbs($categories, $product->categories()->first()->id, url('products/categories/{slug}'));
 
 		return View::make('products::products.view', $this->data);
 	}
@@ -42,11 +42,9 @@ class ProductController extends \Angel\Core\AngelController {
 	public function cart_add()
 	{
 		$Product = App::make('Product');
-
 		$product = $Product::with('images', 'options')->findOrFail(Input::get('product_id'));
 
 		$product->markSelectedOptions(Input::get('options'));
-
 		$this->Cart->add($product, Input::get('qty'));
 
 		return Redirect::back()->with('success', array(
