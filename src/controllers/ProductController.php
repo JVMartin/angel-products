@@ -4,6 +4,13 @@ use Config, App, View, Input, Redirect, Validator, ToolBelt, Session, Auth, Mail
 use Stripe, Stripe_Charge, Stripe_CardError;
 
 class ProductController extends \Angel\Core\AngelController {
+	
+	public function __construct()
+	{
+		parent::__construct();
+		
+		$this->Cart = $this->data['Cart'] = App::make('Cart');
+	}
 
 	public function view($slug)
 	{
@@ -29,21 +36,18 @@ class ProductController extends \Angel\Core\AngelController {
 
 	public function cart()
 	{
-		$this->data['Cart'] = App::make('Cart');
-
 		return View::make('products::products.cart', $this->data);
 	}
 
 	public function cart_add()
 	{
-		$Cart    = App::make('Cart');
 		$Product = App::make('Product');
 
 		$product = $Product::with('images', 'options')->findOrFail(Input::get('product_id'));
 
 		$product->markSelectedOptions(Input::get('options'));
 
-		$Cart->add($product, Input::get('qty'));
+		$this->Cart->add($product, Input::get('qty'));
 
 		return Redirect::back()->with('success', array(
 			'This product has been added to your cart!',
@@ -53,36 +57,28 @@ class ProductController extends \Angel\Core\AngelController {
 
 	public function cart_qty()
 	{
-		$Cart = App::make('Cart');
-
 		foreach (Input::get('qty') as $key=>$qty) {
-			$Cart->quantity($key, $qty);
+			$this->Cart->quantity($key, $qty);
 		}
 
-		return number_format($Cart->total(), 2);
+		return number_format($this->Cart->total(), 2);
 	}
 
 	public function cart_remove($key)
 	{
-		$Cart = App::make('Cart');
-
-		$Cart->remove(urldecode($key));
+		$this->Cart->remove(urldecode($key));
 
 		return Redirect::to('cart');
 	}
 
 	public function checkout()
 	{
-		$Cart = App::make('Cart');
-		$this->data['Cart'] = $Cart;
-		if (!$Cart->count()) return Redirect::to('cart');
+		if (!$this->Cart->count()) return Redirect::to('cart');
 		return View::make('products::products.checkout', $this->data);
 	}
 
 	public function charge()
 	{
-		$Cart = App::make('Cart');
-
 		if (!Input::get('stripeToken')) {
 			return 'The Stripe token was not generated correctly.';
 		}
@@ -107,7 +103,7 @@ class ProductController extends \Angel\Core\AngelController {
 
 		try {
 			$charge = Stripe_Charge::create(array(
-				'amount'   => ToolBelt::pennies($Cart->total()),
+				'amount'   => ToolBelt::pennies($this->Cart->total()),
 				'currency' => 'usd',
 				'card'     => Input::get('stripeToken')
 			));
@@ -120,7 +116,7 @@ class ProductController extends \Angel\Core\AngelController {
 		$order            = new $Order;
 		$order->email     = Input::get('email');
 		$order->charge_id = $charge->id;
-		$order->total     = $Cart->total();
+		$order->total     = $this->Cart->total();
 
 		if (Input::get('billing_zip')) {
 			$billing = array(
@@ -149,14 +145,14 @@ class ProductController extends \Angel\Core\AngelController {
 			$order->user_id = Auth::user()->id;
 		}
 
-		$order->cart = json_encode($Cart->all());
+		$order->cart = json_encode($this->Cart->all());
 		$order->save();
 
 		$charge->metadata['order_id'] = $order->id;
 		$charge->save();
 
 		Session::put('just-ordered', $order->id);
-		$Cart->destroy();
+		$this->Cart->destroy();
 
 		$this->data['order'] = $order;
 		Mail::send('products::orders.emails.receipt', $this->data, function($message) use ($order) {
