@@ -22,7 +22,7 @@ class ProductController extends \Angel\Core\AngelController {
 
 		$this->data['product'] = $product;
 		$this->data['options'] = $options;
-		$this->data['crumbs'] = $ProductCategory::crumbs($categories, $product->category_id, url('products/categories/{slug}'));
+		$this->data['crumbs'] = $ProductCategory::crumbs($categories, $product->categories()->first()->id, url('products/categories/{slug}'));
 
 		return View::make('products::products.view', $this->data);
 	}
