@@ -10,9 +10,9 @@ class Product extends LinkableModel {
 	///////////////////////////////////////////////
 	//               Relationships               //
 	///////////////////////////////////////////////
-	public function category()
+	public function categories()
 	{
-		return $this->belongsTo(App::make('ProductCategory'));
+		return $this->belongsToMany(App::make('ProductCategory'), 'products_categories_products', 'category_id');
 	}
 	public function options()
 	{
