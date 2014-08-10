@@ -80,6 +80,34 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		$this->handle_related($product, $changes);
 	}
 
+	protected function handle_categories($product, &$changes)
+	{
+		$input_categories = Input::get('categories');
+		$old_categories   = array();
+
+		// Loop through old categories and change log the deletions.
+		foreach ($product->categories()->select('id')->get() as $category) {
+			$old_categories[] = $category->id;
+			if (!in_array($category->id, $input_categories)) {
+				$changes['Removed product from Category ID#' . $category->id . ' Name: ' . $category->name] = array();
+			}
+		}
+
+		// Detach all categories.
+		$product->categories()->detach();
+
+		// Loop through input categories, attach them, and change log the additions.
+		$noTwice = array();
+		foreach ($input_categories as $category_id) {
+			if (in_array($category_id, $noTwice)) continue; // No repeats, please.
+			$product->categories()->attach($category_id);
+			$noTwice[] = $category_id;
+			if (!in_array($category_id, $old_categories)) {
+				$changes['Added product to Category ID#' . $category_id] = array();
+			}
+		}
+	}
+
 	protected function handle_images($product, &$changes)
 	{
 		$ProductImage = App::make('ProductImage');
@@ -217,34 +245,6 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			$noTwice[] = $related_id;
 			if (!in_array($related_id, $old_related)) {
 				$changes['Added related product ID#' . $related_id] = array();
-			}
-		}
-	}
-
-	protected function handle_categories($product, &$changes)
-	{
-		$input_categories = Input::get('categories');
-		$old_categories   = array();
-
-		// Loop through old categories and change log the deletions.
-		foreach ($product->categories()->select('id')->get() as $category) {
-			$old_categories[] = $category->id;
-			if (!in_array($category->id, $input_categories)) {
-				$changes['Deleted product from Category ID#' . $category->id . ' Name: ' . $category->name] = array();
-			}
-		}
-
-		// Detach all categories.
-		$product->categories()->detach();
-
-		// Loop through input categories, attach them, and change log the additions.
-		$noTwice = array();
-		foreach ($input_categories as $category_id) {
-			if (in_array($category_id, $noTwice)) continue; // No repeats, please.
-			$product->categories()->attach($category_id);
-			$noTwice[] = $category_id;
-			if (!in_array($category_id, $old_categories)) {
-				$changes['Added product to Category ID#' . $category_id] = array();
 			}
 		}
 	}

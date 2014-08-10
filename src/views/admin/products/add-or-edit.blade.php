@@ -157,6 +157,9 @@
 			$('#categories').on('click', '.removeCategory', function() {
 				$(this).closest('.category').remove();
 			});
+			@if ($action == 'edit')
+				$('.removeCategory').first().remove();
+			@endif
 
 			$('form').submit(function() {
 				$('#save').addClass('disabled').val('Saving...');
