@@ -20,13 +20,10 @@ class CreateProductsTable extends Migration {
 			$table->string('name');
 			$table->string('size');
 			$table->text('description');
-			$table->integer('category_id')->unsigned()->nullable();
 			$table->decimal('price', 9, 2);
 			$table->decimal('fake_price', 9, 2);
 			$table->boolean('new')->default(0);
 			$table->timestamps(); // Adds `created_at` and `updated_at` columns
-
-			$table->foreign('category_id')->references('id')->on('products_categories')->onDelete('cascade');
 
 			if (ToolBelt::mysql_greater(5, 6, 4)) {
 				DB::statement('ALTER TABLE `products` ADD FULLTEXT search(`name`, `description`)');

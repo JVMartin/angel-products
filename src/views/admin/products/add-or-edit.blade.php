@@ -147,6 +147,17 @@
 
 			$('#relatedProductsTable tbody').sortable(sortObj);
 
+			var $category = $('.category').last().clone();
+			$('.category').last().remove();
+
+			$('#addCategory').click(function() {
+				$('#categories').append($category.clone());
+			});
+
+			$('#categories').on('click', '.removeCategory', function() {
+				$(this).closest('.category').remove();
+			});
+
 			$('form').submit(function() {
 				$('#save').addClass('disabled').val('Saving...');
 			});
@@ -194,10 +205,24 @@
 						<tr>
 							<td>
 								<span class="required">*</span>
-								{{ Form::label('category_id', 'Category') }}
+								<b>Categories</b>
 							</td>
 							<td>
-								{{ Form::select('category_id', $ProductCategory::drop_down_with($categories), Input::get('to_category'), array('id'=>'categoryDrop', 'class'=>'form-control', 'style'=>'width:auto;', 'required')) }}
+								<div id="categories">
+									@if ($action == 'add')
+										{{ Form::select('categories[]', $ProductCategory::drop_down_with($categories), Input::get('to_category'), array('class'=>'form-control', 'style'=>'width:auto;margin-bottom:10px;', 'required')) }}
+									@else
+										@foreach ($product->categories as $category)
+											@include('products::admin.products.category-inputs')
+										@endforeach
+									@endif
+									<?php unset($category); ?>
+									@include('products::admin.products.category-inputs')
+								</div>
+								<button id="addCategory" type="button" class="btn btn-sm btn-primary">
+									<span class="glyphicon glyphicon-plus"></span>
+									Add Product To Another Category
+								</button>
 							</td>
 						</tr>
 						<tr>
