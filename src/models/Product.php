@@ -12,7 +12,7 @@ class Product extends LinkableModel {
 	///////////////////////////////////////////////
 	public function categories()
 	{
-		return $this->belongsToMany(App::make('ProductCategory'), 'products_categories_products', 'category_id');
+		return $this->belongsToMany(App::make('ProductCategory'), 'products_categories_products');
 	}
 	public function options()
 	{

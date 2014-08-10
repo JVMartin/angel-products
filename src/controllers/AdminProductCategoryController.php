@@ -55,10 +55,10 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 		$categories = $ProductCategory::all();
 		$order = 0;
 		foreach ($tree['category'] as $category_id=>$parent_id) {
-			$parent_id = ($parent_id == 'null') ? null : $parent_id;
-			$category = $categories->find($category_id);
+			$parent_id           = ($parent_id == 'null') ? null : $parent_id;
+			$category            = $categories->find($category_id);
 			$category->parent_id = $parent_id;
-			$category->order = $order;
+			$category->order     = $order;
 			$category->save();
 			$order++;
 		}
@@ -69,18 +69,17 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 	public function show_products($id)
 	{
 		$ProductCategory = App::make('ProductCategory');
-		$Product = App::make('Product');
 
 		$categories = $ProductCategory::orderBy('parent_id')->orderBy('order')->get();
+		$category   = $categories->find($id);
+		$paginator  = $category->products()->with('images')->paginate();
 
-		$paginator = $Product::with('images')->where('category_id', $id)->paginate();
-
-		$this->data['crumbs'] = $ProductCategory::crumbs($categories, $id);
-		$this->data['category'] = $categories->find($id);
+		$this->data['crumbs']   = $ProductCategory::crumbs($categories, $id);
+		$this->data['category'] = $category;
 		$this->data['products'] = $paginator->getCollection();
 		$appends = $_GET;
 		unset($appends['page']);
-		$this->data['links'] = $paginator->appends($appends)->links();
+		$this->data['links']    = $paginator->appends($appends)->links();
 		return View::make($this->view('show-products'), $this->data);
 	}
 

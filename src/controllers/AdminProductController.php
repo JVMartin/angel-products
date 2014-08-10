@@ -21,7 +21,6 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			'name',
 			'size',
 			'description',
-			'category_id',
 			'price',
 			'fake_price',
 			'new'
@@ -38,9 +37,9 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		return parent::add();
 	}
 
-	public function add_redirect($object)
+	public function add_redirect($product)
 	{
-		return Redirect::to(admin_uri('products/categories/show-products/' . $object->category_id))->with('success', '
+		return Redirect::to(admin_uri('products/categories/show-products/' . $product->categories->first()->id))->with('success', '
 			<p>Product successfully created.</p>
 		');
 	}
@@ -55,18 +54,17 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		return parent::edit($id);
 	}
 
-	public function edit_redirect($object)
+	public function edit_redirect($product)
 	{
-		return Redirect::to($this->uri('edit/' . $object->id))->with('success', '
+		return Redirect::to($this->uri('edit/' . $product->id))->with('success', '
 			<p>Product successfully updated.</p>
-			<p><a href="' . admin_url('products/categories/show-products/' . $object->category_id) . '">Return to index</a></p>
+			<p><a href="' . admin_url('products/categories/show-products/' . $product->categories->first()->id) . '">Return to index</a></p>
 		');
 	}
 
 	public function validate_rules($id = null)
 	{
 		return array(
-			'category_id' => 'required',
 			'name'        => 'required'
 		);
 	}
@@ -76,6 +74,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 	 */
 	public function after_save($product, &$changes = array())
 	{
+		$this->handle_categories($product, $changes);
 		$this->handle_images($product, $changes);
 		$this->handle_options($product, $changes);
 		$this->handle_related($product, $changes);
@@ -218,6 +217,34 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			$noTwice[] = $related_id;
 			if (!in_array($related_id, $old_related)) {
 				$changes['Added related product ID#' . $related_id] = array();
+			}
+		}
+	}
+
+	protected function handle_categories($product, &$changes)
+	{
+		$input_categories = Input::get('categories');
+		$old_categories   = array();
+
+		// Loop through old categories and change log the deletions.
+		foreach ($product->categories()->select('id')->get() as $category) {
+			$old_categories[] = $category->id;
+			if (!in_array($category->id, $input_categories)) {
+				$changes['Deleted product from Category ID#' . $category->id . ' Name: ' . $category->name] = array();
+			}
+		}
+
+		// Detach all categories.
+		$product->categories()->detach();
+
+		// Loop through input categories, attach them, and change log the additions.
+		$noTwice = array();
+		foreach ($input_categories as $category_id) {
+			if (in_array($category_id, $noTwice)) continue; // No repeats, please.
+			$product->categories()->attach($category_id);
+			$noTwice[] = $category_id;
+			if (!in_array($category_id, $old_categories)) {
+				$changes['Added product to Category ID#' . $category_id] = array();
 			}
 		}
 	}

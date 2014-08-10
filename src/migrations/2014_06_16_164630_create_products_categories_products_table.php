@@ -15,12 +15,12 @@ class CreateProductsCategoriesProductsTable extends Migration {
 		Schema::create('products_categories_products', function(Blueprint $table) {
 			$table->engine = 'InnoDB';
 
-			$table->integer('category_id')->unsigned();
+			$table->integer('product_category_id')->unsigned();
 			$table->integer('product_id')->unsigned();
 			$table->integer('order')->unsigned();
 
-			$table->primary(array('category_id', 'product_id'));
-			$table->foreign('category_id')->references('id')->on('products_categories')->onDelete('cascade');
+			$table->primary(array('product_category_id', 'product_id'), 'primary_key');
+			$table->foreign('product_category_id')->references('id')->on('products_categories')->onDelete('cascade');
 			$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
 		});
 	}
