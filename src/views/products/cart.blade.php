@@ -104,7 +104,9 @@
 				<div class="col-sm-3">
 					<h4>Price</h4>
 					<hr />
-					<h5 class="fakePriceWrap">${{ number_format($item['fake_price'], 2) }}</h5>
+					@if ($product->fake_price > 0)
+						<h5 class="fakePriceWrap">${{ number_format($item['fake_price'], 2) }}</h5>
+					@endif
 					<h3>${{ number_format($item['price'], 2) }}</h3>
 				</div>
 				<div class="col-sm-3">

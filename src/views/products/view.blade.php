@@ -10,9 +10,6 @@
 		#fakePriceWrap {
 			text-decoration:line-through;
 			font-style:italic;
-			@if ($product->fake_price == 0)
-				display:none;
-			@endif
 		}
 	</style>
 @stop
@@ -64,7 +61,9 @@
 				{{ $product->description }}
 			</p>
 			<hr />
-			<h5 id="fakePriceWrap">$<span id="fakePrice"></span></h5>
+			@if ($product->fake_price > 0)
+				<h5 id="fakePriceWrap">$<span id="fakePrice"></span></h5>
+			@endif
 			<h3>$<span id="price"></span></h3>
 			{{ Form::open(array('url'=>'cart-add')) }}
 				@foreach ($product->options as $option)
