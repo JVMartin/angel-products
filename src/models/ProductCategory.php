@@ -69,9 +69,6 @@ class ProductCategory extends LinkableModel {
 	///////////////////////////////////////////////
 	//               Menu Linkable               //
 	///////////////////////////////////////////////
-	// Menu link related methods - all menu-linkable models must have these
-	// NOTE: Always pull models with their languages initially if you plan on using these!
-	// Otherwise, you're going to be performing repeated queries.  Naughty.
 	public function link()
 	{
 		$language_segment = (Config::get('core::languages')) ? $this->language->uri . '/' : '';
