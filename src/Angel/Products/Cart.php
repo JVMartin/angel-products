@@ -163,7 +163,8 @@ class Cart {
 
 		$options = array();
 		foreach ($product->selected_options as $string=>$option) {
-			$group_name = explode(':', $string)[0];
+			$pieces = explode(':', $string);
+			$group_name = $pieces[0];
 			$options[$group_name] = $option;
 		}
 
