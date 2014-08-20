@@ -16,6 +16,7 @@ Route::post('checkout', array(
 	'before' => 'csrf',
 	'uses' => 'ProductController@charge'
 ));
+Route::get('inventory-fail', 'ProductController@inventory_fail');
 Route::get('order-summary', 'ProductController@order_summary');
 
 Route::group(array('prefix'=>admin_uri('orders'), 'before'=>'admin'), function() {

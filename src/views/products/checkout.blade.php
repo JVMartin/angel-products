@@ -38,6 +38,9 @@
 			var token = response.id;
 			$('#stripeToken').val(token);
 			$.post('{{ url('checkout') }}', $('#address-form').serialize(), function(data) {
+				if (data == 'inventory_fail') {
+					window.location = '{{ url('inventory-fail') }}';
+				}
 				if (data != 1) {
 					doError($('#address-errors'), data);
 					console.log(data);

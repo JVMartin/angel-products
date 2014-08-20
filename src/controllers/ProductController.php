@@ -98,6 +98,10 @@ class ProductController extends \Angel\Core\AngelController {
 			return $errors;
 		}
 
+		if (!$this->check_inventory()) {
+			return 'inventory_fail';
+		}
+
 		Stripe::setApiKey(Config::get('products::stripe.' . $this->settings['stripe']['value'] . '.secret'));
 
 		try {
@@ -159,6 +163,16 @@ class ProductController extends \Angel\Core\AngelController {
 		});
 
 		return 1;
+	}
+
+	public function check_inventory()
+	{
+		return false;
+	}
+
+	public function inventory_fail()
+	{
+		return Redirect::to('cart')->withErrors('Apologies!  Our inventory is not sufficient to satisfy this order.  Someone purchased the product(s) just before you did!  Shoot!  We have adjusted the product(s) quantities and/or removed them from your cart.  Please verify these new quantities and proceed with the checkout again if you are satisfied.  Your card has not been charged.');
 	}
 
 	public function order_summary()
