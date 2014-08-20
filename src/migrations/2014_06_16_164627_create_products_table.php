@@ -20,6 +20,8 @@ class CreateProductsTable extends Migration {
 			$table->string('name');
 			$table->string('size');
 			$table->text('description');
+			$table->boolean('inventory')->default(0);
+			$table->integer('qty')->unsigned()->default(20);
 			$table->decimal('price', 9, 2);
 			$table->decimal('fake_price', 9, 2);
 			$table->boolean('new')->default(0);

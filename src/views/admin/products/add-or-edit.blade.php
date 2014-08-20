@@ -106,12 +106,14 @@
 					$(this).find('.optionItem').each(function() {
 						$(this).find('.optionItemID').attr('name', 'options['+optCount+'][items]['+optItemCount+'][id]');
 						$(this).find('.optionItemName').attr('name', 'options['+optCount+'][items]['+optItemCount+'][name]');
+						$(this).find('.optionItemQty').attr('name', 'options['+optCount+'][items]['+optItemCount+'][qty]');
 						$(this).find('.optionItemPrice').attr('name', 'options['+optCount+'][items]['+optItemCount+'][price]');
 						$(this).find('.optionItemImage').attr('name', 'options['+optCount+'][items]['+optItemCount+'][image]');
 						optItemCount++;
 					});
 					optCount++;
 				});
+				$('#inventory').trigger('change');
 			}
 			fixOptions();
 
@@ -160,6 +162,23 @@
 			@if ($action == 'edit')
 				$('.removeCategory').first().remove();
 			@endif
+
+			$('#inventory').change(function() {
+				if ($(this).is(':checked')) {
+					if ($('.option').length > 1) {
+						if (!confirm('You can only have one option group with inventory control on.  Continue and drop all but the first option groups?')) {
+							$(this).prop('checked', false);
+							return;
+						}
+						$('.option:not(:first)').remove();
+					}
+					$('.inventoryShow').show();
+					$('.inventoryHide').hide();
+				} else {
+					$('.inventoryShow').hide();
+					$('.inventoryHide').show();
+				}
+			}).trigger('change');
 
 			$('form').submit(function() {
 				$('#save').addClass('disabled').val('Saving...');
@@ -272,6 +291,30 @@
 						</tr>
 						<tr>
 							<td>
+								<b>Inventory Control</b>
+								<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="Check if you would like to limit the quantity of this product available for purchase.  If you do this, the product can only have one option group."></span>
+							</td>
+							<td>
+								{{ Form::hidden('inventory', 0) }}
+								<label>
+									{{ Form::checkbox('inventory', 1, null, array('id'=>'inventory')) }}
+									Yes
+								</label>
+							</td>
+						</tr>
+						<tr class="inventoryShow">
+							<td>
+								{{ Form::label('qty', 'Quantity') }}
+								<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="This quantity is only used if there are no options.  Otherwise, the option quantities are used."></span>
+							</td>
+							<td>
+								<div style="width:300px">
+									{{ Form::text('qty', ($action=='edit') ? $product->qty : 20, array('class'=>'form-control', 'placeholder'=>'Quantity')) }}
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<b>New</b>
 							</td>
 							<td>
@@ -334,7 +377,7 @@
 									<?php unset($option); ?>
 									@include('products::admin.products.option-inputs')
 								</div>
-								<button id="addOption" type="button" class="btn btn-sm btn-primary">
+								<button id="addOption" type="button" class="btn btn-sm btn-primary inventoryHide">
 									<span class="glyphicon glyphicon-plus"></span>
 									Add Option Group
 								</button>

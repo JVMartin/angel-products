@@ -8,6 +8,7 @@
 	</div>
 	<div class="col-sm-2">
 		<input type="text" class="form-control optionItemPrice" placeholder="Price Modifier" value="{{ isset($optionItem) ? $optionItem->price : '' }}" />
+		<input type="text" class="form-control optionItemQty inventoryShow" placeholder="Qty" value="{{ isset($optionItem) ? $optionItem->qty : 20 }}" />
 	</div>
 	<div class="col-sm-5">
 		<input type="text" class="form-control optionItemImage" placeholder="Image" value="{{ isset($optionItem) ? $optionItem->image : '' }}" />

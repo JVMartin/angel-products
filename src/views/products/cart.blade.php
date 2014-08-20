@@ -35,7 +35,13 @@
 			}).submit($.debounce(500, qtyFormSubmit));
 
 			$('.qty').change(function() {
-				if (!parseInt($(this).val())) $(this).val(1);
+				var initial = parseInt($(this).val());
+				if (!initial) $(this).val(1);
+				var max_qty = parseInt($(this).data('max-qty'));
+				if ($(this).val() > max_qty) {
+					$(this).val(max_qty);
+					alert('There are only ' + max_qty + ' of these available for purchase.');
+				}
 				$('#qtyForm').submit();
 			});
 			/*.keyup(function() {
@@ -112,18 +118,25 @@
 				<div class="col-sm-3">
 					<h4>Quantity</h4>
 					<hr />
-					<button type="button" class="btn btn-primary btn-xs qtyMinus">
-						<span class="glyphicon glyphicon-minus"></span>
-					</button>
-					{{ Form::text('qty['.$key.']', $item['qty'], array('class'=>'form-control text-center qty', 'style'=>'display:inline-block;width:50px;')) }}
-					<button type="button" class="btn btn-primary btn-xs qtyPlus">
-						<span class="glyphicon glyphicon-plus"></span>
-					</button>
-					<div style="margin-top:15px;">
+					@if (isset($item['max_qty']) && $item['max_qty'] < 10)
+						<p>
+							<i>Only {{ $item['max_qty'] }} left!</i>
+						</p>
+					@endif
+					<div class="form-group">
+						<button type="button" class="btn btn-primary btn-xs qtyMinus">
+							<span class="glyphicon glyphicon-minus"></span>
+						</button>
+						{{ Form::text('qty['.$key.']', $item['qty'], array('class'=>'form-control text-center qty', 'style'=>'display:inline-block;width:50px;', 'data-max-qty'=>isset($item['max_qty']) ? $item['max_qty'] : null)) }}
+						<button type="button" class="btn btn-primary btn-xs qtyPlus">
+							<span class="glyphicon glyphicon-plus"></span>
+						</button>
+					</div>
+					<p>
 						<a href="{{ url('cart-remove/' . urlencode($key)) }}" class="btn btn-xs btn-default removeItem">
 							Remove This Item
 						</a>
-					</div>
+					</p>
 				</div>
 			</div>
 			<hr />

@@ -19,6 +19,7 @@ class CreateProductsOptionsItemsTable extends Migration {
 			$table->integer('product_option_id')->unsigned();
 			$table->integer('order')->unsigned();
 			$table->string('name');
+			$table->integer('qty')->unsigned()->default(20);;
 			$table->decimal('price', 9, 2);
 			$table->string('image');
 

@@ -68,22 +68,28 @@ class Cart {
 	 *
 	 * @param Product $product - The product model object to add.
 	 * @param int $qty - How many to add to the cart.
-	 * @param array $custom_options - Optional custom options.
 	 * @return string $key - The key for retrieving from the cart.
 	 */
 	public function add($product, $qty = 1)
 	{
 		$key = $this->key($product);
 
+		$max_qty    = $product->qty;
 		$price      = $product->price;
 		$fake_price = $product->fake_price;
 		foreach ($product->selected_options as $option) {
 			$price += $option['price'];
 			if ($fake_price > 0) $fake_price += $option['price'];
+			if (isset($option['qty']) && $option['qty']) {
+				$max_qty = $option['qty'];
+			}
 		}
 
 		if (array_key_exists($key, $this->cart)) {
-			$this->cart[$key]['qty'] += $qty;
+			$desired_qty = $this->cart[$key]['qty'] + $qty;
+			if (isset($this->cart[$key]['max_qty'])) {
+				$this->cart[$key]['qty'] = ($desired_qty > $this->cart[$key]['max_qty']) ? $this->cart[$key]['max_qty'] : $desired_qty;
+			}
 		} else {
 			$this->cart[$key] = array(
 				'product'    => $product->toJson(),
@@ -91,6 +97,10 @@ class Cart {
 				'fake_price' => $fake_price,
 				'qty'        => $qty
 			);
+			if ($product->inventory) {
+				$this->cart[$key]['max_qty'] = $max_qty;
+				$this->cart[$key]['qty'] = ($qty > $max_qty) ? $max_qty : $qty;
+			}
 		}
 
 		$this->save();
@@ -186,6 +196,9 @@ class Cart {
 	{
 		if (!array_key_exists($key, $this->cart)) return false;
 
+		if (isset($this->cart[$key]['max_qty']) && $quantity > $this->cart[$key]['max_qty']) {
+			$quantity = $this->cart[$key]['max_qty'];
+		}
 		$this->cart[$key]['qty'] = $quantity;
 		$this->save();
 

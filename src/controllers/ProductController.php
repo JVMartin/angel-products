@@ -23,7 +23,8 @@ class ProductController extends \Angel\Core\AngelController {
 		$options = array();
 		foreach ($product->options as $option) {
 			foreach ($option->items as $item) {
-				$options[$item->id] = $item->price;
+				$options[$item->id]['price'] = $item->price;
+				$options[$item->id]['qty']   = $item->qty;
 			}
 		}
 

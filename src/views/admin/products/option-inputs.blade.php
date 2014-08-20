@@ -1,6 +1,6 @@
 <div class="panel panel-default option">
 	<div class="panel-heading">
-		<button type="button" class="btn btn-xs btn-default optionHandle">
+		<button type="button" class="btn btn-xs btn-default optionHandle inventoryHide">
 			<span class="glyphicon glyphicon-resize-vertical"></span>
 		</button>
 		<input type="hidden" class="optionID" value="{{ isset($option) ? $option->id : '' }}" />

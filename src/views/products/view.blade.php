@@ -17,15 +17,18 @@
 @section('js')
 	<script>
 		$(function() {
-			var productPrice     = {{ number_format($product->price) }};
-			var productFakePrice = {{ number_format($product->fake_price) }};
+			var qty              = {{ $product->qty }};
+			var inventory        = {{ $product->inventory }};
+			var productPrice     = {{ $product->price }};
+			var productFakePrice = {{ $product->fake_price }};
 			var options          = {{ json_encode($options) }};
 
 			function showPrice() {
 				var price     = productPrice;
 				var fakePrice = productFakePrice;
 				$('.optionSelect').each(function() {
-					var optionPrice = parseFloat(options[$(this).val()]);
+					var optionPrice = parseFloat(options[$(this).val()]['price']);
+					qty             = options[$(this).val()]['qty'];
 					price          += optionPrice;
 					fakePrice      += optionPrice;
 				});
@@ -36,7 +39,51 @@
 
 			$('.optionSelect').change(function() {
 				showPrice();
+				handleQty();
 			});
+
+			function handleQty() {
+				if (!inventory) return;
+				if (qty && $('#qty').val() > qty) {
+					$('#qty').val(qty);
+					alert('There are only '+qty+' of these available for purchase.');
+				}
+				if (qty) {
+					$('.inventoryShow').show();
+					$('.inventoryHide').hide();
+				} else {
+					$('.inventoryShow').hide();
+					$('.inventoryHide').show();
+				}
+				if (qty && qty < 10) {
+					$('#onlyLeft').show().find('span').html(qty);
+				} else {
+					$('#onlyLeft').hide();
+				}
+			}
+			handleQty();
+
+			$('#qty').change(function() {
+				if (!parseInt($(this).val())) $(this).val(1);
+				handleQty();
+			});
+
+			$('.qtyPlus').click(function() {
+				var $qty = $(this).prev();
+				adjustQuantity($qty, 1);
+			});
+			$('.qtyMinus').click(function() {
+				var $qty = $(this).next();
+				adjustQuantity($qty, -1);
+			});
+
+			function adjustQuantity($qty, by) {
+				var qty = $qty.val();
+				var qtyNew = parseInt($qty.val()) + by;
+				qtyNew = (qtyNew) ? qtyNew : 1;
+				if (qty == qtyNew) return;
+				$qty.val(qtyNew).trigger('change');
+			}
 
 			$('.addToCart').click(function() {
 				$(this).addClass('disabled').html('<span class="glyphicon glyphicon-shopping-cart"></span> Adding to cart...');
@@ -73,12 +120,26 @@
 					</div>
 				@endforeach
 				{{ Form::hidden('product_id', $product->id) }}
-				<div class="form-group">
+				<p>
 					{{ Form::label('qty', 'Quantity') }}
+				</p>
+				<p id="onlyLeft" class="inventoryShow">
+					<i>Only <span></span> left!</i>
+				</p>
+				<p class="inventoryHide">
+					<i>Out of stock!</i>
+				</p>
+				<div class="form-group inventoryShow">
+					<button type="button" class="btn btn-primary btn-xs qtyMinus">
+						<span class="glyphicon glyphicon-minus"></span>
+					</button>
 					{{ Form::text('qty', 1, array('class'=>'form-control text-center', 'style'=>'display:inline-block;width:50px;')) }}
+					<button type="button" class="btn btn-primary btn-xs qtyPlus">
+						<span class="glyphicon glyphicon-plus"></span>
+					</button>
 				</div>
 				{{ Form::hidden('product_id', $product->id) }}
-				<button type="submit" class="btn btn-primary addToCart">
+				<button type="submit" class="btn btn-primary addToCart inventoryShow">
 					<span class="glyphicon glyphicon-shopping-cart"></span>
 					Add To Cart
 				</button>

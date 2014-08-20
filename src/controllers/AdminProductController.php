@@ -23,7 +23,9 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			'description',
 			'price',
 			'fake_price',
-			'new'
+			'new',
+			'inventory',
+			'qty'
 		);
 	}
 
@@ -65,7 +67,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 	public function validate_rules($id = null)
 	{
 		return array(
-			'name'        => 'required'
+			'name' => 'required'
 		);
 	}
 
@@ -197,10 +199,11 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 				$item->order             = $order;
 				$item->name              = $input_item['name'];
 				$item->price             = $input_item['price'];
+				$item->qty               = $input_item['qty'];
 				$item->image             = $input_item['image'];
 				$item->save();
 
-				$this->log_relation_change($item, $old_array, array('order', 'name', 'price', 'image'), $changes);
+				$this->log_relation_change($item, $old_array, array('order', 'name', 'price', 'qty', 'image'), $changes);
 			}
 		}
 
