@@ -205,6 +205,7 @@ class ProductController extends \Angel\Core\AngelController {
 					// Not enough products of that selected option
 					$enough = false;
 					$this->Cart->quantity($details['key'], $optionItem->qty);
+					$this->Cart->maxQuantity($details['key'], $optionItem->qty);
 					continue;
 				}
 			} else {
@@ -212,6 +213,7 @@ class ProductController extends \Angel\Core\AngelController {
 					// Not enough of the product
 					$enough = false;
 					$this->Cart->quantity($details['key'], $product->qty);
+					$this->Cart->maxQuantity($details['key'], $optionItem->qty);
 					continue;
 				}
 			}

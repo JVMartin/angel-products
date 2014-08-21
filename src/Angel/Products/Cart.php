@@ -196,10 +196,31 @@ class Cart {
 	{
 		if (!array_key_exists($key, $this->cart)) return false;
 
+		if ($quantity == 0) return $this->remove($key);
+
 		if (isset($this->cart[$key]['max_qty']) && $quantity > $this->cart[$key]['max_qty']) {
 			$quantity = $this->cart[$key]['max_qty'];
 		}
 		$this->cart[$key]['qty'] = $quantity;
+		$this->save();
+
+		return true;
+	}
+
+	/**
+	 * Adjust the cart maximum quantity for a product by its unique key.
+	 *
+	 * @param string $key - The unique key, returned from add().
+	 * @param int $quantity - The new quantity.
+	 * @return bool - Success true or false.
+	 */
+	public function maxQuantity($key, $max_quantity)
+	{
+		if (!array_key_exists($key, $this->cart)) return false;
+
+		if ($max_quantity == 0) return $this->remove($key);
+
+		$this->cart[$key]['max_qty'] = $max_quantity;
 		$this->save();
 
 		return true;
