@@ -1,7 +1,7 @@
 <?php namespace Angel\Products;
 
 use Illuminate\Database\Eloquent\Collection;
-use Session;
+use Session, App;
 
 class Cart {
 
@@ -325,7 +325,7 @@ class Cart {
 			if (!$product) {
 				// Product no longer exists
 				$enough = false;
-				$this->Cart->remove($key);
+				$this->remove($key);
 				continue;
 			}
 			$selected_option = null;
@@ -337,22 +337,22 @@ class Cart {
 				if (!$optionItem) {
 					// Option no longer exists
 					$enough = false;
-					$this->Cart->remove($key);
+					$this->remove($key);
 					continue;
 				}
 				if ($optionItem->qty < $item['qty']) {
 					// Not enough products of that selected option
 					$enough = false;
-					$this->Cart->quantity($key, $optionItem->qty);
-					$this->Cart->maxQuantity($key, $optionItem->qty);
+					$this->quantity($key, $optionItem->qty);
+					$this->maxQuantity($key, $optionItem->qty);
 					continue;
 				}
 			} else {
 				if ($product->qty < $item['qty']) {
 					// Not enough of the product
 					$enough = false;
-					$this->Cart->quantity($key, $product->qty);
-					$this->Cart->maxQuantity($key, $optionItem->qty);
+					$this->quantity($key, $product->qty);
+					$this->maxQuantity($key, $optionItem->qty);
 					continue;
 				}
 			}
