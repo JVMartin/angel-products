@@ -98,7 +98,7 @@ class ProductController extends \Angel\Core\AngelController {
 			return $errors;
 		}
 
-		if (!$this->enough_inventory()) {
+		if (!$this->Cart->enoughInventory()) {
 			return 'inventory_fail';
 		}
 
@@ -165,63 +165,6 @@ class ProductController extends \Angel\Core\AngelController {
 		});
 
 		return 1;
-	}
-
-	public function enough_inventory()
-	{
-		$enough            = true;
-		$Product           = App::make('Product');
-		$ProductOptionItem = App::make('ProductOptionItem');
-
-		$cart_products = array();
-		foreach ($this->Cart->all() as $key=>$item) {
-			if (!isset($item['max_qty'])) continue;
-			$product = json_decode($item['product'], true);
-			$selected_options = array_values($product['selected_options']);
-			$cart_products[$product['id']] = array(
-				'key'             => $key,
-				'qty'             => $item['qty'],
-				'selected_option' => array_shift($selected_options)
-			);
-		}
-
-		$products = $Product::whereIn('id', array_keys($cart_products))->get();
-
-		foreach ($cart_products as $product_id=>$details) {
-			$product = $products->find($product_id);
-			if (!$product) {
-				// Product no longer exists
-				$enough = false;
-				$this->Cart->remove($details['key']);
-				continue;
-			}
-			if (isset($details['selected_option']['id'])) {
-				$optionItem = $ProductOptionItem::find($details['selected_option']['id']);
-				if (!$optionItem) {
-					// Option no longer exists
-					$enough = false;
-					$this->Cart->remove($details['key']);
-					continue;
-				}
-				if ($optionItem->qty < $details['qty']) {
-					// Not enough products of that selected option
-					$enough = false;
-					$this->Cart->quantity($details['key'], $optionItem->qty);
-					$this->Cart->maxQuantity($details['key'], $optionItem->qty);
-					continue;
-				}
-			} else {
-				if ($product->qty < $details['qty']) {
-					// Not enough of the product
-					$enough = false;
-					$this->Cart->quantity($details['key'], $product->qty);
-					$this->Cart->maxQuantity($details['key'], $optionItem->qty);
-					continue;
-				}
-			}
-		}
-
-		return $enough;
 	}
 
 	public function subtract_inventory()

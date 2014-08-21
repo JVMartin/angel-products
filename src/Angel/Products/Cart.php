@@ -1,5 +1,6 @@
 <?php namespace Angel\Products;
 
+use Illuminate\Database\Eloquent\Collection;
 use Session;
 
 class Cart {
@@ -32,7 +33,7 @@ class Cart {
 	/**
 	 * Load a cart array in.  This is so we can use the cart getOptions(), etc.
 	 * for this class from order summaries and whatnot after the card has been charged
-	 * and the cart has been destroyed from the session.
+	 * and the cart has been destroy()ed from the session.
 	 *
 	 * @param array $cart - The cart to load.
 	 */
@@ -252,6 +253,112 @@ class Cart {
 		if (!array_key_exists($key, $this->cart)) return false;
 
 		return $this->cart[$key]['price'] * $this->cart[$key]['qty'];
+	}
+
+
+	/**
+	 * Get all the cart products and cache them.
+	 */
+	protected $products = null;
+	public function products()
+	{
+		if ($this->products) return $this->products;
+
+		$Product = App::make('Product');
+		$product_ids = array();
+		foreach ($this->decoded() as $item) {
+			$product_ids[] = $item['product']['id'];
+		}
+		if (!count($product_ids)) return new Collection;
+		$this->products = $Product::whereIn('id', $product_ids)->get();
+		return $this->products;
+	}
+
+
+	/**
+	 * Get all the selected option items and cache them.
+	 */
+	protected $optionItems = null;
+	public function optionItems()
+	{
+		if ($this->optionItems) return $this->optionItems;
+
+		$ProductOptionItem = App::make('ProductOptionItem');
+
+		$item_ids = array();
+		foreach ($this->decoded() as $item) {
+			if (!count($item['product']['selected_options'])) continue;
+			foreach ($item['product']['selected_options'] as $selected_option) {
+				if (!isset($selected_option['id'])) continue;
+				$item_ids[] = $selected_option['id'];
+			}
+		}
+		if (!count($item_ids)) return new Collection;
+		$this->optionItems = $ProductOptionItem::whereIn('id', $item_ids)->get();
+		return $this->optionItems;
+	}
+
+	/**
+	 * JSON Decode all the cart products and cache them.
+	 */
+	protected $decoded = null;
+	public function decoded()
+	{
+		if ($this->decoded) return $this->decoded;
+
+		$this->decoded = $this->cart;
+		foreach ($this->decoded as &$item) {
+			$item['product'] = json_decode($item['product'], true);
+		}
+
+		return $this->decoded;
+	}
+
+	public function enoughInventory()
+	{
+		$enough = true;
+
+		foreach ($this->decoded() as $key=>$item) {
+			if (!isset($item['max_qty'])) continue;
+
+			$product = $this->products()->find($item['product']['id']);
+			if (!$product) {
+				// Product no longer exists
+				$enough = false;
+				$this->Cart->remove($key);
+				continue;
+			}
+			$selected_option = null;
+			if (count($item['product']['selected_options'])) {
+				$selected_option = array_shift($item['product']['selected_options']);
+			}
+			if ($selected_option) {
+				$optionItem = $this->optionItems()->find($selected_option['id']);
+				if (!$optionItem) {
+					// Option no longer exists
+					$enough = false;
+					$this->Cart->remove($key);
+					continue;
+				}
+				if ($optionItem->qty < $item['qty']) {
+					// Not enough products of that selected option
+					$enough = false;
+					$this->Cart->quantity($key, $optionItem->qty);
+					$this->Cart->maxQuantity($key, $optionItem->qty);
+					continue;
+				}
+			} else {
+				if ($product->qty < $item['qty']) {
+					// Not enough of the product
+					$enough = false;
+					$this->Cart->quantity($key, $product->qty);
+					$this->Cart->maxQuantity($key, $optionItem->qty);
+					continue;
+				}
+			}
+		}
+
+		return $enough;
 	}
 
 }
