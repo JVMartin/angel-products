@@ -314,6 +314,12 @@ class Cart {
 		return $this->decoded;
 	}
 
+	/**
+	 * Verify that there is still enough inventory to satisfy the current cart.  This is checked
+	 * before charging the customer's card.
+	 *
+	 * @return bool
+	 */
 	public function enoughInventory()
 	{
 		$enough = true;
@@ -359,6 +365,30 @@ class Cart {
 		}
 
 		return $enough;
+	}
+
+	/**
+	 * Deduct all the cart quantities from the products / option items.
+	 * This is to be performed after the card has been charged.
+	 */
+	public function subtractInventory()
+	{
+		foreach ($this->decoded() as $item) {
+			if (!isset($item['max_qty'])) continue;
+			$selected_option = null;
+			if (count($item['product']['selected_options'])) {
+				$selected_option = array_shift($item['product']['selected_options']);
+			}
+			if ($selected_option && isset($selected_option['id'])) {
+				$optionItem = $this->optionItems()->find($selected_option['id']);
+				$optionItem->qty -= $item['qty'];
+				$optionItem->save();
+			} else {
+				$product = $this->products()->find($item['product']['id']);
+				$product->qty -= $item['qty'];
+				$product->save();
+			}
+		}
 	}
 
 }

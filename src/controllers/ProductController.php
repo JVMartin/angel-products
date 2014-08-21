@@ -114,10 +114,9 @@ class ProductController extends \Angel\Core\AngelController {
 			return $e->getMessage();
 		}
 
-		$this->subtract_inventory();
+		$this->Cart->subtractInventory();
 
-		$Order = App::make('Order');
-
+		$Order            = App::make('Order');
 		$order            = new $Order;
 		$order->email     = Input::get('email');
 		$order->charge_id = $charge->id;
@@ -143,8 +142,7 @@ class ProductController extends \Angel\Core\AngelController {
 			'state'     => Input::get('shipping_state'),
 			'zip'       => Input::get('shipping_zip'),
 		);
-		$order->shipping_address = json_encode($shipping);
-		$charge->metadata['shipping'] = json_encode($shipping);
+		$order->shipping_address = $charge->metadata['shipping'] = json_encode($shipping);
 
 		if (Auth::check()) {
 			$order->user_id = Auth::user()->id;
@@ -165,37 +163,6 @@ class ProductController extends \Angel\Core\AngelController {
 		});
 
 		return 1;
-	}
-
-	public function subtract_inventory()
-	{
-		$Product           = App::make('Product');
-		$ProductOptionItem = App::make('ProductOptionItem');
-
-		$cart_products     = array();
-		foreach ($this->Cart->all() as $item) {
-			if (!isset($item['max_qty'])) continue;
-			$product = json_decode($item['product'], true);
-			$selected_options = array_values($product['selected_options']);
-			$cart_products[$product['id']] = array(
-				'qty'             => $item['qty'],
-				'selected_option' => array_shift($selected_options)
-			);
-		}
-
-		$products = $Product::whereIn('id', array_keys($cart_products))->get();
-
-		foreach ($cart_products as $product_id=>$details) {
-			$product = $products->find($product_id);
-			if (isset($details['selected_option']['id'])) {
-				$optionItem = $ProductOptionItem::find($details['selected_option']['id']);
-				$optionItem->qty -= $details['qty'];
-				$optionItem->save();
-			} else {
-				$product->qty -= $details['qty'];
-				$product->save();
-			}
-		}
 	}
 
 	public function inventory_fail()
