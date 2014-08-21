@@ -17,7 +17,7 @@ class ProductController extends \Angel\Core\AngelController {
 		$Product         = App::make('Product');
 		$ProductCategory = App::make('ProductCategory');
 
-		$product = $Product::with('images', 'options')->where('slug', $slug)->firstOrFail();
+		$product    = $Product::with('images', 'options')->where('slug', $slug)->firstOrFail();
 		$categories = $ProductCategory::orderBy('parent_id')->orderBy('order')->get();
 
 		$options = array();
