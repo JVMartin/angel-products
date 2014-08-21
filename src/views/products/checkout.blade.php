@@ -39,7 +39,9 @@
 			$('#stripeToken').val(token);
 			$.post('{{ url('checkout') }}', $('#address-form').serialize(), function(data) {
 				if (data == 'inventory_fail') {
+					doError($('#address-errors'), 'Not enough inventory!');
 					window.location = '{{ url('inventory-fail') }}';
+					return;
 				}
 				if (data != 1) {
 					doError($('#address-errors'), data);
