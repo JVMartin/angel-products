@@ -16,12 +16,34 @@
 @section('js')
 	{{ HTML::script('packages/angel/core/js/ckeditor/ckeditor.js') }}
 	<script>
+		// Keep BootStrap's tooltip from conflicting with jQuery UI's tooltip
 		$.fn.bsTooltip = $.fn.tooltip.noConflict();
 	</script>
 	{{ HTML::script('packages/angel/core/js/jquery/jquery-ui.min.js') }}
 	<script>
 		$(function() {
+			$('form').submit(function() {
+				$('#save').addClass('disabled').val('Saving...');
+			});
+
 			$('.glyphicon-question-sign').bsTooltip();
+
+			//-------------
+			// Categories
+			//-------------
+			var $category = $('.category').last().clone();
+			$('.category').last().remove();
+
+			$('#addCategory').click(function() {
+				$('#categories').append($category.clone());
+			});
+
+			$('#categories').on('click', '.removeCategory', function() {
+				$(this).closest('.category').remove();
+			});
+			@if ($action == 'edit')
+				$('.removeCategory').first().remove();
+			@endif
 
 			//-----------
 			// Images
@@ -129,6 +151,9 @@
 				}
 			});
 
+			//-------------------
+			// Related Products
+			//-------------------
 			$('#relatedProductsTable').on('change', '.relatedCategory', function() {
 				var $categoryID = $(this).val();
 				var $tr = $(this).closest('tr');
@@ -149,20 +174,9 @@
 
 			$('#relatedProductsTable tbody').sortable(sortObj);
 
-			var $category = $('.category').last().clone();
-			$('.category').last().remove();
-
-			$('#addCategory').click(function() {
-				$('#categories').append($category.clone());
-			});
-
-			$('#categories').on('click', '.removeCategory', function() {
-				$(this).closest('.category').remove();
-			});
-			@if ($action == 'edit')
-				$('.removeCategory').first().remove();
-			@endif
-
+			//--------------------
+			// Inventory Control
+			//--------------------
 			$('#inventory').change(function() {
 				if ($(this).is(':checked')) {
 					if ($('.option').length > 1) {
@@ -179,10 +193,6 @@
 					$('.inventoryHide').show();
 				}
 			}).trigger('change');
-
-			$('form').submit(function() {
-				$('#save').addClass('disabled').val('Saving...');
-			});
 		});
 	</script>
 @stop
