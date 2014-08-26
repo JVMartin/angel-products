@@ -117,6 +117,7 @@
 			$('#options').on('click', '.addOptionItem', function() {
 				$(this).prev().append($optionItem.clone());
 				fixOptions();
+				bindImageBrowsers();
 			});
 
 			function fixOptions() {
