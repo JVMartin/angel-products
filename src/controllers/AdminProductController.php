@@ -20,7 +20,7 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		return array(
 			'name',
 			'size',
-			'description',
+			'html',
 			'price',
 			'fake_price',
 			'new',
@@ -69,6 +69,11 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 		return array(
 			'name' => 'required'
 		);
+	}
+
+	public function before_save(&$product, &$changes = array())
+	{
+		$product->plaintext = strip_tags($product->html);
 	}
 
 	/**

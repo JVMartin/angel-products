@@ -338,10 +338,10 @@
 						</tr>
 						<tr>
 							<td>
-								{{ Form::label('description', 'Description') }}
+								{{ Form::label('html', 'HTML') }}
 							</td>
 							<td>
-								{{ Form::textarea('description', null, array('class'=>'ckeditor')) }}
+								{{ Form::textarea('html', null, array('class'=>'ckeditor')) }}
 							</td>
 						</tr>
 						<tr>

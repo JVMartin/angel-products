@@ -79,5 +79,13 @@ class ProductCategory extends LinkableModel {
 	{
 		return admin_url('products/categories/edit/' . $this->id);
 	}
+	public function search($terms)
+	{
+		return static::where(function($query) use ($terms) {
+			foreach ($terms as $term) {
+				$query->orWhere('name', 'like', $term);
+			}
+		})->get();
+	}
 
 }

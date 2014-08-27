@@ -105,7 +105,7 @@
 			{{ $crumbs }}
 			<h1 style="margin:0 0 10px;">{{ $product->name }}</h1>
 			<p>
-				{{ $product->description }}
+				{{ $product->html }}
 			</p>
 			<hr />
 			@if ($product->fake_price > 0)

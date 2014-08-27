@@ -19,7 +19,8 @@ class CreateProductsTable extends Migration {
 			$table->string('slug')->unique();
 			$table->string('name');
 			$table->string('size');
-			$table->text('description');
+			$table->text('html');
+			$table->text('plaintext');
 			$table->boolean('inventory')->default(0);
 			$table->integer('qty')->unsigned()->default(20);
 			$table->decimal('price', 9, 2);
@@ -28,7 +29,7 @@ class CreateProductsTable extends Migration {
 			$table->timestamps(); // Adds `created_at` and `updated_at` columns
 
 			if (ToolBelt::mysql_greater(5, 6, 4)) {
-				DB::statement('ALTER TABLE `products` ADD FULLTEXT search(`name`, `description`)');
+				DB::statement('ALTER TABLE `products` ADD FULLTEXT search(`name`, `plaintext`)');
 			}
 		});
 	}

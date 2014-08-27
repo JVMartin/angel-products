@@ -117,5 +117,14 @@ class Product extends LinkableModel {
 	{
 		return admin_url('products/edit/' . $this->id);
 	}
+	public function search($terms)
+	{
+		return static::where(function($query) use ($terms) {
+			foreach ($terms as $term) {
+				$query->orWhere('name', 'like', $term);
+				$query->orWhere('url',  'like', $term);
+			}
+		})->get();
+	}
 
 }
