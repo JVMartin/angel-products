@@ -1,10 +1,20 @@
 {
 	"name": "angel/products",
 	"description": "An Angel CMS module for products.",
+	"keywords": [
+		"angel",
+		"cms",
+		"laravel",
+		"products",
+		"commerce",
+		"cart"
+	],
+	"homepage": "https://github.com/JVMartin/angel-products",
 	"authors": [
 		{
 			"name": "Jacob Martin",
-			"email": "jacobm@angelvisiontech.com"
+			"email": "jacobm@angelvisiontech.com",
+			"homepage": "http://jacobvmartin.com"
 		}
 	],
 	"require": {
@@ -21,6 +31,5 @@
 		"psr-0": {
 			"Angel\\Products\\": "src/"
 		}
-	},
-	"minimum-stability": "stable"
+	}
 }
