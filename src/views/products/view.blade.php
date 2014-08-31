@@ -121,12 +121,14 @@
 				<p>
 					{{ Form::label('qty', 'Quantity') }}
 				</p>
-				<p id="onlyLeft" class="inventoryShow">
-					<i>Only <span></span> left!</i>
-				</p>
-				<p class="inventoryHide">
-					<i>Out of stock!</i>
-				</p>
+				@if ($product->inventory)
+					<p id="onlyLeft" class="inventoryShow">
+						<i>Only <span></span> left!</i>
+					</p>
+					<p class="inventoryHide">
+						<i>Out of stock!</i>
+					</p>
+				@endif
 				<div class="form-group inventoryShow">
 					<button type="button" class="btn btn-primary btn-xs qtyMinus">
 						<span class="glyphicon glyphicon-minus"></span>
