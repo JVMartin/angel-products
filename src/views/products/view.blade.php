@@ -104,9 +104,7 @@
 		<div class="col-sm-6">
 			{{ $crumbs }}
 			<h1 style="margin:0 0 10px;">{{ $product->name }}</h1>
-			<p>
-				{{ $product->html }}
-			</p>
+			{{ $product->html }}
 			<hr />
 			@if ($product->fake_price > 0)
 				<h5 id="fakePriceWrap">$<span id="fakePrice"></span></h5>
