@@ -21,11 +21,11 @@ class CreateProductsTable extends Migration {
 			$table->string('size');
 			$table->text('html');
 			$table->text('plaintext');
-			$table->boolean('inventory')->default(0);
+			$table->boolean('inventory');
 			$table->integer('qty')->unsigned()->default(20);
 			$table->decimal('price', 9, 2);
 			$table->decimal('fake_price', 9, 2);
-			$table->boolean('new')->default(0);
+			$table->boolean('new');
 			$table->timestamps(); // Adds `created_at` and `updated_at` columns
 
 			if (ToolBelt::mysql_greater(5, 6, 4)) {

@@ -22,9 +22,9 @@ class CreateOrdersTable extends Migration {
 			$table->text('shipping_address');
 			$table->text('billing_address');
 			$table->string('charge_id');
-			$table->boolean('shipped')->default(0);
+			$table->boolean('shipped');
 			$table->string('tracking');
-			$table->boolean('tracking_sent')->default(0);
+			$table->boolean('tracking_sent');
 			$table->integer('user_id')->unsigned()->nullable();
 			$table->timestamps();
 		});
