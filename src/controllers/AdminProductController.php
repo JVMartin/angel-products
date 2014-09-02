@@ -89,29 +89,25 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 
 	protected function handle_categories($product, &$changes)
 	{
-		$input_categories = Input::get('categories');
-		$old_categories   = array();
-
-		// Loop through old categories and change log the deletions.
-		foreach ($product->categories()->select('id')->get() as $category) {
-			$old_categories[] = $category->id;
-			if (!in_array($category->id, $input_categories)) {
-				$changes['Removed product from Category ID#' . $category->id . ' Name: ' . $category->name] = array();
-			}
+		$ids = count(Input::get('categories')) ? Input::get('categories') : array();
+		$category_changes = $product->categories()->sync($ids);
+		foreach ($category_changes['attached'] as $id) {
+			$changes['Added product to Category ID#' . $id] = array();
 		}
+		foreach ($category_changes['detached'] as $id) {
+			$changes['Removed product from Category ID#' . $id] = array();
+		}
+	}
 
-		// Detach all categories.
-		$product->categories()->detach();
-
-		// Loop through input categories, attach them, and change log the additions.
-		$noTwice = array();
-		foreach ($input_categories as $category_id) {
-			if (in_array($category_id, $noTwice)) continue; // No repeats, please.
-			$product->categories()->attach($category_id);
-			$noTwice[] = $category_id;
-			if (!in_array($category_id, $old_categories)) {
-				$changes['Added product to Category ID#' . $category_id] = array();
-			}
+	protected function handle_related($product, &$changes)
+	{
+		$ids = count(Input::get('related')) ? Input::get('related') : array();
+		$related_changes = $product->related()->sync($ids);
+		foreach ($related_changes['attached'] as $id) {
+			$changes['Added related Product ID#' . $id] = array();
+		}
+		foreach ($related_changes['detached'] as $id) {
+			$changes['Removed related Product ID#' . $id] = array();
 		}
 	}
 
@@ -225,34 +221,6 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 			if (!in_array($item->id, $input_item_ids)) {
 				$this->log_relation_deletion($item, $changes);
 				$item->delete();
-			}
-		}
-	}
-
-	protected function handle_related($product, &$changes)
-	{
-		$input_related = Input::get('related') ? Input::get('related') : array();
-		$old_related   = array();
-
-		// Loop through old related products and change log the deletions.
-		foreach ($product->related()->select('id')->get() as $related_product) {
-			$old_related[] = $related_product->id;
-			if (!in_array($related_product->id, $input_related)) {
-				$changes['Deleted related product ID#' . $related_product->id . ' Name: ' . $related_product->name] = array();
-			}
-		}
-
-		// Detach all related products.
-		$product->related()->detach();
-
-		// Loop through input related products, attach them, and change log the additions.
-		$noTwice = array();
-		foreach ($input_related as $order => $related_id) {
-			if (in_array($related_id, $noTwice)) continue; // No repeats, please.
-			$product->related()->attach($related_id, array('order' => $order));
-			$noTwice[] = $related_id;
-			if (!in_array($related_id, $old_related)) {
-				$changes['Added related product ID#' . $related_id] = array();
 			}
 		}
 	}
