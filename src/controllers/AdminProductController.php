@@ -41,9 +41,8 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 
 	public function add_redirect($product)
 	{
-		return Redirect::to(admin_uri('products/categories/show-products/' . $product->categories->first()->id))->with('success', '
-			<p>Product successfully created.</p>
-		');
+		return Redirect::to(admin_uri('products/categories/show-products/' . $product->categories->first()->id))
+			           ->with('success', '<p>Product successfully created.</p>');
 	}
 
 	public function edit($id)
@@ -58,9 +57,14 @@ class AdminProductController extends \Angel\Core\AdminCrudController {
 
 	public function edit_redirect($product)
 	{
-		return Redirect::to($this->uri('edit/' . $product->id))->with('success', '
+		return Redirect::to($this->uri('edit/' . $product->id))
+			           ->with('success', '
 			<p>Product successfully updated.</p>
-			<p><a href="' . admin_url('products/categories/show-products/' . $product->categories->first()->id) . '">Return to index</a></p>
+			<p>
+				<a href="' . admin_url('products/categories/show-products/' . $product->categories->first()->id) . '">
+					Return to index
+				</a>
+			</p>
 		');
 	}
 
