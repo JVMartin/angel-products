@@ -10,7 +10,7 @@
 	<meta name="twitter:description" content="{{ $product->plaintext }}" />
 	<meta name="og:url" content="{{ $product->link() }}" />
 	<meta name="twitter:url" content="{{ $product->link() }}" />
-	<meta name="og:type" content="" />
+	<meta name="og:type" content="website" />
 	@if ($product->images->count())
 		<meta name="og:image" content="{{ asset($product->images[0]->thumb) }}" />
 		<meta name="twitter:card" content="{{ asset($product->images[0]->thumb) }}" />
