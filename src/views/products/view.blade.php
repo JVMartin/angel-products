@@ -3,6 +3,19 @@
 @section('title', $product->name)
 
 @section('meta')
+	<meta name="og:title" content="{{ $product->name }}" />
+	<meta name="twitter:title" content="{{ $product->name }}" />
+	<meta name="description" content="{{ $product->plaintext }}" />
+	<meta name="og:description" content="{{ $product->plaintext }}" />
+	<meta name="twitter:description" content="{{ $product->plaintext }}" />
+	<meta name="og:url" content="{{ $product->link() }}" />
+	<meta name="twitter:url" content="{{ $product->link() }}" />
+	<meta name="og:type" content="" />
+	@if ($product->images->count())
+		<meta name="og:image" content="{{ asset($product->images[0]->thumb) }}" />
+		<meta name="twitter:card" content="{{ asset($product->images[0]->thumb) }}" />
+		<meta name="twitter:image" content="{{ asset($product->images[0]->thumb) }}" />
+	@endif
 @stop
 
 @section('css')
