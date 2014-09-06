@@ -158,11 +158,17 @@ class ProductController extends \Angel\Core\AngelController {
 		$this->Cart->destroy();
 
 		$this->data['order'] = $order;
+
+		$this->email_receipt($order);
+
+		return 1;
+	}
+
+	public function email_receipt($order)
+	{
 		Mail::send('products::orders.emails.receipt', $this->data, function($message) use ($order) {
 			$message->to($order->email)->subject('Receipt for Order #' . $order->id);
 		});
-
-		return 1;
 	}
 
 	public function inventory_fail()
