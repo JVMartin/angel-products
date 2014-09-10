@@ -1,8 +1,8 @@
 <?php namespace Angel\Products;
 
-use Eloquent, App;
+use App;
 
-class ProductOption extends Eloquent {
+class ProductOption extends \Eloquent {
 
 	protected $table = 'products_options';
 	public $timestamps = false;
