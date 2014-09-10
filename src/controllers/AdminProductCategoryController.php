@@ -10,18 +10,6 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 	protected $singular	= 'category';
 	protected $package	= 'products';
 
-	protected $slug        = 'name';
-	protected $reorderable = true;
-
-	// Columns to update on edit/add
-	protected static function columns()
-	{
-		return array(
-			'name',
-			'image'
-		);
-	}
-
 	public function index()
 	{
 		$ProductCategory = App::make('ProductCategory');
@@ -33,13 +21,6 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 		$this->data['categories'] = $categories;
 
 		return View::make($this->view('index'), $this->data);
-	}
-
-	public function validate_rules($id = null)
-	{
-		return array(
-			'name' => 'required'
-		);
 	}
 
 	public function update_tree()

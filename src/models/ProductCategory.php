@@ -7,6 +7,28 @@ class ProductCategory extends LinkableModel {
 
 	protected $table = 'products_categories';
 
+	protected $slugSeed = 'name';
+
+	public static $reorderable = true;
+
+	public static function columns()
+	{
+		return array(
+			'name',
+			'image'
+		);
+	}
+
+	public function validate_rules()
+	{
+		return array(
+			'name' => 'required'
+		);
+	}
+
+	///////////////////////////////////////////////
+	//               Relationships               //
+	///////////////////////////////////////////////
 	public function children()
 	{
 		return $this->hasMany(get_class($this), 'parent_id')->orderBy('order');
