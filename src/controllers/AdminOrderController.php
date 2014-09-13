@@ -37,7 +37,7 @@ class AdminOrderController extends \Angel\Core\AdminCrudController {
 		$order = $Order::findOrFail($id);
 		$order->shipped = Input::has('mark-shipped');
 		$order->save();
-		return Redirect::to(admin_uri('orders/show/' . $order->id));
+		return Redirect::to($this->uri('show/' . $order->id));
 	}
 
 	public function tracking($id)
@@ -46,7 +46,7 @@ class AdminOrderController extends \Angel\Core\AdminCrudController {
 		$order = $Order::findOrFail($id);
 		$order->tracking = Input::get('tracking');
 		$order->save();
-		return Redirect::to(admin_uri('orders/show/' . $order->id))->with('success', 'Tracking number updated.');
+		return Redirect::to($this->uri('show/' . $order->id))->with('success', 'Tracking number updated.');
 	}
 
 	public function send_tracking($id)
@@ -66,7 +66,7 @@ class AdminOrderController extends \Angel\Core\AdminCrudController {
 			$message->to($order->email)->subject('Tracking Number for Order #' . $order->id);
 		});
 
-		return Redirect::to(admin_uri('orders/show/' . $order->id))->with('success', 'Tracking number emailed to customer.');
+		return Redirect::to($this->uri('show/' . $order->id))->with('success', 'Tracking number emailed to customer.');
 	}
 
 }
