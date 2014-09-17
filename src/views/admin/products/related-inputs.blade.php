@@ -5,12 +5,12 @@
 		</button>
 	</td>
 	<td>
-		{{ Form::select(null, $ProductCategory::drop_down_with($categories), isset($relatedProduct) ? $relatedProduct->category_id : null, array('class'=>'form-control relatedCategory', 'style'=>'width:auto;')) }}
+		{{ Form::select(null, $categories->lists('name', 'id'), isset($relatedProduct) ? $relatedProduct->category_id : null, array('class'=>'form-control relatedCategory', 'style'=>'width:auto;')) }}
 	</td>
 	<td>
 		@foreach ($categories as $category)
 			@if ($category->products->count())
-				{{ Form::select('related[]', $Product::drop_down_with($category->products), isset($relatedProduct) ? $relatedProduct->id : null, array('class'=>'form-control relatedCategoryProducts category' . $category->id, 'style'=>'width:auto;display:none;')) }}
+				{{ Form::select('related[]', $category->products->lists('name', 'id'), isset($relatedProduct) ? $relatedProduct->id : null, array('class'=>'form-control relatedCategoryProducts category' . $category->id, 'style'=>'width:auto;display:none;')) }}
 			@endif
 		@endforeach
 	</td>

@@ -243,7 +243,7 @@
 							<td>
 								<div id="categories">
 									@if ($action == 'add')
-										{{ Form::select('categories[]', $ProductCategory::drop_down_with($categories), Input::get('to_category'), array('class'=>'form-control', 'style'=>'width:auto;margin-bottom:10px;', 'required')) }}
+										{{ Form::select('categories[]', $categories->lists('name', 'id'), Input::get('to_category'), array('class'=>'form-control', 'style'=>'width:auto;margin-bottom:10px;', 'required')) }}
 									@else
 										@foreach ($product->categories as $category)
 											@include('products::admin.products.category-inputs')
