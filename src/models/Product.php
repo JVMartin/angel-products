@@ -97,10 +97,10 @@ class Product extends \Angel\Core\LinkableModel {
 
 			// Update image or create new one
 			$image = ($image) ? $image : new $ProductImage;
-			$image->product_id	= $this->id;
-			$image->order		= $order;
-			$image->image		= $input_image;
-			$image->thumb		= $input_thumb;
+			$image->product_id = $this->id;
+			$image->order      = $order;
+			$image->image      = $input_image;
+			$image->thumb      = $input_thumb;
 			$image->save();
 
 			with(App::make('Change'))->log_relation_change($image, $old_array, array('order', 'image', 'thumb'), $changes);
