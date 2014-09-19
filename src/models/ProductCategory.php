@@ -1,9 +1,8 @@
 <?php namespace Angel\Products;
 
-use Angel\Core\LinkableModel;
 use View, Config, App;
 
-class ProductCategory extends LinkableModel {
+class ProductCategory extends \Angel\Core\LinkableModel {
 
 	protected $table = 'products_categories';
 
