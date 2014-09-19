@@ -7,9 +7,8 @@ class ProductCategory extends LinkableModel {
 
 	protected $table = 'products_categories';
 
-	protected $slugSeed = 'name';
-
-	public static $reorderable = true;
+	protected $slugSeed    = 'name';
+	protected $reorderable = true;
 
 	public static function columns()
 	{
