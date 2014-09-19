@@ -1,7 +1,8 @@
 <?php namespace Angel\Products;
 
 class ProductImage extends \Eloquent {
-	protected $table = 'products_images';
+
+	protected $table   = 'products_images';
 	public $timestamps = false;
 
 	public function src()
@@ -12,4 +13,5 @@ class ProductImage extends \Eloquent {
 	{
 		if ($this->thumb) return asset($this->thumb);
 	}
+
 }

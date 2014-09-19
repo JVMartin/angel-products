@@ -4,7 +4,7 @@ use App;
 
 class ProductOption extends \Eloquent {
 
-	protected $table = 'products_options';
+	protected $table   = 'products_options';
 	public $timestamps = false;
 
 	///////////////////////////////////////////////

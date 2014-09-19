@@ -2,7 +2,7 @@
 
 class ProductOptionItem extends \Eloquent {
 
-	protected $table = 'products_options_items';
+	protected $table   = 'products_options_items';
 	public $timestamps = false;
 
 }
