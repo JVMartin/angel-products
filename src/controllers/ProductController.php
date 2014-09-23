@@ -166,7 +166,9 @@ class ProductController extends \Angel\Core\AngelController {
 
 	public function email_receipt($order)
 	{
+		$this->data['order'] = $order;
 		Mail::send('products::orders.emails.receipt', $this->data, function($message) use ($order) {
+			$message->from($this->data['settings']['emails']['value']);
 			$message->to($order->email)->subject('Receipt for Order #' . $order->id);
 		});
 	}
