@@ -24,11 +24,6 @@ class CreateProductsCategoriesTable extends Migration {
 			$table->timestamps();
 
 			$table->foreign('parent_id')->references('id')->on('products_categories')->onDelete('cascade');
-
-			if (Config::get('core::languages')) {
-				$table->integer('language_id')->unsigned()->default(1);
-				$table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
-			}
 		});
 	}
 

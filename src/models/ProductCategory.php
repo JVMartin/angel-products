@@ -91,9 +91,7 @@ class ProductCategory extends \Angel\Core\LinkableModel {
 	///////////////////////////////////////////////
 	public function link()
 	{
-		$language_segment = (Config::get('core::languages')) ? $this->language->uri . '/' : '';
-
-		return url($language_segment . 'products/categories/' . $this->slug);
+		return url('products/categories/' . $this->slug);
 	}
 	public function link_edit()
 	{
