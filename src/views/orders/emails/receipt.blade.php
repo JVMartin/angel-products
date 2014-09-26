@@ -6,8 +6,8 @@
 	$billing_address  = json_decode($order->billing_address);
 	$shipping_address = json_decode($order->shipping_address);
 
-	$Cart = App::make('Cart');
-	$Cart->load($cart);
+	$TempCart = clone App::make('Cart');
+	$TempCart->load($cart);
 	?>
 	<p>
 		Thank you for your order!  Here is your receipt.
@@ -47,7 +47,7 @@
 				{{ $product->name }}
 			</a>
 			<?php
-			$options = $Cart->getOptions($key);
+			$options = $TempCart->getOptions($key);
 			if (count($options)) {
 				echo '(';
 				$i = 0;

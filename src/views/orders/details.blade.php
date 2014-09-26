@@ -3,8 +3,8 @@ $cart             = json_decode($order->cart, true);
 $billing_address  = json_decode($order->billing_address);
 $shipping_address = json_decode($order->shipping_address);
 
-$Cart = App::make('Cart');
-$Cart->load($cart);
+$TempCart = clone App::make('Cart');
+$TempCart->load($cart);
 ?>
 <div class="row">
 	<div class="col-xs-12">
@@ -50,7 +50,7 @@ $Cart->load($cart);
 				</a>
 			</h4>
 			<hr />
-			@foreach ($Cart->getOptions($key) as $group_name=>$option)
+			@foreach ($TempCart->getOptions($key) as $group_name=>$option)
 				<p>
 					<b>{{ $group_name }}:</b>
 				</p>
@@ -62,7 +62,9 @@ $Cart->load($cart);
 		<div class="col-sm-3">
 			<h4>Price</h4>
 			<hr />
-			<h5 style="text-decoration:line-through;font-style:italic;">${{ number_format($item['fake_price'], 2) }}</h5>
+			@if ($item['fake_price'] > 0)
+				<h5 style="text-decoration:line-through;font-style:italic;">${{ number_format($item['fake_price'], 2) }}</h5>
+			@endif
 			<h3>${{ number_format($item['price'], 2) }}</h3>
 		</div>
 		<div class="col-sm-3">
