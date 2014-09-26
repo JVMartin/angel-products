@@ -1,7 +1,7 @@
 <?php namespace Angel\Products;
 
 use Illuminate\Database\Eloquent\Collection;
-use Config, App, Input;
+use App, Input;
 
 class Product extends \Angel\Core\LinkableModel {
 

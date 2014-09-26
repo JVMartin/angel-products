@@ -1,6 +1,6 @@
 <?php namespace Angel\Products;
 
-use View, Config, App;
+use View, App;
 
 class ProductCategory extends \Angel\Core\LinkableModel {
 
