@@ -29,7 +29,7 @@ class CreateProductsTable extends Migration {
 			$table->timestamps(); // Adds `created_at` and `updated_at` columns
 		});
 
-		if (ToolBelt::mysql_greater(5, 6, 4)) {
+		if (ToolBelt::mysql_greater('5.6.4')) {
 			DB::statement('ALTER TABLE `products` ADD FULLTEXT search(`name`, `plaintext`)');
 		}
 	}
