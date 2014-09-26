@@ -119,6 +119,7 @@ class Product extends \Angel\Core\LinkableModel {
 	{
 		$ProductOption     = App::make('ProductOption');
 		$ProductOptionItem = App::make('ProductOptionItem');
+		$Change            = App::make('Change');
 
 		// Get all existing options and option items
 		$options    = $ProductOption::where('product_id', $this->id)->get();
@@ -147,7 +148,7 @@ class Product extends \Angel\Core\LinkableModel {
 			$option->name       = $input_option['name'];
 			$option->save();
 
-			with(App::make('Change'))->log_relation_change($option, $old_array, array('order', 'name'), $changes);
+			$Change->log_relation_change($option, $old_array, array('order', 'name'), $changes);
 
 			foreach ($input_option['items'] as $order=>$input_item) {
 				if ($input_item['id']) $input_item_ids[] = $input_item['id'];
@@ -168,14 +169,14 @@ class Product extends \Angel\Core\LinkableModel {
 				$item->image             = $input_item['image'];
 				$item->save();
 
-				with(App::make('Change'))->log_relation_change($item, $old_array, array('order', 'name', 'price', 'qty', 'image'), $changes);
+				$Change->log_relation_change($item, $old_array, array('order', 'name', 'price', 'qty', 'image'), $changes);
 			}
 		}
 
 		// Delete all options not in input
 		foreach ($options as $option) {
 			if (!in_array($option->id, $input_option_ids)) {
-				with(App::make('Change'))->log_relation_deletion($option, $changes);
+				$Change->log_relation_deletion($option, $changes);
 				$option->delete();
 			}
 		}
@@ -183,7 +184,7 @@ class Product extends \Angel\Core\LinkableModel {
 		// Delete all option items not in input
 		foreach ($items as $item) {
 			if (!in_array($item->id, $input_item_ids)) {
-				with(App::make('Change'))->log_relation_deletion($item, $changes);
+				$Change->log_relation_deletion($item, $changes);
 				$item->delete();
 			}
 		}
