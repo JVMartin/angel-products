@@ -94,10 +94,22 @@
 				}
 			});
 
+			function addOptionGroup() {
+				var $newOption = $option.clone();
+				$newOption.find('.options').sortable({
+					cancel: '',
+					handle: '.handle',
+					stop: function(e, ui) {
+						fixOptions();
+					}
+				});
+				$('#options').append($newOption);
+			}
+
 			$('#options').on('click', '.removeOption', function() {
 				$(this).closest('.option').remove();
 				if ($('.option').length < 1) {
-					$('#options').append($option.clone());
+					addOptionGroup();
 				}
 				fixOptions();
 			});
@@ -111,7 +123,7 @@
 			});
 
 			$('#addOption').click(function() {
-				$('#options').append($option.clone());
+				addOptionGroup();
 				fixOptions();
 			});
 			$('#options').on('click', '.addOptionItem', function() {
