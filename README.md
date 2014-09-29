@@ -9,7 +9,7 @@ Installation
 Add the following requirements to your `composer.json` file:
 ```javascript
 "require": {
-	"angel/products": "dev-master"
+	"angel/products": "1.0.*"
 },
 ```
 
