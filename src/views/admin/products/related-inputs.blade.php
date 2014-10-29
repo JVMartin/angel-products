@@ -5,7 +5,7 @@
 		</button>
 	</td>
 	<td>
-		{{ Form::select(null, $categories->lists('name', 'id'), isset($relatedProduct) ? $relatedProduct->category_id : null, array('class'=>'form-control relatedCategory', 'style'=>'width:auto;')) }}
+		{{ Form::select(null, $categories->lists('name', 'id'), isset($relatedProduct) ? $relatedProduct->categories[0]->id : null, array('class'=>'form-control relatedCategory', 'style'=>'width:auto;')) }}
 	</td>
 	<td>
 		@foreach ($categories as $category)
