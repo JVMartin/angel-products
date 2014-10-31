@@ -76,8 +76,8 @@
 								<td>{{ $product->name }}</td>
 								<td>{{ $product->price }}</td>
 								<td>
-									@if ($product->images->count())
-										<img src="{{ asset($product->images->first()->image) }}" style="width:120px;" />
+									@if ($product->images->count() && $product->images->first()->thumb)
+										<img src="{{ asset($product->images->first()->thumb) }}" style="width:120px;" />
 									@endif
 								</td>
 							</tr>
