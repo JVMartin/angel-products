@@ -60,32 +60,6 @@ class ProductCategory extends \Angel\Core\LinkableModel {
 		return View::make('products::products.categories.crumbs', compact('crumbs', 'url'));
 	}
 
-	/**
-	 * Creates a nested array of categories and their children.
-	 *
-	 * @param $categories - An Illuniate Collection of all product categories.
-	 * @param null $parent_id - Used for recursively creating branches.
-	 * @return array - The completed branch.
-	 */
-	public static function tree($categories, $parent_id = null)
-	{
-		$branch = array();
-
-		foreach ($categories as $category) {
-			if ($category->parent_id != $parent_id) continue;
-
-			$children = static::tree($categories, $category->id);
-
-			if (count($children)) {
-				$category->children = $children;
-			}
-
-			$branch[] = $category;
-		}
-
-		return $branch;
-	}
-
 	///////////////////////////////////////////////
 	//               Menu Linkable               //
 	///////////////////////////////////////////////

@@ -13,12 +13,8 @@ class AdminProductCategoryController extends \Angel\Core\AdminCrudController {
 	public function index()
 	{
 		$ProductCategory = App::make('ProductCategory');
-
-		$temp_categories = $ProductCategory::orderBy('parent_id')->orderBy('order')->get();
-
-		$categories = $ProductCategory::tree($temp_categories);
-
-		$this->data['categories'] = $categories;
+		$categories      = $ProductCategory::orderBy('parent_id')->orderBy('order')->get();
+		$this->data['categories'] = $ProductCategory::tree($categories);
 
 		return View::make($this->view('index'), $this->data);
 	}
