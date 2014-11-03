@@ -386,6 +386,7 @@ class Cart {
 			} else {
 				$product = $this->products()->find($item['product']['id']);
 				$product->qty -= $item['qty'];
+				$product->skipEvents = true;
 				$product->save();
 			}
 		}
