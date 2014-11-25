@@ -73,6 +73,13 @@ class Product extends \Angel\Core\LinkableModel {
 		foreach ($related_changes['detached'] as $id) {
 			$changes['Removed related Product ID#' . $id] = array();
 		}
+
+		$related_products = $this->related()->withPivot('order')->get();
+		foreach ($ids as $order=>$id) {
+			$pivot = $related_products->find($id)->pivot;
+			$pivot->order = $order;
+			$pivot->save();
+		}
 	}
 
 	protected function handle_images(&$changes)
