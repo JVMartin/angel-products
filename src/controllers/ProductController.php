@@ -112,6 +112,11 @@ class ProductController extends \Angel\Core\AngelController {
 			));
 		} catch (Stripe_CardError $e) {
 			return $e->getMessage();
+		} catch (Exception $e) {
+			echo "<p>There was an error; your card has *not* been charged.</p>";
+			Log::error($e);
+			ToolBelt::debug($e);
+			return;
 		}
 
 		$this->Cart->subtractInventory();
@@ -166,9 +171,13 @@ class ProductController extends \Angel\Core\AngelController {
 
 	public function email_receipt($order)
 	{
-		Mail::send('products::orders.emails.receipt', $this->data, function($message) use ($order) {
-			$message->to($order->email)->subject('Receipt for Order #' . $order->id);
-		});
+		try {
+			Mail::send('products::orders.emails.receipt', $this->data, function($message) use ($order) {
+				$message->to($order->email)->subject('Receipt for Order #' . $order->id);
+			});
+		} catch(Exception $e) {
+			Log::error($e);
+		}
 	}
 
 	public function inventory_fail()
