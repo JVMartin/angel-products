@@ -1,14 +1,15 @@
 Angel Products
 ==============
-This is an eCommerce module for the [Angel CMS](https://github.com/JVMartin/angel).
+This is an eCommerce module for the [Laravel 4 Angel CMS](https://github.com/JVMartin/angel/tree/laravel-4).
 
-The module works with Stripe automatically, or you can easily extend it to use other payment gateways.
+The module works with Stripe out of the box, but you can easily extend it to use other payment gateways.
 
 Installation
 ------------
 Add the following requirements to your `composer.json` file:
 ```javascript
 "require": {
+	...
 	"angel/products": "1.0.*"
 },
 ```
