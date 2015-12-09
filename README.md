@@ -1,6 +1,6 @@
 Angel Products
 ==============
-This is an eCommerce module for the [Laravel 4 Angel CMS](https://github.com/JVMartin/angel/tree/laravel-4).
+This is an eCommerce module for the [Laravel 4 Angel CMS](https://github.com/JVMartin/angel).
 
 The module works with Stripe out of the box, but you can easily extend it to use other payment gateways.
 
